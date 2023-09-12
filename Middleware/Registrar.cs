@@ -92,13 +92,13 @@ namespace MKExpress.API.Middleware
                 .AddScoped<IExpenseNameService, ExpenseNameService>()
                 .AddScoped<IExpenseTypeService, ExpenseTypeService>()
                 .AddScoped<IExpenseService, ExpenseService>()
-                .AddScoped<IRentDetailRepository,RentDetailRepository>()
-                .AddScoped<IRentDetailService,RentDetailService>()
+                .AddScoped<IRentDetailRepository, RentDetailRepository>()
+                .AddScoped<IRentDetailService, RentDetailService>()
                 .AddScoped<IRentLocationRepository, RentLocationRepository>()
                 .AddScoped<IRentLocationService, RentLocationService>()
-                .AddScoped<IReportRepository,ReportRepository>()
+                .AddScoped<IReportRepository, ReportRepository>()
                 .AddScoped<IReportService, ReportService>()
-                .AddScoped<IMasterWorkDescriptionRepository,MasterWorkDescriptionRepository>()
+                .AddScoped<IMasterWorkDescriptionRepository, MasterWorkDescriptionRepository>()
                 .AddScoped<IMasterWorkDescriptionService, MasterWorkDescriptionService>()
                  .AddScoped<IMasterAccessRepository, MasterAccessRepository>()
                 .AddScoped<IMasterAccessService, MasterAccessService>()
@@ -124,16 +124,17 @@ namespace MKExpress.API.Middleware
         public static IServiceCollection RegisterDataServices(this IServiceCollection services,
             IConfiguration configuration)
         {
-            var dbName = new string[] { "LaBeach", "GreenTower", "MKExpress", "AbuMansour", "local" };
-            int dbIndex =0;
+            var dbName = new string[] { "MKExpress_Db_Test", "MKExpress_Db", "local" };
+            int dbIndex = 1;
             var connectionString = "";
             if (dbName[dbIndex] == "local")
-                connectionString = "workstation id=MKExpress.mssql.somee.com;packet size=4096;user id=amendutt_SQLLogin_1;pwd=4wwnhqgv8b;data source=MKExpress.mssql.somee.com;persist security info=False;initial catalog=MKExpress";
+                connectionString = "workstation id=mssql-88450-0.cloudclusters.net,12597;packet size=4096;user id=mkExpress_User;pwd=Gr8@12345;data source=mssql-88450-0.cloudclusters.net,12597;persist security info=False;initial catalog=mkExpress_Db";
             else
-                connectionString = $"workstation id=mssql-88450-0.cloudclusters.net,12597;TrustServerCertificate=true;packet size=4096;user id=LaBeachUser;pwd=Gr8@54321;data source=mssql-88450-0.cloudclusters.net,12597;persist security info=False;initial catalog={dbName[dbIndex]}";
+                connectionString = $"workstation id=mssql-88450-0.cloudclusters.net,12597;TrustServerCertificate=true;packet size=4096;user id=mkExpress_User;pwd=Gr8@12345;data source=mssql-88450-0.cloudclusters.net,12597;persist security info=False;initial catalog={dbName[dbIndex]}";
 
             services.AddDbContext<MKExpressDbContext>(
-                options => {
+                options =>
+                {
                     options.UseSqlServer(connectionString);
                 }
             );
@@ -174,7 +175,7 @@ namespace MKExpress.API.Middleware
         public static void ApplyMigrations(this IServiceProvider serviceProvider)
         {
             var db = serviceProvider.GetRequiredService<MKExpressDbContext>();
-           // db.Database.Migrate();
+            //db.Database.Migrate();
         }
 
         public static void InitializeDatabase(IApplicationBuilder app)

@@ -81,7 +81,7 @@ namespace MKExpress.API.Data
             if (optionsBuilder.IsConfigured) return;
 
             var _connectionString =
-                "workstation id=mssql-88450-0.cloudclusters.net,12597;packet size=4096;user id=LaBeachUser;pwd=Gr8@54321;data source=mssql-88450-0.cloudclusters.net,12597;persist security info=False;initial catalog=AbuMansour";
+                "workstation id=mssql-88450-0.cloudclusters.net,12597;packet size=4096;user id=mkExpress_User;pwd=Gr8@12345;data source=mssql-88450-0.cloudclusters.net,12597;persist security info=False;initial catalog=mkExpress_Db";
             optionsBuilder.UseSqlServer(_connectionString);
         }
 
