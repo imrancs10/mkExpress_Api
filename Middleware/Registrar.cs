@@ -28,8 +28,6 @@ namespace MKExpress.API.Middleware
                 .AddScoped<IJobTitleService, JobTitleService>()
                 .AddScoped<IDropdownRepository, DropdownRepository>()
                 .AddScoped<IDropdownService, DropdownService>()
-                .AddScoped<IAccountRepository, AccountRepository>()
-                .AddScoped<IAccountService, AccountService>()
                 .AddScoped<TokenConfig>()
                 .AddTransient<DataSeeder>()
                 .AddTransient<IMailService, MailService>()

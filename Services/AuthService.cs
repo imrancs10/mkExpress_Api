@@ -114,11 +114,6 @@ namespace MKExpress.API.Services
         {
             var token = Guid.NewGuid().ToString();
             var user = await GetIdentityUser(customerResetPasswordRequest.Email);
-            CustomerSession session = new CustomerSession()
-            {
-                Email = user.Email,
-                OtpVerified = false,
-            };
             return new Session
             {
                 SessionId = token
