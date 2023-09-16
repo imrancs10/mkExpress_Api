@@ -15,14 +15,12 @@ namespace MKExpress.API.Services
     public class CustomerService : ICustomerService
     {
         private readonly ICustomerRepository _customerRepository;
-        private readonly IOrderRepository _orderRepository;
         private readonly IMapper _mapper;
 
-        public CustomerService(ICustomerRepository customerRepository, IMapper mapper, IOrderRepository orderRepository)
+        public CustomerService(ICustomerRepository customerRepository, IMapper mapper)
         {
             _customerRepository = customerRepository;
             _mapper = mapper;
-            _orderRepository = orderRepository;
         }
 
         public async Task<CustomerResponse> Add(CustomerRequest customerRequest)
@@ -49,27 +47,7 @@ namespace MKExpress.API.Services
         public async Task<PagingResponse<CustomerResponse>> GetAll(PagingRequest pagingRequest)
         {
             PagingResponse<CustomerResponse> result = _mapper.Map<PagingResponse<CustomerResponse>>(await _customerRepository.GetAll(pagingRequest));
-            var filteredContacts = result.Data.Select(x => x.Contact1).ToList();
-            var ordersCountByContactNo = await _orderRepository.GetOrderCountByContactNo(filteredContacts);
-            if (ordersCountByContactNo.Count > 0)
-            {
-                foreach (var item in result.Data)
-                {
-                    if (ordersCountByContactNo.ContainsKey(item.Contact1))
-                        item.TotalOrders = ordersCountByContactNo[item.Contact1];
-                    else
-                        item.TotalOrders = 0;
-                }
-            }
-            //PagingResponse<Order> activeOrders = await _orderRepository.GetAll(new PagingRequest() { PageNo = 1, PageSize = 1000000 });
-            //foreach (var customer in result.Data)
-            //{
-            //    var customerOrders = activeOrders.Data.Where(x => x.CustomerId == customer.Id).ToList();
-            //    if (customerOrders.Count == 0)
-            //        continue;
-            //    customer.LastSalesMan = $"{customerOrders.First().Employee.FirstName} {customerOrders.First().Employee.LastName}";
-            //    customer.TotalOrders = customerOrders.Count;
-            //}
+           
             return result;
         }
 
@@ -81,15 +59,7 @@ namespace MKExpress.API.Services
         public async Task<PagingResponse<CustomerResponse>> Search(SearchPagingRequest searchPagingRequest)
         {
             var result= _mapper.Map<PagingResponse<CustomerResponse>>(await _customerRepository.Search(searchPagingRequest));
-            var filteredContacts = result.Data.Select(x => x.Contact1).ToList();
-            var ordersCountByContactNo = await _orderRepository.GetOrderCountByContactNo(filteredContacts);
-            if (ordersCountByContactNo.Count > 0)
-            {
-                foreach (var item in result.Data)
-                {
-                    item.TotalOrders = ordersCountByContactNo[item.Contact1];
-                }
-            }
+           
             return result;
         }
 

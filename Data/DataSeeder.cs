@@ -1,4 +1,3 @@
-using CatalogService.API.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,14 +7,12 @@ namespace MKExpress.API.Data
 
     public class DataSeeder
     {
-        private readonly ICsvFileReaderService _csvFileReaderService;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly MKExpressDbContext _MKExpressDbContext;
 
-        public DataSeeder(ICsvFileReaderService csvFileReaderService, RoleManager<IdentityRole> roleManager,
+        public DataSeeder( RoleManager<IdentityRole> roleManager,
             MKExpressDbContext MKExpressDbContext)
         {
-            _csvFileReaderService = csvFileReaderService;
             _roleManager = roleManager;
             _MKExpressDbContext = MKExpressDbContext;
         }

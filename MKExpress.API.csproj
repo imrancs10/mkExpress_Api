@@ -10,12 +10,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\Image\DesignSampleSample\**" />
+    <Content Remove="wwwroot\Image\DesignSampleSample\**" />
+    <EmbeddedResource Remove="wwwroot\Image\DesignSampleSample\**" />
+    <None Remove="wwwroot\Image\DesignSampleSample\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="Properties\PublishProfiles\FTPProfile.pubxml.user" />
-    <None Include="wwwroot\Image\DesignSampleSample\10-202207092119333561.jpg" />
-    <None Include="wwwroot\Image\DesignSampleSample\11-202207092121135992.docx" />
-    <None Include="wwwroot\Image\DesignSampleSample\7-202207091723297453.jpg" />
-    <None Include="wwwroot\Image\DesignSampleSample\8-202207091823463348.jpg" />
-    <None Include="wwwroot\Image\DesignSampleSample\9-202207092117092706.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,6 +37,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.3.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.3.1" />
     <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Image\" />
   </ItemGroup>
 
 

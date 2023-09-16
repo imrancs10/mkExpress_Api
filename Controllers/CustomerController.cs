@@ -13,11 +13,9 @@ namespace MKExpress.API.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerService _customerService;
-        private readonly ICustomerAccountStatementService _customerAccountStatementService;
-        public CustomerController(ICustomerService customerService, ICustomerAccountStatementService customerAccountStatementService)
+        public CustomerController(ICustomerService customerService)
         {
             _customerService = customerService;
-            _customerAccountStatementService = customerAccountStatementService;
         }
 
         [ProducesResponseType(typeof(CustomerResponse), StatusCodes.Status201Created)]
@@ -90,26 +88,6 @@ namespace MKExpress.API.Controllers
         public async Task<PagingResponse<CustomerResponse>> SearchCustomer([FromQuery] SearchPagingRequest searchPagingRequest)
         {
             return await _customerService.Search(searchPagingRequest);
-        }
-
-        [ProducesResponseType(typeof(List<CustomerPreviousAmountStatementResponse>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
-        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        [HttpGet(StaticValues.CustomerGetPreAmountStatementPath)]
-        public async Task<List<CustomerPreviousAmountStatementResponse>> SearchCustomer([FromQuery] string contactNo)
-        {
-            return await _customerAccountStatementService.GetCustomerPreviousAmountStatement(contactNo);
-        }
-
-        [ProducesResponseType(typeof(List<int>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
-        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        [HttpPost(StaticValues.CustomerAddAdvanceAmountPath)]
-        public async Task<int> AddCustomerAdvancePayment([FromBody] List<CustomerAdvancePaymentRequest> customerAdvancePaymentRequests)
-        {
-            return await _customerAccountStatementService.AddAdvancePayment(customerAdvancePaymentRequests);
         }
     }
 }

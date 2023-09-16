@@ -76,6 +76,8 @@ namespace MKExpress.API.Data
         public DbSet<MasterAccess> MasterAccesses { get; set; }
         public DbSet<MasterAccessDetail> MasterAccessDetail { get; set; }
         public DbSet<MasterMenu> MasterMenus { get; set; }
+        public DbSet<Member> Members { get; set; }
+        public DbSet<Station> Stations { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (optionsBuilder.IsConfigured) return;
