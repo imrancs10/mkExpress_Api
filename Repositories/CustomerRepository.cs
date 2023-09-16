@@ -70,7 +70,7 @@ namespace MKExpress.API.Repositories
         {
             var comparer = new DistinctCustomerComparer();
             var data = await _context.Customers
-                .Include(x=>x.Orders.Where(y=>!y.IsCancelled && !y.IsDeleted))
+                //.Include(x=>x.Orders.Where(y=>!y.IsCancelled && !y.IsDeleted))
                 .Where(x => !x.IsDeleted)
                 .OrderBy(x => x.Firstname)
                 .ToListAsync();
@@ -117,7 +117,7 @@ namespace MKExpress.API.Repositories
         {
 
             return await _context.Customers
-                .Include(x=>x.Orders.Where(y => !y.IsCancelled && !y.IsDeleted))
+                //.Include(x=>x.Orders.Where(y => !y.IsCancelled && !y.IsDeleted))
                .Where(x => !x.IsDeleted && x.Contact1 == contactNo)
                .OrderBy(x => x.Firstname)
                .ToListAsync();

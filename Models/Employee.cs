@@ -48,12 +48,12 @@ namespace MKExpress.API.Models
         [ForeignKey("JobTitleId")]
         public MasterJobTitle MasterJobTitle { get; set; }
 
-        public List<MonthlyAttendence> MonthlyAttendences { get; set; }
+        //public List<MonthlyAttendence> MonthlyAttendences { get; set; }
         public User User { get; set; }
-        [NotMapped]
-        public List<Order> Orders { get; set; }
-        [NotMapped]
-        public List<OrderDetail> OrderDetails { get; set; }
-        public List<EmployeeAdvancePayment> EmployeeAdvancePayments { get; set; }
+        //[NotMapped]
+        //public List<Order> Orders { get; set; }
+        //[NotMapped]
+        //public List<OrderDetail> OrderDetails { get; set; }
+        //public List<EmployeeAdvancePayment> EmployeeAdvancePayments { get; set; }
     }
 }

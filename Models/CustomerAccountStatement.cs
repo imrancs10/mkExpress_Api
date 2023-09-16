@@ -20,11 +20,11 @@ namespace MKExpress.API.Models
         public DateTime PaymentDate { get; set; }
         public bool IsFirstAdvance { get; set; }
 
-        [ForeignKey("OrderId")]
-        public Order Order { get; set; }
+        //[ForeignKey("OrderId")]
+        //public Order Order { get; set; }
 
-        [ForeignKey("OrderDetailId")]
-        public OrderDetail OrderDetail { get; set; }
+        //[ForeignKey("OrderDetailId")]
+        //public OrderDetail OrderDetail { get; set; }
 
         [ForeignKey("CustomerId")]
         public Customer Customer { get; set; }

@@ -18,7 +18,7 @@ namespace MKExpress.API.Models
         public string Branch { get; set; }
         public string POBox { get; set; }
         public string TRN { get; set; }
-        public List<Order> Orders { get; set; }
+        //public List<Order> Orders { get; set; }
         public List<CustomerAccountStatement> AccountStatements { get; set; }
     }
 }

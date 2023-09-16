@@ -26,7 +26,7 @@ namespace MKExpress.API.Repositories
         public async Task<List<Dropdown>> Customers(string? searchTerm)
         {
             searchTerm = searchTerm?.ToLower() ?? string.Empty;
-            return await _context.Customers.Where(customer =>!customer.IsDeleted && (
+            return await _context.Customers.Where(customer => !customer.IsDeleted && (
             searchTerm.Equals(string.Empty) ||
             customer.Firstname.Contains(searchTerm) ||
             customer.Lastname.Contains(searchTerm) ||
@@ -66,13 +66,13 @@ namespace MKExpress.API.Repositories
         public async Task<List<Dropdown>> JobTitle()
         {
             return await _context.MasterJobTitles
-                .Where(x=>!x.IsDeleted)
+                .Where(x => !x.IsDeleted)
                .Select(x =>
                        new Dropdown()
                        {
                            Id = x.Id,
                            Value = x.Value,
-                           Code=x.Code
+                           Code = x.Code
                        })
                .OrderBy(x => x.Value)
                .ToListAsync();
@@ -80,74 +80,77 @@ namespace MKExpress.API.Repositories
 
         public async Task<List<Dropdown>> Products()
         {
-            var products = await _context.Products.Where(pro=>!pro.IsDeleted).ToListAsync();
-            return products.Select(pro =>
-                       new Dropdown()
-                       {
-                           Id = pro.Id,
-                           Value = $"{pro.ProductName}"
-                       })
-               .OrderBy(x => x.Value)
-               .ToList();
+            //var products = await _context.Products.Where(pro => !pro.IsDeleted).ToListAsync();
+            //return products.Select(pro =>
+            //           new Dropdown()
+            //           {
+            //               Id = pro.Id,
+            //               Value = $"{pro.ProductName}"
+            //           })
+            //   .OrderBy(x => x.Value)
+            //   .ToList();
+            return null;
         }
 
-        public async Task<List<Dropdown<Supplier>>> Suppliers()
-        {
-            return await _context.Suppliers.Where(x=>!x.IsDeleted)
-               .Select(supp => new Dropdown<Supplier>()
-               {
-                   Id = supp.Id,
-                   Value = supp.CompanyName,
-                   Remark = string.Empty,
-                   Data = supp
-               })
-               .OrderBy(x => x.Value)
-               .ToListAsync();
-        }
+        //public async Task<List<Dropdown<Supplier>>> Suppliers()
+        //{
+        //    return await _context.Suppliers.Where(x=>!x.IsDeleted)
+        //       .Select(supp => new Dropdown<Supplier>()
+        //       {
+        //           Id = supp.Id,
+        //           Value = supp.CompanyName,
+        //           Remark = string.Empty,
+        //           Data = supp
+        //       })
+        //       .OrderBy(x => x.Value)
+        //       .ToListAsync();
+        //}
 
         public async Task<List<Dropdown>> DesignCategory()
         {
-            return await _context.MasterDesignCategories
-                .Where(x=>!x.IsDeleted)
-              .Select(mdc =>
-                      new Dropdown()
-                      {
-                          Id = mdc.Id,
-                          Value = mdc.Value,
-                          Code = mdc.Code
-                      })
-              .OrderBy(x => x.Value)
-              .ToListAsync();
+            //return await _context.MasterDesignCategories
+            //    .Where(x=>!x.IsDeleted)
+            //  .Select(mdc =>
+            //          new Dropdown()
+            //          {
+            //              Id = mdc.Id,
+            //              Value = mdc.Value,
+            //              Code = mdc.Code
+            //          })
+            //  .OrderBy(x => x.Value)
+            //  .ToListAsync();
+            return null;
         }
 
         public async Task<List<Dropdown>> OrderDetailNos(bool excludeDelivered)
         {
-            return await _context.OrderDetails
-                .Where(x => !x.IsDeleted && !x.IsCancelled && (!excludeDelivered || x.Status!=OrderStatusEnum.Delivered.ToString()))
-              .Select(mdc =>
-                      new Dropdown()
-                      {
-                          Id = mdc.Id,
-                          Value = mdc.OrderNo,
-                          Code = mdc.OrderId.ToString(),
-                          Remark=mdc.Status,
-                          ParentId=mdc.OrderId
-                      })
-              .OrderByDescending(x => x.Value)
-              .ToListAsync();
+            //return await _context.OrderDetails
+            //    .Where(x => !x.IsDeleted && !x.IsCancelled && (!excludeDelivered || x.Status != OrderStatusEnum.Delivered.ToString()))
+            //  .Select(mdc =>
+            //          new Dropdown()
+            //          {
+            //              Id = mdc.Id,
+            //              Value = mdc.OrderNo,
+            //              Code = mdc.OrderId.ToString(),
+            //              Remark = mdc.Status,
+            //              ParentId = mdc.OrderId
+            //          })
+            //  .OrderByDescending(x => x.Value)
+            //  .ToListAsync();
+            return null;
         }
 
         public async Task<List<Dropdown>> WorkTypes()
         {
             return await _context.MasterDatas
-               .Where(x => !x.IsDeleted && x.MasterDataType=="work_type")
+               .Where(x => !x.IsDeleted && x.MasterDataType == "work_type")
              .Select(mdc =>
                      new Dropdown()
                      {
                          Id = mdc.Id,
                          Value = mdc.Value,
                          Code = mdc.Code,
-                         Remark=string.Empty
+                         Remark = string.Empty
                      })
              .OrderBy(x => x.Code)
              .ToListAsync();
