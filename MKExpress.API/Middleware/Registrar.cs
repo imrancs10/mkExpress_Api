@@ -18,7 +18,6 @@ namespace MKExpress.API.Middleware
                 .AddScoped<ILoginService, LoginService>()
                 .AddScoped<IMailService, MailService>()
                 .AddScoped<IExcelReader, ExcelReader>()
-                .AddScoped<IQrCodeService, QrCodeService>()
                 .AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             return services;

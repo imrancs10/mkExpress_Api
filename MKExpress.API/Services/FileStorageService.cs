@@ -50,7 +50,7 @@ namespace MKExpress.API.Services
             ModuleNameEnum modName = Enum.Parse<ModuleNameEnum>(moduleName, true);
             if (modName == null)
             {
-                throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidModuleName, StaticValues.Error_InvalidModuleName);
+               // throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidModuleName, StaticValues.Error_InvalidModuleName);
             }
             return _mapper.Map<List<ImageStoreResponse>>(await _fileStorageRepository.GetByModuleName(modName));
         }

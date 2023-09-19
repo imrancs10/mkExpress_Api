@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using MKExpress.API.DTO.Request;
-using MKExpress.API.DTO.Request.Common;
 using MKExpress.API.DTO.Request.ImageStore;
 using MKExpress.API.DTO.Response;
-using MKExpress.API.DTO.Response.Common;
 using MKExpress.API.DTO.Response.Image;
 using MKExpress.API.Models;
 

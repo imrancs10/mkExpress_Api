@@ -19,24 +19,17 @@
         #endregion
 
         #region Master Data API
-        public const string MasterGetDivisionPath = "get/divisions";
-        public const string MasterGetPadavPath = "get/padavs";
-        public const string MasterGetPadavByYatraIdPath = "get/padavs/{yatraId}";
-        public const string MasterGetPadavBydPath = "padavs/get/{Id}";
-        public const string MasterGetYatraPath = "get/yatras";
-        public const string MasterYatraGetByIdPath = "yatra/get/{id}";
-        public const string MasterGetSequencePath = "get/sequences";
+        public const string MasterDataPath = APIPrefix + "master-data";
+        public const string MasterDataDeletePath = APIPrefix + "master-data/{id}";
+        public const string MasterDataByIdPath = APIPrefix + "master-data/get/{id}";
+        public const string MasterDataSearchPath = APIPrefix + "master-data/search";
+        public const string MasterDataGetByTypePath = APIPrefix + "master-data/get/by-type";
+        public const string MasterDataGetByTypesPath = APIPrefix + "master-data/get/by-types";
+        public const string MasterDataTypePath = APIPrefix + "master-data-type";
+        public const string MasterDataTypeDeletePath = APIPrefix + "master-data-type/{id}";
+        public const string MasterDataTypeByIdPath = APIPrefix + "master-data-type/get/{id}";
+        public const string MasterDataTypeSearchPath = APIPrefix + "master-data-type/search";
 
-        public const string MasterDivisionPath = "divisions";
-        public const string MasterDataPath = "master/data";
-        public const string MasterDataGetByTypesPath = "master/data/types";
-        public const string MasterDataDropdownPath = "master/data/dropdown";
-        public const string MasterDataByIdPath = "master/data/{id}";
-        public const string MasterPadavPath = "padavs";
-        public const string MasterYatraPath = "yatras";
-        public const string MasterSequencePath = "sequences";
-        public const string MasterDataNearByPlacesPath = "master/nearby/data";
-        public const string MasterDataSearchPath = "master/search";
 
         #endregion
 
@@ -83,22 +76,29 @@
         #endregion
 
         #region Error Message
-        public const string Error_InvalidDataSupplied = "Invalid data supplied";
-        public const string Error_NoDataSupplied = "No data supplied";
-        public const string Error_InvalidCredentials = "Wrong username/password";
-        public const string Error_UserNotFound = "User is not registered.";
-        public const string Error_InvalidOldPassword = "Wrong old password";
-        public const string Error_UserAccountBlocked = "User account is blocked";
-        public const string Error_UserAccountLocked = "User account is locked";
-        public const string Error_UserAccountEmailNotVerified = "User account email is not verified";
-        public const string Error_InvalidConfigData = "Some appSetting config key missing/contains invalid data";
-        public const string Error_InvalidModuleName = "Invalid modile name";
-        public const string Error_ImageNotSelected = "Image not selected";
-        public const string Error_RecordNotFound = "Record not found";
-        public const string Error_AlreadyDeleted = "Record is already deleted";
-        public const string Error_AlreadyExist = "Record is already exist";
-        public const string Error_EmailAlreadyRegistered = "This email is already registered";
-        public const string Error_EmailAlreadyVerified = "This email is already verified";
+        public const string MasterDataTypeAlreadyExistError = "MasterDataTypeAlreadyExist!";
+        public const string MasterDataTypeAlreadyExistMessage = "Master data type is already exist!";
+        public const string InvalidEmail = "Email address is invalid!";
+        public const string DataNotFoundError = "DataNotFound!";
+        public const string DataNotFoundMessage = "Data does not exist!";
+        public const string RecordAlreadyExistError = "RecordAlreadyExist!";
+        public const string RecordAlreadyCancelledError = "RecordAlreadyCancelledError!";
+        public const string RecordAlreadyCancelledMessage = "Record already cancelled!";
+        public const string RecordAlreadyDeletedError = "RecordAlreadyDeletedError!";
+        public const string RecordAlreadyDeletedMessage = "Record already deleted!";
+        public const string InvalidMasterDataTypeError = "InvalidMasterDataTypeError!";
+        public const string InvalidMasterDataTypeMessage = "Master data type is invalid!";
+        public const string Error_InvalidOldPassword = "Error_InvalidOldPassword";
+        public const string Error_UserNotFound = "Error_UserNotFound";
+        public const string Error_InvalidCredentials = "Error_InvalidCredentials";
+        public const string Error_UserAccountBlocked = "";
+        public const string Error_UserAccountLocked = "";
+        public const string Error_UserAccountEmailNotVerified = "";
+        public const string Error_EmailAlreadyVerified = "";
+        public static string RecordAlreadyExistMessage(string recordType)
+        {
+            return $"Record already exist with same: {recordType}";
+        }
         #endregion
 
         #region Constant Values

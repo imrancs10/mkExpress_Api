@@ -39,7 +39,9 @@ namespace MKExpress.API.Services
             if (iFormFile == null)
                 return default;
             if (iFormFile?.Length == 0)
-                throw new NotFoundException(StaticValues.ErrorType_ImageNotSelected, StaticValues.Error_ImageNotSelected);
+            {
+                //throw new NotFoundException(StaticValues.ErrorType_ImageNotSelected, StaticValues.Error_ImageNotSelected);
+            }
 
             var newFileName = $"{sampleId}-{GetFileName(iFormFile)}";
             var designSamplePhotoPath = _configuration.GetSection("DesignSamplePhotoPath").Value;
@@ -152,8 +154,10 @@ namespace MKExpress.API.Services
 
         public async Task<List<ImageStoreResponse>> UploadPhoto(List<FileUploadRequest> requests)
         {
-            if (requests.Count==0)
-                throw new NotFoundException(StaticValues.ErrorType_ImageNotSelected, StaticValues.Error_ImageNotSelected);
+            if (requests.Count == 0)
+            { 
+                //throw new NotFoundException(StaticValues.ErrorType_ImageNotSelected, StaticValues.Error_ImageNotSelected);
+                }
 
             List<ImageStore> images = new List<ImageStore>();
             foreach (FileUploadRequest request in requests)

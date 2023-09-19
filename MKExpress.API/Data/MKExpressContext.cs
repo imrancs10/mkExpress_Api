@@ -27,6 +27,8 @@ namespace MKExpress.API.Data
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<MasterData> MasterDatas { get; set; }
+        public DbSet<MasterDataType> MasterDataTypes { get; set; }
 
         public override int SaveChanges()
         {

@@ -1,8 +1,11 @@
-﻿namespace MKExpress.API.DTO.Request.Common
+﻿using MKExpress.API.DTO.BaseDto;
+using System;
+
+namespace MKExpress.API.DTO.Request
 {
-    public class PagingRequest
+    public class PagingRequest : BasePagingRequest
     {
-        public int PageNo { get; set; } = 1;
-        public int PageSize { get; set; } = 10;
+        public virtual DateTime FromDate { get; set; } = DateTime.Now.AddYears(-10).Date;
+        public virtual DateTime ToDate { get; set; } = DateTime.Now.Date;
     }
 }

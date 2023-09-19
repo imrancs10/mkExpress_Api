@@ -52,12 +52,12 @@ namespace MKExpress.API.Services
         {
             if (request == null)
             {
-                throw new BusinessRuleViolationException(StaticValues.ErrorType_NoDataSupplied, StaticValues.Error_NoDataSupplied);
+               // throw new BusinessRuleViolationException(StaticValues.ErrorType_NoDataSupplied, StaticValues.Error_NoDataSupplied);
             }
 
             if (string.IsNullOrEmpty(request.UserName) || string.IsNullOrEmpty(request.Password))
             {
-                throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidDataSupplied, StaticValues.Error_InvalidDataSupplied);
+                //throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidDataSupplied, StaticValues.Error_InvalidDataSupplied);
             }
             request.Password = request.Password.DecodeBase64();
             request.Password = PasswordHasher.GenerateHash(request.Password);
@@ -78,10 +78,11 @@ namespace MKExpress.API.Services
 
         public async Task<UserResponse> RegisterUser(UserRequest request)
         {
-           
-            if (await _loginRepository.IsUserExist(request.Email))
-                throw new BusinessRuleViolationException(StaticValues.ErrorType_AlreadyExist, StaticValues.Error_EmailAlreadyRegistered);
 
+            if (await _loginRepository.IsUserExist(request.Email))
+            {
+                //throw new BusinessRuleViolationException(StaticValues.ErrorType_AlreadyExist, StaticValues.Error_EmailAlreadyRegistered);
+            }
             User user = _mapper.Map<User>(request);
             user.IsEmailVerified = _configuration.GetValue<int>("EnableEmailVerification",0)==0;
             user.Password = PasswordHasher.GenerateHash(request.Password.DecodeBase64());
