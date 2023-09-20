@@ -8,6 +8,5 @@ namespace MKExpress.API.Repositories.Interfaces
     {
         Task<List<MasterData>> GetByMasterDataType(string masterDataType);
         Task<List<MasterData>> GetByMasterDataTypes(List<string> masterDataTypes);
-        Task<int> GetWorkTypeIdByCode(string masterDataType,string code);
     }
 }

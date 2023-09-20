@@ -34,7 +34,7 @@ namespace SalehGarib.API.Repositories
             return entity.Entity;
         }
 
-        public async Task<int> Delete(int id)
+        public async Task<int> Delete(Guid id)
         {
             MasterDataType masterDataType = await _context.MasterDataTypes
                 .Where(mdt => mdt.Id == id)
@@ -49,7 +49,7 @@ namespace SalehGarib.API.Repositories
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<MasterDataType> Get(int id)
+        public async Task<MasterDataType> Get(Guid id)
         {
             return await _context.MasterDataTypes.Where(mdt => mdt.Id == id).FirstOrDefaultAsync();
         }

@@ -34,31 +34,6 @@ namespace MKExpress.API.Services
             _mapper = mapper;
             _imageStoreRepository = imageStoreRepository;
         }
-        public async Task<string> UploadDesignSamplePhoto(IFormFile iFormFile, int sampleId)
-        {
-            if (iFormFile == null)
-                return default;
-            if (iFormFile?.Length == 0)
-            {
-                //throw new NotFoundException(StaticValues.ErrorType_ImageNotSelected, StaticValues.Error_ImageNotSelected);
-            }
-
-            var newFileName = $"{sampleId}-{GetFileName(iFormFile)}";
-            var designSamplePhotoPath = _configuration.GetSection("DesignSamplePhotoPath").Value;
-            var basePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", designSamplePhotoPath);
-            if (!Directory.Exists(basePath))
-                Directory.CreateDirectory(basePath);
-
-            var filePath = Path.Combine(basePath, newFileName);
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                iFormFile.CopyTo(stream);
-            }
-
-            await FileCleanup(sampleId);
-            CreateThumbnail(basePath, newFileName);
-            return Path.Combine(designSamplePhotoPath, newFileName);
-        }
 
         private static string GetFileName(IFormFile file)
         {
@@ -69,9 +44,9 @@ namespace MKExpress.API.Services
             return value.ToString("yyyyMMddHHmmssffff");
         }
 
-        public async Task FileCleanup(int id, ModuleNameEnum moduleName = ModuleNameEnum.Temple, int threshhold = 10, string remark = "")
+        public async Task FileCleanup(Guid id, ModuleNameEnum moduleName = ModuleNameEnum.Temple, int threshhold = 10, string remark = "")
         {
-            var ImageStore = await _fileStorageRepository.GetByModuleIds(new List<int>() { id }, moduleName);
+            var ImageStore = await _fileStorageRepository.GetByModuleIds(new List<Guid>() { id }, moduleName);
 
             var deleteResult = 0;
             if (remark != "" && ImageStore.Where(x => x.Remark == remark).Count() > 0)
@@ -198,7 +173,7 @@ namespace MKExpress.API.Services
            return _mapper.Map<List<ImageStoreResponse>>(await _fileStorageRepository.Add(images));
         }
 
-        public async Task<bool> DeleteFile(int id)
+        public async Task<bool> DeleteFile(Guid id)
         {
             var res=await _imageStoreRepository.DeleteFile(id);
             if (res == null) return false;

@@ -8,8 +8,8 @@ namespace MKExpress.API.Services.Interfaces
     {
         Task<TResponse> Add(TRequest request);
         Task<TResponse> Update(TRequest request);
-        Task<int> Delete(int id);
-        Task<TResponse> Get(int id);
+        Task<int> Delete(Guid id);
+        Task<TResponse> Get(Guid id);
         Task<PagingResponse<TResponse>> GetAll(PagingRequest pagingRequest);
         Task<PagingResponse<TResponse>> Search(SearchPagingRequest searchPagingRequest);
     }

@@ -27,12 +27,12 @@ namespace MKExpress.API.Services
             return _mapper.Map<MasterDataResponse>(await _masterDataRepository.Add(masterData));
         }
 
-        public async Task<int> Delete(int masterDataId)
+        public async Task<int> Delete(Guid masterDataId)
         {
             return await _masterDataRepository.Delete(masterDataId);
         }
 
-        public async Task<MasterDataResponse> Get(int masterDataId)
+        public async Task<MasterDataResponse> Get(Guid masterDataId)
         {
             PagingResponse<MasterDataType> masterDataType = await _masterDataTypeRepository.GetAll(new PagingRequest() { PageNo = 1, PageSize = 10000 });
             Dictionary<string, string> masterDataTypeDictionary = masterDataType.Data.Distinct().ToDictionary(x => x.Code.ToLower(), x => x.Value);

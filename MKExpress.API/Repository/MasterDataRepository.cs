@@ -45,7 +45,7 @@ namespace MKExpress.API.Repositories
             return oldJobTitle.Entity;
         }
 
-        public async Task<int> Delete(int MasterDataId)
+        public async Task<int> Delete(Guid MasterDataId)
         {
             MasterData masterData = await _context.MasterDatas
                 .Where(mjt => mjt.Id == MasterDataId)
@@ -64,7 +64,7 @@ namespace MKExpress.API.Repositories
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<MasterData> Get(int MasterDataId)
+        public async Task<MasterData> Get(Guid MasterDataId)
         {
             return await _context.MasterDatas
                 .Where(mjt => mjt.Id == MasterDataId && !mjt.IsDeleted)
@@ -138,12 +138,6 @@ namespace MKExpress.API.Repositories
                 .ThenBy(x => x.Code)
                 .ThenBy(x => x.Value)
                 .ToListAsync();
-        }
-
-        public async Task<int> GetWorkTypeIdByCode(string masterDataType, string code)
-        {
-          var result=await  _context.MasterDatas.Where(x =>!x.IsDeleted && x.MasterDataType == masterDataType && x.Code.Contains(code)).FirstOrDefaultAsync();
-            return result?.Id??0;
         }
     }
 }

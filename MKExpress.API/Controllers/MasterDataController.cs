@@ -7,6 +7,7 @@ using MKExpress.API.Services.Interfaces;
 
 namespace MKExpress.Web.API.Controllers
 {
+    [Route("api")]
     [ApiController]
     public class MasterDataController : ControllerBase
     {
@@ -43,7 +44,7 @@ namespace MKExpress.Web.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpDelete(StaticValues.MasterDataDeletePath)]
-        public async Task<int> DeleteMasterData([FromRoute(Name = "id")] int masterDataId)
+        public async Task<int> DeleteMasterData([FromRoute(Name = "id")] Guid masterDataId)
         {
             return await _masterDataService.Delete(masterDataId);
         }
@@ -54,7 +55,7 @@ namespace MKExpress.Web.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpGet(StaticValues.MasterDataByIdPath)]
-        public async Task<MasterDataResponse> GetMasterData([FromRoute] int id)
+        public async Task<MasterDataResponse> GetMasterData([FromRoute] Guid id)
         {
             return await _masterDataService.Get(id);
         }
@@ -127,7 +128,7 @@ namespace MKExpress.Web.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpDelete(StaticValues.MasterDataTypeDeletePath)]
-        public async Task<int> DeleteMasterTypeData([FromRoute(Name = "id")] int masterDataTypeId)
+        public async Task<int> DeleteMasterTypeData([FromRoute(Name = "id")] Guid masterDataTypeId)
         {
             return await _masterDataTypeService.Delete(masterDataTypeId);
         }
@@ -138,7 +139,7 @@ namespace MKExpress.Web.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpGet(StaticValues.MasterDataTypeByIdPath)]
-        public async Task<MasterDataTypeResponse> GetMasterDataType([FromRoute] int id)
+        public async Task<MasterDataTypeResponse> GetMasterDataType([FromRoute] Guid id)
         {
             return await _masterDataTypeService.Get(id);
         }

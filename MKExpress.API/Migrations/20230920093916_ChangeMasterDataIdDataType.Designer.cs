@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MKExpress.API.Migrations
 {
     [DbContext(typeof(MKExpressContext))]
-    [Migration("20230920050327_AddBasicTable")]
-    partial class AddBasicTable
+    [Migration("20230920093916_ChangeMasterDataIdDataType")]
+    partial class ChangeMasterDataIdDataType
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,14 +25,57 @@ namespace MKExpress.API.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("MKExpress.API.Models.Customer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Confirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DeletedBy")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MaxDeliveryAttempt")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PreferredPickupTime")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Customers");
+                });
+
             modelBuilder.Entity("MKExpress.API.Models.MasterData", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("MasterDataId");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -78,11 +121,9 @@ namespace MKExpress.API.Migrations
 
             modelBuilder.Entity("MKExpress.API.Models.MasterDataType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -120,11 +161,9 @@ namespace MKExpress.API.Migrations
 
             modelBuilder.Entity("MKExpress.API.Models.Member", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -154,11 +193,9 @@ namespace MKExpress.API.Migrations
 
             modelBuilder.Entity("MKExpress.API.Models.Shipment", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal?>("CODAmount")
                         .HasColumnType("decimal(18,2)");
@@ -169,8 +206,8 @@ namespace MKExpress.API.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DeletedAt")
                         .HasColumnType("datetime2");
@@ -226,16 +263,16 @@ namespace MKExpress.API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CustomerId");
+
                     b.ToTable("Shipments");
                 });
 
             modelBuilder.Entity("MKExpress.API.Models.ShipmentDetail", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ConsigneeAddress1")
                         .IsRequired()
@@ -247,8 +284,8 @@ namespace MKExpress.API.Migrations
                     b.Property<string>("ConsigneeAddress3")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ConsigneeCityId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ConsigneeCityId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ConsigneeEmail")
                         .HasColumnType("nvarchar(max)");
@@ -282,14 +319,14 @@ namespace MKExpress.API.Migrations
                     b.Property<decimal>("Dimension")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("FromStoreId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("FromStoreId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ShipmentId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ShipmentId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ShipperAddress1")
                         .IsRequired()
@@ -301,8 +338,8 @@ namespace MKExpress.API.Migrations
                     b.Property<string>("ShipperAddress3")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ShipperCityId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ShipperCityId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ShipperEmail")
                         .HasColumnType("nvarchar(max)");
@@ -318,8 +355,8 @@ namespace MKExpress.API.Migrations
                     b.Property<string>("ShipperSecondPhone")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ToStoreId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ToStoreId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("TotalPieces")
                         .HasColumnType("int");
@@ -335,18 +372,24 @@ namespace MKExpress.API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ConsigneeCityId");
+
+                    b.HasIndex("FromStoreId");
+
                     b.HasIndex("ShipmentId");
+
+                    b.HasIndex("ShipperCityId");
+
+                    b.HasIndex("ToStoreId");
 
                     b.ToTable("ShipmentDetails");
                 });
 
             modelBuilder.Entity("MKExpress.API.Models.ShipmentImage", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -363,8 +406,12 @@ namespace MKExpress.API.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ShipmentId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ShipmentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ThumbnailUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -385,11 +432,9 @@ namespace MKExpress.API.Migrations
 
             modelBuilder.Entity("MKExpress.API.Models.ShipmentTracking", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Activity")
                         .IsRequired()
@@ -404,8 +449,8 @@ namespace MKExpress.API.Migrations
                     b.Property<string>("Comment3")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("CommentBy")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("CommentBy")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -422,8 +467,8 @@ namespace MKExpress.API.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ShipmentId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ShipmentId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -442,11 +487,9 @@ namespace MKExpress.API.Migrations
 
             modelBuilder.Entity("MKExpress.API.Models.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -532,15 +575,58 @@ namespace MKExpress.API.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("MKExpress.API.Models.Shipment", b =>
+                {
+                    b.HasOne("MKExpress.API.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
             modelBuilder.Entity("MKExpress.API.Models.ShipmentDetail", b =>
                 {
+                    b.HasOne("MKExpress.API.Models.MasterData", "ConsigneeCity")
+                        .WithMany()
+                        .HasForeignKey("ConsigneeCityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MKExpress.API.Models.MasterData", "FromStore")
+                        .WithMany()
+                        .HasForeignKey("FromStoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("MKExpress.API.Models.Shipment", "Shipment")
                         .WithMany("ShipmentDetails")
                         .HasForeignKey("ShipmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MKExpress.API.Models.MasterData", "ShipperCity")
+                        .WithMany()
+                        .HasForeignKey("ShipperCityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MKExpress.API.Models.MasterData", "ToStore")
+                        .WithMany()
+                        .HasForeignKey("ToStoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ConsigneeCity");
+
+                    b.Navigation("FromStore");
+
                     b.Navigation("Shipment");
+
+                    b.Navigation("ShipperCity");
+
+                    b.Navigation("ToStore");
                 });
 
             modelBuilder.Entity("MKExpress.API.Models.ShipmentImage", b =>

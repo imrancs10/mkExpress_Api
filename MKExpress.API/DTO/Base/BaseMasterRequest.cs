@@ -2,7 +2,7 @@
 {
     public class BaseMasterRequest
     {
-        public int Id { get; set; }
+        public Guid? Id { get; set; }=Guid.NewGuid();
         public string Code { get; set; }
         public string Value { get; set; }
     }

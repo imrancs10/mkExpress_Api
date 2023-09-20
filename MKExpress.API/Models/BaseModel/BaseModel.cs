@@ -5,7 +5,7 @@ namespace MKExpress.API.Models
     public class BaseModel
     {
         [Key]
-        public virtual int Id { get; set; }
+        public virtual Guid Id { get; set; }
         public int CreatedBy { get; set; }
         public int UpdatedBy { get; set; }
         public int DeletedBy { get; set; }

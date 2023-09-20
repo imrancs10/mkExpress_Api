@@ -46,7 +46,7 @@ namespace MKExpress.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpGet(StaticValues.FileGetImageByModNameModIdPath)]
-        public async Task<List<ImageStoreResponse>> GetImageStore([FromQuery] ModuleNameEnum moduleName, [FromQuery] int moduleId,[FromQuery] string imageType="image")
+        public async Task<List<ImageStoreResponse>> GetImageStore([FromQuery] ModuleNameEnum moduleName, [FromQuery] Guid moduleId,[FromQuery] string imageType="image")
         {
             return await _fileStoreService.GetImageStore(moduleName, moduleId, imageType);
         }
@@ -56,7 +56,7 @@ namespace MKExpress.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpGet(StaticValues.FileGetImageByModNameModIdsPath)]
-        public async Task<List<ImageStoreResponse>> GetImageStore([FromQuery] ModuleNameEnum moduleName, [FromQuery] List<int> moduleIds, [FromQuery] string imageType = "image")
+        public async Task<List<ImageStoreResponse>> GetImageStore([FromQuery] ModuleNameEnum moduleName, [FromQuery] List<Guid> moduleIds, [FromQuery] string imageType = "image")
         {
             return await _fileStoreService.GetImageStore(moduleName, moduleIds, imageType);
         }
@@ -65,7 +65,7 @@ namespace MKExpress.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpGet(StaticValues.FileGetImageByModNameModIdSeqPath)]
-        public async Task<List<ImageStoreResponse>> GetImageStore([FromQuery] ModuleNameEnum moduleName, [FromQuery] int moduleId,[FromQuery] int sequence, [FromQuery] string imageType = "image")
+        public async Task<List<ImageStoreResponse>> GetImageStore([FromQuery] ModuleNameEnum moduleName, [FromQuery] Guid moduleId,[FromQuery] int sequence, [FromQuery] string imageType = "image")
         {
             return await _fileStoreService.GetImageStore(moduleName, moduleId,sequence, imageType);
         }
@@ -85,7 +85,7 @@ namespace MKExpress.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpDelete(StaticValues.FileDeleteImageByIdPath)]
-        public async Task<bool> DeleteFile([FromQuery] int id)
+        public async Task<bool> DeleteFile([FromQuery] Guid id)
         {
             return await _fileService.DeleteFile(id);
         }

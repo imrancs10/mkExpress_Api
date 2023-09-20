@@ -10,13 +10,13 @@ namespace MKExpress.API.Services.IServices
     {
         Task<List<ImageStoreResponse>> Add(List<ImageStore> imageStore);
         Task<ImageStoreResponse> Update(ImageStore imageStore);
-        Task<int> Delete(int storageId);
-        Task<ImageStoreResponse> Get(int storageId);
-        Task<List<ImageStoreResponse>> GetByModuleIds(List<int> moduleIds, ModuleNameEnum moduleName);
+        Task<int> Delete(Guid storageId);
+        Task<ImageStoreResponse> Get(Guid storageId);
+        Task<List<ImageStoreResponse>> GetByModuleIds(List<Guid> moduleIds, ModuleNameEnum moduleName);
         Task<List<ImageStoreResponse>> GetByModuleName(string moduleName);
-        Task<List<ImageStoreResponse>> GetImageStore(ModuleNameEnum moduleName, int moduleId, string imageType = "image");
-        Task<List<ImageStoreResponse>> GetImageStore(ModuleNameEnum moduleName, List<int> moduleIds, string imageType = "image");
-        Task<List<ImageStoreResponse>> GetImageStore(ModuleNameEnum moduleName, int moduleId, int sequenceNo, string imageType = "image");
+        Task<List<ImageStoreResponse>> GetImageStore(ModuleNameEnum moduleName, Guid moduleId, string imageType = "image");
+        Task<List<ImageStoreResponse>> GetImageStore(ModuleNameEnum moduleName, List<Guid> moduleIds, string imageType = "image");
+        Task<List<ImageStoreResponse>> GetImageStore(ModuleNameEnum moduleName, Guid moduleId, int sequenceNo, string imageType = "image");
         Task<List<ImageStoreWithNameResponse>> GetImageStore(ModuleNameEnum? moduleName, int pageNo, int pageSize, bool allImage = false, string imageType = "image");
     }
 }

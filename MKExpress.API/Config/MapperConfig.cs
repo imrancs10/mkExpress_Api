@@ -35,6 +35,8 @@ namespace MKExpress.API.Config
             CreateMap<MasterData,MasterDataResponse>();
             CreateMap<MasterDataTypeRequest, MasterDataType>();
             CreateMap<MasterDataType, MasterDataTypeResponse>();
+            CreateMap<PagingResponse<MasterDataType>, PagingResponse<MasterDataTypeResponse>>();
+            CreateMap<PagingResponse<MasterData>, PagingResponse<MasterDataResponse>>();
             #endregion
 
         }

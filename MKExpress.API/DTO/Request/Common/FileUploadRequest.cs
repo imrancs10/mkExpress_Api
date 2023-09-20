@@ -6,7 +6,7 @@ namespace MKExpress.API.DTO.Request
 {
     public class FileUploadQueryRequest
     {
-        public int ModuleId { get; set; }
+        public Guid ModuleId { get; set; }
         public ModuleNameEnum ModuleName { get; set; }
         public bool CreateThumbnail { get; set; } = true;
         public string Remark { get; set; }

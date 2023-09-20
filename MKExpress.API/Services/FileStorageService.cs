@@ -30,17 +30,17 @@ namespace MKExpress.API.Services
             return _mapper.Map <List<ImageStoreResponse>>( await _fileStorageRepository.Add(ImageStore));
         }
 
-        public async Task<int> Delete(int storageId)
+        public async Task<int> Delete(Guid storageId)
         {
             return await _fileStorageRepository.Delete(storageId);
         }
 
-        public async Task<ImageStoreResponse> Get(int storageId)
+        public async Task<ImageStoreResponse> Get(Guid storageId)
         {
             return _mapper.Map<ImageStoreResponse>(await _fileStorageRepository.Get(storageId));
         }
 
-        public async Task<List<ImageStoreResponse>> GetByModuleIds(List<int> moduleIds, ModuleNameEnum moduleName)
+        public async Task<List<ImageStoreResponse>> GetByModuleIds(List<Guid> moduleIds, ModuleNameEnum moduleName)
         {
             return _mapper.Map<List<ImageStoreResponse>>(await _fileStorageRepository.GetByModuleIds(moduleIds, moduleName));
         }
@@ -55,17 +55,17 @@ namespace MKExpress.API.Services
             return _mapper.Map<List<ImageStoreResponse>>(await _fileStorageRepository.GetByModuleName(modName));
         }
 
-        public async Task<List<ImageStoreResponse>> GetImageStore(ModuleNameEnum moduleName, int moduleId, string imageType = "image")
+        public async Task<List<ImageStoreResponse>> GetImageStore(ModuleNameEnum moduleName, Guid moduleId, string imageType = "image")
         {
             return _mapper.Map<List<ImageStoreResponse>>(await _imageStorageRepository.GetImageStore(moduleName,moduleId,imageType));
         }
 
-        public async Task<List<ImageStoreResponse>> GetImageStore(ModuleNameEnum moduleName, List<int> moduleIds, string imageType = "image")
+        public async Task<List<ImageStoreResponse>> GetImageStore(ModuleNameEnum moduleName, List<Guid> moduleIds, string imageType = "image")
         {
             return _mapper.Map<List<ImageStoreResponse>>(await _imageStorageRepository.GetImageStore(moduleName, moduleIds, imageType));
         }
 
-        public async  Task<List<ImageStoreResponse>> GetImageStore(ModuleNameEnum moduleName, int moduleId, int sequenceNo, string imageType = "image")
+        public async  Task<List<ImageStoreResponse>> GetImageStore(ModuleNameEnum moduleName, Guid moduleId, int sequenceNo, string imageType = "image")
         {
             return _mapper.Map<List<ImageStoreResponse>>(await _imageStorageRepository.GetImageStore(moduleName, moduleId,sequenceNo, imageType));
         }

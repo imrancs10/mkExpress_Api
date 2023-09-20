@@ -6,7 +6,7 @@ namespace MKExpress.API.Models
     {
         public string FilePath { get; set; }
         public string? ThumbPath { get; set; }
-        public int ModuleId { get; set; }
+        public Guid ModuleId { get; set; }
         public string ModuleName { get; set; }
         public string? Remark { get; set; }
         public string ImageType { get; set; }

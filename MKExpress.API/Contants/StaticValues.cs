@@ -3,7 +3,7 @@
     public static class StaticValues
     {
         #region API Paths
-        public const string APIPrefix = "v1/[controller]";
+        public const string APIPrefix = "v1/";
 
         #region Login API
         public const string LoginPath = "user/login";
@@ -19,7 +19,7 @@
         #endregion
 
         #region Master Data API
-        public const string MasterDataPath = APIPrefix + "master-data";
+        public const string MasterDataPath = APIPrefix+"master-data";
         public const string MasterDataDeletePath = APIPrefix + "master-data/{id}";
         public const string MasterDataByIdPath = APIPrefix + "master-data/get/{id}";
         public const string MasterDataSearchPath = APIPrefix + "master-data/search";

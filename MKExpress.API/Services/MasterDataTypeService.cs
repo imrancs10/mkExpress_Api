@@ -30,12 +30,12 @@ namespace MKExpress.API.Services
             return _mapper.Map<MasterDataTypeResponse>(await _masterDataTypeRepository.Add(masterData));
         }
 
-        public async Task<int> Delete(int id)
+        public async Task<int> Delete(Guid id)
         {
             return await _masterDataTypeRepository.Delete(id);
         }
 
-        public async Task<MasterDataTypeResponse> Get(int id)
+        public async Task<MasterDataTypeResponse> Get(Guid id)
         {
             return _mapper.Map<MasterDataTypeResponse>(await _masterDataTypeRepository.Get(id));
         }

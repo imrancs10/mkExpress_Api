@@ -6,17 +6,38 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MKExpress.API.Migrations
 {
     /// <inheritdoc />
-    public partial class AddBasicTable : Migration
+    public partial class DatabaseInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Customers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MaxDeliveryAttempt = table.Column<int>(type: "int", nullable: false),
+                    Confirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PreferredPickupTime = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedBy = table.Column<int>(type: "int", nullable: false),
+                    UpdatedBy = table.Column<int>(type: "int", nullable: false),
+                    DeletedBy = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Customers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MasterDatas",
                 columns: table => new
                 {
-                    MasterDataId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MasterDataId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     MasterDataType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -38,8 +59,7 @@ namespace MKExpress.API.Migrations
                 name: "MasterDataTypes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: false),
                     UpdatedBy = table.Column<int>(type: "int", nullable: false),
                     DeletedBy = table.Column<int>(type: "int", nullable: false),
@@ -59,8 +79,7 @@ namespace MKExpress.API.Migrations
                 name: "Members",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: false),
                     UpdatedBy = table.Column<int>(type: "int", nullable: false),
                     DeletedBy = table.Column<int>(type: "int", nullable: false),
@@ -75,43 +94,10 @@ namespace MKExpress.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Shipments",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ShipmentNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CustomerId = table.Column<int>(type: "int", nullable: false),
-                    UniqueRefNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StatusReason = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FailedDelivery = table.Column<int>(type: "int", nullable: false),
-                    CODAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    StatusDuration = table.Column<int>(type: "int", nullable: false),
-                    SchedulePickupDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    PickupDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DeliveryDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ScheduleDeliveryDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatedBy = table.Column<int>(type: "int", nullable: false),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: false),
-                    DeletedBy = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Shipments", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -143,14 +129,50 @@ namespace MKExpress.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Shipments",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ShipmentNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UniqueRefNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StatusReason = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FailedDelivery = table.Column<int>(type: "int", nullable: false),
+                    CODAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StatusDuration = table.Column<int>(type: "int", nullable: false),
+                    SchedulePickupDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    PickupDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeliveryDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ScheduleDeliveryDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<int>(type: "int", nullable: false),
+                    UpdatedBy = table.Column<int>(type: "int", nullable: false),
+                    DeletedBy = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Shipments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Shipments_Customers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Customers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ShipmentDetails",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ShipmentId = table.Column<int>(type: "int", nullable: false),
-                    FromStoreId = table.Column<int>(type: "int", nullable: false),
-                    ToStoreId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ShipmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FromStoreId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ToStoreId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ShipperName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ShipperEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ShipperPhone = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -158,7 +180,7 @@ namespace MKExpress.API.Migrations
                     ShipperAddress1 = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ShipperAddress2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ShipperAddress3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ShipperCityId = table.Column<int>(type: "int", nullable: false),
+                    ShipperCityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ConsigneeName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ConsigneeEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ConsigneePhone = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -166,7 +188,7 @@ namespace MKExpress.API.Migrations
                     ConsigneeAddress1 = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ConsigneeAddress2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ConsigneeAddress3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConsigneeCityId = table.Column<int>(type: "int", nullable: false),
+                    ConsigneeCityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Weight = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     TotalPieces = table.Column<int>(type: "int", nullable: false),
                     Dimension = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -183,21 +205,45 @@ namespace MKExpress.API.Migrations
                 {
                     table.PrimaryKey("PK_ShipmentDetails", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_ShipmentDetails_MasterDatas_ConsigneeCityId",
+                        column: x => x.ConsigneeCityId,
+                        principalTable: "MasterDatas",
+                        principalColumn: "MasterDataId",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_ShipmentDetails_MasterDatas_FromStoreId",
+                        column: x => x.FromStoreId,
+                        principalTable: "MasterDatas",
+                        principalColumn: "MasterDataId",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_ShipmentDetails_MasterDatas_ShipperCityId",
+                        column: x => x.ShipperCityId,
+                        principalTable: "MasterDatas",
+                        principalColumn: "MasterDataId",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_ShipmentDetails_MasterDatas_ToStoreId",
+                        column: x => x.ToStoreId,
+                        principalTable: "MasterDatas",
+                        principalColumn: "MasterDataId",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
                         name: "FK_ShipmentDetails_Shipments_ShipmentId",
                         column: x => x.ShipmentId,
                         principalTable: "Shipments",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
                 name: "ShipmentImages",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ShipmentId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ShipmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ThumbnailUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: false),
                     UpdatedBy = table.Column<int>(type: "int", nullable: false),
                     DeletedBy = table.Column<int>(type: "int", nullable: false),
@@ -214,21 +260,20 @@ namespace MKExpress.API.Migrations
                         column: x => x.ShipmentId,
                         principalTable: "Shipments",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
                 name: "ShipmentTrackings",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ShipmentId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ShipmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Activity = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Comment1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Comment2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Comment3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CommentBy = table.Column<int>(type: "int", nullable: true),
+                    CommentBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedBy = table.Column<int>(type: "int", nullable: false),
                     UpdatedBy = table.Column<int>(type: "int", nullable: false),
                     DeletedBy = table.Column<int>(type: "int", nullable: false),
@@ -250,8 +295,18 @@ namespace MKExpress.API.Migrations
                         column: x => x.ShipmentId,
                         principalTable: "Shipments",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShipmentDetails_ConsigneeCityId",
+                table: "ShipmentDetails",
+                column: "ConsigneeCityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShipmentDetails_FromStoreId",
+                table: "ShipmentDetails",
+                column: "FromStoreId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShipmentDetails_ShipmentId",
@@ -259,9 +314,24 @@ namespace MKExpress.API.Migrations
                 column: "ShipmentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ShipmentDetails_ShipperCityId",
+                table: "ShipmentDetails",
+                column: "ShipperCityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShipmentDetails_ToStoreId",
+                table: "ShipmentDetails",
+                column: "ToStoreId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ShipmentImages_ShipmentId",
                 table: "ShipmentImages",
                 column: "ShipmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Shipments_CustomerId",
+                table: "Shipments",
+                column: "CustomerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShipmentTrackings_CommentBy",
@@ -278,9 +348,6 @@ namespace MKExpress.API.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "MasterDatas");
-
-            migrationBuilder.DropTable(
                 name: "MasterDataTypes");
 
             migrationBuilder.DropTable(
@@ -296,10 +363,16 @@ namespace MKExpress.API.Migrations
                 name: "Users");
 
             migrationBuilder.DropTable(
+                name: "MasterDatas");
+
+            migrationBuilder.DropTable(
                 name: "Members");
 
             migrationBuilder.DropTable(
                 name: "Shipments");
+
+            migrationBuilder.DropTable(
+                name: "Customers");
         }
     }
 }

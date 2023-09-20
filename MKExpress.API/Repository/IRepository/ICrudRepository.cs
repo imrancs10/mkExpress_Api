@@ -8,8 +8,8 @@ namespace MKExpress.API.Repositories.Interfaces
     {
         Task<T> Add(T entity);
         Task<T> Update(T entity);
-        Task<int> Delete(int Id);
-        Task<T> Get(int Id);
+        Task<int> Delete(Guid Id);
+        Task<T> Get(Guid Id);
         Task<PagingResponse<T>> GetAll(PagingRequest pagingRequest);
         Task<PagingResponse<T>> Search(SearchPagingRequest searchPagingRequest);
     }
