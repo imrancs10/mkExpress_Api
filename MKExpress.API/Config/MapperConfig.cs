@@ -30,6 +30,13 @@ namespace MKExpress.API.Config
             CreateMap<FileUploadQueryRequest, FileUploadRequest>();
             #endregion
 
+            #region Master Data
+            CreateMap<MasterDataRequest, MasterData>();
+            CreateMap<MasterData,MasterDataResponse>();
+            CreateMap<MasterDataTypeRequest, MasterDataType>();
+            CreateMap<MasterDataType, MasterDataTypeResponse>();
+            #endregion
+
         }
 
         public static IMapper GetMapperConfig()

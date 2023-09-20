@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SalehGarib.API.Repositories
+namespace MKExpress.API.Repositories
 {
     public class MasterDataRepository : IMasterDataRepository
     {

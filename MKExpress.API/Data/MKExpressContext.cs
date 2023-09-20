@@ -17,7 +17,7 @@ namespace MKExpress.API.Data
             Configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
             //_defaultConnection = "workstation id=mssql-88450-0.cloudclusters.net,12597;TrustServerCertificate=true;user id=LaBeachUser;pwd=Gr8@54321;data source=mssql-88450-0.cloudclusters.net,12597;persist security info=False;initial catalog=KaashiYatri";
-            _defaultConnection = "workstation id=mssql-88450-0.cloudclusters.net,12597;TrustServerCertificate=true;user id=mkExpress_User;pwd=Gr8@12345;data source=mssql-88450-0.cloudclusters.net,12597;persist security info=False;initial catalog=mkExpress_Db";
+            _defaultConnection = "workstation id=mssql-88450-0.cloudclusters.net,12597;TrustServerCertificate=true;user id=mkExpress_User;pwd=Gr8@12345;data source=mssql-88450-0.cloudclusters.net,12597;persist security info=False;initial catalog=mkExpress_Db_test";
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
@@ -29,7 +29,11 @@ namespace MKExpress.API.Data
         public DbSet<User> Users { get; set; }
         public DbSet<MasterData> MasterDatas { get; set; }
         public DbSet<MasterDataType> MasterDataTypes { get; set; }
-
+        public DbSet<Member> Members { get; set; }
+        public DbSet<Shipment> Shipments { get; set; }
+        public DbSet<ShipmentDetail> ShipmentDetails { get; set; }
+        public DbSet<ShipmentImage>? ShipmentImages { get; set; }
+        public DbSet<ShipmentTracking> ShipmentTrackings { get; set; }
         public override int SaveChanges()
         {
             AddDateTimeStamp();

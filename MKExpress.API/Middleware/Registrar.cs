@@ -7,6 +7,9 @@ using MKExpress.API.Services.Interfaces;
 using MKExpress.API.Services.IServices;
 using MKExpress.API.Utility;
 using Microsoft.EntityFrameworkCore;
+using MKExpress.API.Repositories.Interfaces;
+using MKExpress.API.Repositories;
+using SalehGarib.API.Repositories;
 
 namespace MKExpress.API.Middleware
 {
@@ -16,6 +19,10 @@ namespace MKExpress.API.Middleware
         {
             services.AddScoped<ILoginRepository, LoginRepository>()
                 .AddScoped<ILoginService, LoginService>()
+                .AddScoped<IMasterDataService, MasterDataService>()
+                .AddScoped<IMasterDataRepository, MasterDataRepository>()
+                .AddScoped<IMasterDataTypeService, MasterDataTypeService>()
+                .AddScoped<IMasterDataTypeRepository, MasterDataTypeRepository>()
                 .AddScoped<IMailService, MailService>()
                 .AddScoped<IExcelReader, ExcelReader>()
                 .AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
