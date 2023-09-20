@@ -3,7 +3,7 @@
     public static class StaticValues
     {
         #region API Paths
-        public const string APIPrefix = "v1/";
+        public const string APIPrefix = "v1/[controller]/";
 
         #region Login API
         public const string LoginPath = "user/login";

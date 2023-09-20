@@ -20,7 +20,7 @@ namespace MKExpress.API.Services
         private readonly IMapper _mapper;/**/
         private readonly IMailService _mailService;
         private readonly IConfiguration _configuration;
-        public LoginService(ILoginRepository loginRepository, IMapper mapper,IMailService mailService,IConfiguration configuration)
+        public LoginService(ILoginRepository loginRepository, IMapper mapper, IMailService mailService, IConfiguration configuration)
         {
             _loginRepository = loginRepository;
             _mapper = mapper;
@@ -52,7 +52,7 @@ namespace MKExpress.API.Services
         {
             if (request == null)
             {
-               // throw new BusinessRuleViolationException(StaticValues.ErrorType_NoDataSupplied, StaticValues.Error_NoDataSupplied);
+                // throw new BusinessRuleViolationException(StaticValues.ErrorType_NoDataSupplied, StaticValues.Error_NoDataSupplied);
             }
 
             if (string.IsNullOrEmpty(request.UserName) || string.IsNullOrEmpty(request.Password))
@@ -72,7 +72,8 @@ namespace MKExpress.API.Services
                 throw new UnauthorizedException();
             }
 
-            response.AccessToken =Utility.Utility .GenerateAccessToken(response.UserResponse.Role);
+            response.AccessToken = Utility.Utility.GenerateAccessToken(response.UserResponse.Role);
+            response.IsAuthenticated = true;
             return response;
         }
 
@@ -84,12 +85,12 @@ namespace MKExpress.API.Services
                 //throw new BusinessRuleViolationException(StaticValues.ErrorType_AlreadyExist, StaticValues.Error_EmailAlreadyRegistered);
             }
             User user = _mapper.Map<User>(request);
-            user.IsEmailVerified = _configuration.GetValue<int>("EnableEmailVerification",0)==0;
+            user.IsEmailVerified = _configuration.GetValue<int>("EnableEmailVerification", 0) == 0;
             user.Password = PasswordHasher.GenerateHash(request.Password.DecodeBase64());
             user.EmailVerificationCode = Guid.NewGuid().ToString() + Guid.NewGuid().ToString();
             user.EmailVerificationCodeExpireOn = DateTime.Now.AddHours(48);
-            var res= _mapper.Map<UserResponse>(await _loginRepository.RegisterUser(user));
-            if(res.Id!=null)
+            var res = _mapper.Map<UserResponse>(await _loginRepository.RegisterUser(user));
+            if (res.Id != null)
             {
                 var emailBody = await _mailService.GetMailTemplete(Constants.EmailTemplateEnum.EmailVerification);
 
@@ -99,7 +100,7 @@ namespace MKExpress.API.Services
                     Body = emailBody,
                     Subject = "Emai verification | Kashi Yatri"
                 };
-               // _mailService.SendEmailAsync(mailRequest);
+                // _mailService.SendEmailAsync(mailRequest);
             }
             return res;
         }
@@ -111,8 +112,8 @@ namespace MKExpress.API.Services
 
         public async Task<string> ResetPassword(string userName)
         {
-            var result=await _loginRepository.ResetPassword(userName);
-            if(result)
+            var result = await _loginRepository.ResetPassword(userName);
+            if (result)
             {
 
             }
@@ -121,13 +122,13 @@ namespace MKExpress.API.Services
 
         public async Task<bool> UpdateProfile(UserRequest request)
         {
-            User user= _mapper.Map<User>(request);
+            User user = _mapper.Map<User>(request);
             return await _loginRepository.UpdateProfile(user);
         }
 
         public async Task<string> VerifyEmail(string token)
         {
-            var result=await _loginRepository.VerifyEmail(token);
+            var result = await _loginRepository.VerifyEmail(token);
             return result ? ValidationMessage.EmailVerificationSuccess : ValidationMessage.EmailVerificationFail;
         }
     }
