@@ -39,7 +39,7 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
-    <Folder Include="wwwroot\TempleQrCodes\" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>

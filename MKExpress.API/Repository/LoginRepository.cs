@@ -68,11 +68,8 @@ namespace MKExpress.API.Repository
             }
             catch (Exception ex)
             {
-
                 throw;
             }
-
-            return null;
         }
 
         public async Task<User> RegisterUser(User request)

@@ -59,8 +59,8 @@ namespace MKExpress.API.Services
             {
                 //throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidDataSupplied, StaticValues.Error_InvalidDataSupplied);
             }
-            request.Password = request.Password.DecodeBase64();
-            request.Password = PasswordHasher.GenerateHash(request.Password);
+            //request.Password = request.Password.DecodeBase64();
+            //request.Password = PasswordHasher.GenerateHash(request.Password);
 
             LoginResponse response = new()
             {
