@@ -67,7 +67,7 @@ namespace MKExpress.API.Services
                 UserResponse = _mapper.Map<UserResponse>(await _loginRepository.Login(request))
             };
 
-            if (response.UserResponse.Id == 0)
+            if (response.UserResponse.Id == null)
             {
                 throw new UnauthorizedException();
             }
@@ -89,7 +89,7 @@ namespace MKExpress.API.Services
             user.EmailVerificationCode = Guid.NewGuid().ToString() + Guid.NewGuid().ToString();
             user.EmailVerificationCodeExpireOn = DateTime.Now.AddHours(48);
             var res= _mapper.Map<UserResponse>(await _loginRepository.RegisterUser(user));
-            if(res.Id>0)
+            if(res.Id!=null)
             {
                 var emailBody = await _mailService.GetMailTemplete(Constants.EmailTemplateEnum.EmailVerification);
 

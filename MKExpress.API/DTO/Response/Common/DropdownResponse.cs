@@ -1,8 +1,10 @@
-﻿namespace MKExpress.API.DTO.Response.Common
+﻿using MKExpress.API.DTO.Base;
+using MKExpress.API.DTO.BaseDto;
+
+namespace MKExpress.API.DTO.Response.Common
 {
-    public class DropdownResponse
+    public class DropdownResponse:BaseResponse
     {
-        public int Id { get; set; }
         public string EnValue { get; set; }
         public string HiValue { get; set; }
         public string TaValue { get; set; }

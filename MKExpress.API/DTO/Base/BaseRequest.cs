@@ -2,6 +2,6 @@
 {
     public class BaseRequest
     {
-        public virtual int Id { get; set; }
+        public virtual Guid Id { get; set; }
     }
 }
