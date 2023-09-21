@@ -33,6 +33,8 @@ namespace MKExpress.API.Config
             #region Master Data
             CreateMap<MasterDataRequest, MasterData>();
             CreateMap<MasterData,MasterDataResponse>();
+            CreateMap<MasterData, MasterDataResponse>()
+                 .ForMember(des => des.MasterDataTypeCode, src => src.MapFrom(x=>x.MasterDataType));
             CreateMap<MasterDataTypeRequest, MasterDataType>();
             CreateMap<MasterDataType, MasterDataTypeResponse>();
             CreateMap<PagingResponse<MasterDataType>, PagingResponse<MasterDataTypeResponse>>();

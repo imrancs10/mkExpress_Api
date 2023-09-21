@@ -7,7 +7,7 @@ using MKExpress.API.Services.Interfaces;
 
 namespace MKExpress.Web.API.Controllers
 {
-    [Route(StaticValues.APIPrefix)]
+    //[Route(StaticValues.APIPrefix)]
     [ApiController]
     public class MasterDataController : ControllerBase
     {

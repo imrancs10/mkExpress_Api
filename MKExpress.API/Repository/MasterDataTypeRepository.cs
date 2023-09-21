@@ -56,15 +56,18 @@ namespace SalehGarib.API.Repositories
 
         public async Task<PagingResponse<MasterDataType>> GetAll(PagingRequest pagingRequest)
         {
+            var dataCount = await _context.MasterDataTypes
+                .Where(x => !x.IsDeleted).CountAsync();
             var data = await _context.MasterDataTypes
                 .Where(x => !x.IsDeleted)
+                .Skip(pagingRequest.PageSize * (pagingRequest.PageNo - 1)).Take(pagingRequest.PageSize)
                 .OrderBy(x => x.Value)
                 .ToListAsync();
             PagingResponse<MasterDataType> pagingResponse = new PagingResponse<MasterDataType>()
             {
                 PageNo = pagingRequest.PageNo,
                 PageSize = pagingRequest.PageSize,
-                Data = data.Skip(pagingRequest.PageSize * (pagingRequest.PageNo - 1)).Take(pagingRequest.PageSize).ToList(),
+                Data = data,
                 TotalRecords = data.Count
             };
             return pagingResponse;
@@ -78,19 +81,27 @@ namespace SalehGarib.API.Repositories
         public async Task<PagingResponse<MasterDataType>> Search(SearchPagingRequest searchPagingRequest)
         {
             string searchTerm = string.IsNullOrEmpty(searchPagingRequest.SearchTerm) ? string.Empty : searchPagingRequest.SearchTerm.ToLower();
+            var dataCount = await _context.MasterDataTypes
+                .Where(mdt => !mdt.IsDeleted &&
+                        searchTerm.Equals(string.Empty) ||
+                        searchTerm.Equals(mdt.Value)
+                    ).CountAsync();
+
             var data = await _context.MasterDataTypes
                 .Where(mdt => !mdt.IsDeleted &&
                         searchTerm.Equals(string.Empty) ||
                         searchTerm.Equals(mdt.Value)
                     )
+                .Skip(searchPagingRequest.PageSize * (searchPagingRequest.PageNo - 1))
+                .Take(searchPagingRequest.PageSize)
                 .OrderBy(x => x.Value)
                 .ToListAsync();
             PagingResponse<MasterDataType> pagingResponse = new PagingResponse<MasterDataType>()
             {
                 PageNo = searchPagingRequest.PageNo,
                 PageSize = searchPagingRequest.PageSize,
-                Data = data.Skip(searchPagingRequest.PageSize * (searchPagingRequest.PageNo - 1)).Take(searchPagingRequest.PageSize).ToList(),
-                TotalRecords = data.Count
+                Data = data,
+                TotalRecords = dataCount
             };
             return pagingResponse;
         }

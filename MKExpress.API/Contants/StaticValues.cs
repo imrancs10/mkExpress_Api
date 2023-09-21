@@ -33,6 +33,14 @@
 
         #endregion
 
+        #region Customer API Path
+        public const string CustomerDeletePath = APIPrefix + "{id}";
+        public const string CustomerByIdPath = APIPrefix + "get/{id}";
+        public const string CustomerByContactNoPath = APIPrefix + "get/by-contact";
+        public const string CustomerSearchPath = APIPrefix + "search";
+        public const string CustomerPath = APIPrefix;
+        #endregion
+
         #region Temple
         public const string TemplePath = "temple";
         public const string TempleGetByIdPath = "temple/get/{id}";
@@ -73,6 +81,8 @@
         public const string ErrorType_AlreadyDeleted = "AlreadyDeleted";
         public const string ErrorType_AlreadyExist = "AlreadyExist";
         public const string ErrorType_EmailAlreadyVerified = "EmailAlreadyVerified";
+        public const string ErrorType_CustomerAlreadyExist= "CustomerAlreadyExist";
+        public const string ErrorType_CustomerNotFoundError = "CustomerNotFoundError";
         #endregion
 
         #region Error Message
@@ -95,6 +105,9 @@
         public const string Error_UserAccountLocked = "";
         public const string Error_UserAccountEmailNotVerified = "";
         public const string Error_EmailAlreadyVerified = "";
+        public const string Error_CustomerAlreadyExist = "Customer already exist";
+        public const string Error_CustomerNotFoundError = "Customer not found";
+
         public static string RecordAlreadyExistMessage(string recordType)
         {
             return $"Record already exist with same: {recordType}";

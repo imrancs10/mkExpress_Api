@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.InkML;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MKExpress.API.Contants;
@@ -74,8 +75,11 @@ namespace MKExpress.API.Repositories
 
         public async Task<PagingResponse<MasterData>> GetAll(PagingRequest pagingRequest)
         {
+            var dataCount= await _context.MasterDatas.Where(x=>!x.IsDeleted).CountAsync();
             var data = await _context.MasterDatas
                 .Where(x => !x.IsDeleted)
+                .Skip(pagingRequest.PageSize * (pagingRequest.PageNo - 1))
+                .Take(pagingRequest.PageSize)
                 .OrderBy(x => x.MasterDataType)
                 .ThenBy(x => x.Value)
                 .ToListAsync();
@@ -84,11 +88,8 @@ namespace MKExpress.API.Repositories
             {
                 PageNo = pagingRequest.PageNo,
                 PageSize = pagingRequest.PageSize,
-                Data = data
-                    .Skip(pagingRequest.PageSize * (pagingRequest.PageNo - 1))
-                    .Take(pagingRequest.PageSize)
-                    .ToList(),
-                TotalRecords = data.Count
+                Data = data,
+                TotalRecords = dataCount
             };
             return pagingResponse;
         }
