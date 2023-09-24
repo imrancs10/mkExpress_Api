@@ -59,7 +59,7 @@ namespace MKExpress.API.Utility
                                                     {
                                                         new Claim("role",role)
                                                     },
-                                                    expires: DateTime.Now.AddMinutes(6),
+                                                    expires: DateTime.Now.AddDays(7),
                                                     signingCredentials: signinCredentials);
 
             var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
