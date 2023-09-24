@@ -95,9 +95,9 @@ app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
     if (app.Environment.IsDevelopment())
-        options.SwaggerEndpoint("/swagger/V1/swagger.json", "Kashi Yatra Web API");
+        options.SwaggerEndpoint("/swagger/V1/swagger.json", "IMK Express Web API");
     else 
-        options.SwaggerEndpoint("/api/swagger/V1/swagger.json", "Kashi Yatra Web API");
+        options.SwaggerEndpoint("/api/swagger/V1/swagger.json", "IMK Express Web API");
     options.DocExpansion(DocExpansion.None);
 });
 
