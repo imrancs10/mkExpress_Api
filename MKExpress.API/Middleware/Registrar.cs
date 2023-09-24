@@ -23,6 +23,8 @@ namespace MKExpress.API.Middleware
                 .AddScoped<IMasterDataRepository, MasterDataRepository>()
                 .AddScoped<IMasterDataTypeService, MasterDataTypeService>()
                 .AddScoped<IMasterDataTypeRepository, MasterDataTypeRepository>()
+                .AddScoped<ICustomerRepository, CustomerRepository>()
+                .AddScoped<ICustomerService, CustomerService>()
                 .AddScoped<IMailService, MailService>()
                 .AddScoped<IExcelReader, ExcelReader>()
                 .AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

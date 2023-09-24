@@ -90,10 +90,10 @@ namespace MKExpress.API.Repositories
         {
            string searchTerm = string.IsNullOrEmpty(searchPagingRequest.SearchTerm) ? string.Empty : searchPagingRequest.SearchTerm.ToLower();
             var data = await _context.Customers
-                .Where(customer => !customer.IsDeleted &&
+                .Where(customer => !customer.IsDeleted &&(
                         string.IsNullOrEmpty(searchTerm) ||
                         customer.Name.Contains(searchTerm) ||
-                        customer.MaxDeliveryAttempt.ToString().Contains(searchTerm)
+                        customer.MaxDeliveryAttempt.ToString().Contains(searchTerm))
                     )
                 .OrderBy(x => x.Name)
                     .ToListAsync();

@@ -41,6 +41,12 @@ namespace MKExpress.API.Config
             CreateMap<PagingResponse<MasterData>, PagingResponse<MasterDataResponse>>();
             #endregion
 
+            #region Customer
+            CreateMap<CustomerRequest, Customer>();
+            CreateMap<Customer, CustomerResponse>();
+            CreateMap<PagingResponse<Customer>, PagingResponse<CustomerResponse>>();
+            #endregion
+
         }
 
         public static IMapper GetMapperConfig()
