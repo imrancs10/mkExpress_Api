@@ -31,7 +31,7 @@ builder.Services.AddSwaggerGen(options =>
     {
         Version = "V1",
         Title = "WebAPI",
-        Description = "Kaashi Yatra Web API"
+        Description = "IMK Express Web API"
     });
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -97,7 +97,7 @@ app.UseSwaggerUI(options =>
     if (app.Environment.IsDevelopment())
         options.SwaggerEndpoint("/swagger/V1/swagger.json", "IMK Express Web API");
     else 
-        options.SwaggerEndpoint("/api/swagger/V1/swagger.json", "IMK Express Web API");
+        options.SwaggerEndpoint("/swagger/V1/swagger.json", "IMK Express Web API");
     options.DocExpansion(DocExpansion.None);
 });
 
