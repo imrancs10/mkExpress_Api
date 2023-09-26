@@ -4,6 +4,7 @@ using MKExpress.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MKExpress.API.Migrations
 {
     [DbContext(typeof(MKExpressContext))]
-    partial class MKExpressContextModelSnapshot : ModelSnapshot
+    [Migration("20230926101758_Add-LogisticRegionTable")]
+    partial class AddLogisticRegionTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -96,8 +99,7 @@ namespace MKExpress.API.Migrations
                     b.Property<int>("DeletedBy")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("DistrictId")
-                        .IsRequired()
+                    b.Property<Guid>("DistrictId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")

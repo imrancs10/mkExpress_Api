@@ -68,20 +68,17 @@ namespace MKExpress.API.Repositories
         }
 
         public async Task<PagingResponse<Customer>> GetAll(PagingRequest pagingRequest)
-        {   var dataCount = await _context.Customers
-                .Where(x => !x.IsDeleted)
-                .CountAsync();
-            var data = await _context.Customers
+        {  
+            var data = _context.Customers
                 .Where(x => !x.IsDeleted)
                 .OrderBy(x => x.Name)
-                .Skip(pagingRequest.PageSize * (pagingRequest.PageNo - 1)).Take(pagingRequest.PageSize)
-                .ToListAsync();
+                .AsQueryable();
             PagingResponse<Customer> pagingResponse = new PagingResponse<Customer>()
             {
                 PageNo = pagingRequest.PageNo,
                 PageSize = pagingRequest.PageSize,
-                Data = data,
-                TotalRecords = dataCount
+                Data =await data.Skip(pagingRequest.PageSize * (pagingRequest.PageNo - 1)).Take(pagingRequest.PageSize).ToListAsync(),
+                TotalRecords =await data.CountAsync()
             };
             return pagingResponse;
         }

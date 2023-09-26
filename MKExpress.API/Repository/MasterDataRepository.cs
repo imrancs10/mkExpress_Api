@@ -8,6 +8,7 @@ using MKExpress.API.DTO.Response;
 using MKExpress.API.Exceptions;
 using MKExpress.API.Models;
 using MKExpress.API.Repositories.Interfaces;
+using MKExpress.API.Utility;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,6 +26,41 @@ namespace MKExpress.API.Repositories
 
         public async Task<MasterData> Add(MasterData masterData)
         {
+            if (masterData.Value.Contains(","))
+            {
+                var valList = masterData.Value.Split(',');
+                var list = new List<MasterData>();
+                foreach (var val in valList)
+                {
+                    var code = val.CreateMasterCode();
+                    if (list.Count(x => x.Code.Equals(code)) == 0)
+                    {
+                        if (!string.IsNullOrEmpty(code))
+                        {
+                            list.Add(new MasterData()
+                            {
+                                Code = code,
+                                Value = val.Trim(),
+                                MasterDataType = masterData.MasterDataType,
+                                Id = Guid.NewGuid(),
+                                Remark=string.Empty 
+                            });
+                        }
+                    }
+                }
+
+                var codeList = list.Select(x => x.Code).ToList();
+                var existedData = await _context.MasterDatas.Where(x => !x.IsDeleted && x.MasterDataType == masterData.MasterDataType && codeList.Contains(x.Code)).Select(x => x.Value).ToListAsync();
+                if (existedData.Count > 0)
+                {
+                    throw new BusinessRuleViolationException(StaticValues.RecordAlreadyExistError, StaticValues.RecordAlreadyExistMessage($"{string.Join(",", existedData)}"));
+                }
+                _context.MasterDatas.AddRange(list);
+                if (await _context.SaveChangesAsync() > 0)
+                    return list.FirstOrDefault();
+                return new MasterData();
+
+            }
             var oldData = await _context.MasterDatas.Where(x => !x.IsDeleted &&
               x.MasterDataType == masterData.MasterDataType &&
               x.Value == masterData.Value).CountAsync();

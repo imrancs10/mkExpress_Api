@@ -41,6 +41,13 @@
         public const string CustomerPath = APIPrefix;
         #endregion
 
+        #region Logistic Region API Path
+        public const string LogisticRegionDeletePath = APIPrefix + "{id}";
+        public const string LogisticRegionByIdPath = APIPrefix + "get/{id}";
+        public const string LogisticRegionSearchPath = APIPrefix + "search";
+        public const string LogisticRegionPath = APIPrefix;
+        #endregion
+
         #region Temple
         public const string TemplePath = "temple";
         public const string TempleGetByIdPath = "temple/get/{id}";

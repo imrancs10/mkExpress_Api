@@ -34,7 +34,8 @@ namespace MKExpress.API.Data
         public DbSet<ShipmentDetail> ShipmentDetails { get; set; }
         public DbSet<ShipmentImage>? ShipmentImages { get; set; }
         public DbSet<ShipmentTracking> ShipmentTrackings { get; set; }
-        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Customer> Customers { get; set; } 
+        public DbSet<LogisticRegion> LogisticRegions { get; set; }
         public override int SaveChanges()
         {
             AddDateTimeStamp();

@@ -47,6 +47,18 @@ namespace MKExpress.API.Config
             CreateMap<PagingResponse<Customer>, PagingResponse<CustomerResponse>>();
             #endregion
 
+            #region LogisticRegion
+            CreateMap<LogisticRegionRequest, LogisticRegion>();
+            CreateMap<LogisticRegion, LogisticRegionResponse>()
+                .ForMember(des => des.Country, src => src.MapFrom(x => x.Country.Value))
+                 .ForMember(des => des.Province, src => src.MapFrom(x => x.Province.Value))
+                  .ForMember(des => des.City, src => src.MapFrom(x => x.City.Value))
+                   .ForMember(des => des.Station, src => src.MapFrom(x => x.Station.Value))
+                    .ForMember(des => des.District, src => src.MapFrom(x => x.District.Value??string.Empty))
+                     .ForMember(des => des.ParentStation, src => src.MapFrom(x => x.ParentStation.Value));
+            CreateMap<PagingResponse<LogisticRegion>, PagingResponse<LogisticRegionResponse>>();
+            #endregion
+
         }
 
         public static IMapper GetMapperConfig()
