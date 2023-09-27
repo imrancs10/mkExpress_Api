@@ -59,6 +59,20 @@ namespace MKExpress.API.Config
             CreateMap<PagingResponse<LogisticRegion>, PagingResponse<LogisticRegionResponse>>();
             #endregion
 
+            #region Shipment
+            CreateMap<ShipmentRequest, Shipment>();
+            CreateMap<Shipment, ShipmentResponse>();
+            CreateMap<PagingResponse<Shipment>, PagingResponse<ShipmentResponse>>();
+
+            CreateMap<ShipmentDetailRequest, ShipmentDetail>();
+            CreateMap<ShipmentDetail, ShipmentDetailResponse>();
+            CreateMap<PagingResponse<ShipmentDetail>, PagingResponse<ShipmentDetailResponse>>();
+
+            CreateMap<ShipmentTrackingRequest, ShipmentTracking>();
+            CreateMap<ShipmentTracking, ShipmentTrackingResponse>();
+            CreateMap<PagingResponse<ShipmentTracking>, PagingResponse<ShipmentTrackingResponse>>();
+            #endregion
+
         }
 
         public static IMapper GetMapperConfig()

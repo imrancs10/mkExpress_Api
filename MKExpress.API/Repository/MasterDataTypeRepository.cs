@@ -90,19 +90,17 @@ namespace SalehGarib.API.Repositories
 
         public async Task<PagingResponse<MasterDataType>> GetAll(PagingRequest pagingRequest)
         {
-            var dataCount = await _context.MasterDataTypes
-                .Where(x => !x.IsDeleted).CountAsync();
-            var data = await _context.MasterDataTypes
+            var data = _context.MasterDataTypes
                 .Where(x => !x.IsDeleted)
-                .Skip(pagingRequest.PageSize * (pagingRequest.PageNo - 1)).Take(pagingRequest.PageSize)
                 .OrderBy(x => x.Value)
-                .ToListAsync();
-            PagingResponse<MasterDataType> pagingResponse = new PagingResponse<MasterDataType>()
+                .AsQueryable();
+            PagingResponse<MasterDataType> pagingResponse = new()
             {
                 PageNo = pagingRequest.PageNo,
                 PageSize = pagingRequest.PageSize,
-                Data = data,
-                TotalRecords = data.Count
+                Data =await data
+                .Skip(pagingRequest.PageSize * (pagingRequest.PageNo - 1)).Take(pagingRequest.PageSize).ToListAsync(),
+                TotalRecords = await data.CountAsync()
             };
             return pagingResponse;
         }
@@ -115,37 +113,35 @@ namespace SalehGarib.API.Repositories
         public async Task<PagingResponse<MasterDataType>> Search(SearchPagingRequest searchPagingRequest)
         {
             string searchTerm = string.IsNullOrEmpty(searchPagingRequest.SearchTerm) ? string.Empty : searchPagingRequest.SearchTerm.ToLower();
-            var dataCount = await _context.MasterDataTypes
-                .Where(mdt => !mdt.IsDeleted &&
-                        searchTerm.Equals(string.Empty) ||
-                        searchTerm.Equals(mdt.Value)
-                    ).CountAsync();
-
-            var data = await _context.MasterDataTypes
+           
+            var data = _context.MasterDataTypes
                 .Where(mdt => !mdt.IsDeleted &&
                         searchTerm.Equals(string.Empty) ||
                         searchTerm.Equals(mdt.Value)
                     )
-                .Skip(searchPagingRequest.PageSize * (searchPagingRequest.PageNo - 1))
-                .Take(searchPagingRequest.PageSize)
                 .OrderBy(x => x.Value)
-                .ToListAsync();
-            PagingResponse<MasterDataType> pagingResponse = new PagingResponse<MasterDataType>()
+                .AsQueryable();
+            PagingResponse<MasterDataType> pagingResponse = new()
             {
                 PageNo = searchPagingRequest.PageNo,
                 PageSize = searchPagingRequest.PageSize,
-                Data = data,
-                TotalRecords = dataCount
+                Data =await data
+                .Skip(searchPagingRequest.PageSize * (searchPagingRequest.PageNo - 1))
+                .Take(searchPagingRequest.PageSize).ToListAsync(),
+                TotalRecords = await data.CountAsync()
             };
             return pagingResponse;
         }
 
-        public async Task<MasterDataType> Update(MasterDataType entity)
+        public async Task<MasterDataType> Update(MasterDataType masterDataType)
         {
-            EntityEntry<MasterDataType> oldCustomer = _context.Update(entity);
-            oldCustomer.State = EntityState.Modified;
+            var oldData = await _context.MasterDataTypes.Where(x => !x.IsDeleted && x.Id == masterDataType.Id).FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.DataNotFoundMessage);
+           oldData.Value = masterDataType.Value;
+
+            EntityEntry<MasterDataType> entity = _context.Update(oldData);
+            entity.State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            return oldCustomer.Entity;
+            return entity.Entity;
         }
     }
 }

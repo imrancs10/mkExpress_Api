@@ -48,6 +48,10 @@
         public const string LogisticRegionPath = APIPrefix;
         #endregion
 
+        #region Shipment
+        public const string ShipmentPath = APIPrefix;
+        #endregion
+
         #region Temple
         public const string TemplePath = "temple";
         public const string TempleGetByIdPath = "temple/get/{id}";

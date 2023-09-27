@@ -1,8 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace MKExpress.API.Models
+﻿namespace MKExpress.API.DTO.Response
 {
-    public class ShipmentDetail:BaseModel
+    public class ShipmentDetailResponse
     {
         public Guid ShipmentId { get; set; }
         public Guid FromStoreId { get; set; }
@@ -23,23 +21,9 @@ namespace MKExpress.API.Models
         public string? ConsigneeAddress2 { get; set; }
         public string? ConsigneeAddress3 { get; set; }
         public Guid ConsigneeCityId { get; set; }
-
         public decimal Weight { get; set; }
         public int TotalPieces { get; set; }
-        public string Dimension { get; set; }
-        public string Description { get; set; }
-
-        [ForeignKey("ShipmentId")]
-        public Shipment Shipment { get; set; }
-
-        [ForeignKey("FromStoreId")]
-        public MasterData FromStore { get; set; }
-        [ForeignKey("ToStoreId")]
-        public MasterData ToStore { get; set; }
-        [ForeignKey("ConsigneeCityId")]
-        public MasterData ConsigneeCity { get; set; }
-        [ForeignKey("ShipperCityId")]
-        public MasterData ShipperCity { get; set; }
+        public decimal Dimension { get; set; }
+        public decimal Description { get; set; }
     }
-
 }

@@ -74,12 +74,16 @@ namespace MKExpress.API.Repositories
             return entity.Entity;
         }
 
-        public async Task<MasterData> Update(MasterData MasterData)
+        public async Task<MasterData> Update(MasterData masterData)
         {
-            EntityEntry<MasterData> oldJobTitle = _context.Update(MasterData);
-            oldJobTitle.State = EntityState.Modified;
+            var oldData=await _context.MasterDatas.Where(x=>!x.IsDeleted && x.Id==masterData.Id).FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.DataNotFoundMessage);
+            oldData.MasterDataType = masterData.MasterDataType;
+            oldData.Value = masterData.Value;
+
+            EntityEntry<MasterData> entity = _context.Update(oldData);
+            entity.State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            return oldJobTitle.Entity;
+            return entity.Entity;
         }
 
         public async Task<int> Delete(Guid MasterDataId)
@@ -111,21 +115,21 @@ namespace MKExpress.API.Repositories
 
         public async Task<PagingResponse<MasterData>> GetAll(PagingRequest pagingRequest)
         {
-            var dataCount= await _context.MasterDatas.Where(x=>!x.IsDeleted).CountAsync();
-            var data = await _context.MasterDatas
+            
+            var data = _context.MasterDatas
                 .Where(x => !x.IsDeleted)
-                .Skip(pagingRequest.PageSize * (pagingRequest.PageNo - 1))
-                .Take(pagingRequest.PageSize)
                 .OrderBy(x => x.MasterDataType)
                 .ThenBy(x => x.Value)
-                .ToListAsync();
+                .AsQueryable();
 
-            PagingResponse<MasterData> pagingResponse = new PagingResponse<MasterData>()
+            PagingResponse<MasterData> pagingResponse = new()
             {
                 PageNo = pagingRequest.PageNo,
                 PageSize = pagingRequest.PageSize,
-                Data = data,
-                TotalRecords = dataCount
+                Data =await data
+                .Skip(pagingRequest.PageSize * (pagingRequest.PageNo - 1))
+                .Take(pagingRequest.PageSize).ToListAsync(),
+                TotalRecords =await data.CountAsync()
             };
             return pagingResponse;
         }
@@ -133,7 +137,7 @@ namespace MKExpress.API.Repositories
         public async Task<PagingResponse<MasterData>> Search(SearchPagingRequest searchPagingRequest)
         {
             string searchTerm = string.IsNullOrEmpty(searchPagingRequest.SearchTerm) ? string.Empty : searchPagingRequest.SearchTerm.ToLower();
-            var data = await _context.MasterDatas
+            var data =  _context.MasterDatas
                 .Where(mdc => !mdc.IsDeleted &&
                     (
                     searchTerm == string.Empty ||
@@ -144,16 +148,16 @@ namespace MKExpress.API.Repositories
                 )
                 .OrderBy(x => x.MasterDataType)
                 .ThenBy(x => x.Value)
-                .ToListAsync();
+                .AsQueryable();
             PagingResponse<MasterData> pagingResponse = new PagingResponse<MasterData>()
             {
                 PageNo = searchPagingRequest.PageNo,
                 PageSize = searchPagingRequest.PageSize,
-                Data = data
+                Data =await data
                     .Skip(searchPagingRequest.PageSize * (searchPagingRequest.PageNo - 1))
                     .Take(searchPagingRequest.PageSize)
-                    .ToList(),
-                TotalRecords = data.Count
+                    .ToListAsync(),
+                TotalRecords =await data.CountAsync()
             };
             return pagingResponse;
         }

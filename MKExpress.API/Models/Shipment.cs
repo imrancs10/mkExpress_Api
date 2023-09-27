@@ -22,8 +22,6 @@ namespace MKExpress.API.Models
         public Customer Customer { get; set; }
 
         public List<ShipmentDetail> ShipmentDetails { get; set; }
-        public List<ShipmentImage>? ShipmentImages { get; set; }
-        public List<ShipmentTracking>? ShipmentTrackings { get; set; }
 
     }
 }
