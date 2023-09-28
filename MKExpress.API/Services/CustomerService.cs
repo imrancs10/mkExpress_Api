@@ -47,8 +47,7 @@ namespace MKExpress.API.Services
 
         public async Task<PagingResponse<CustomerResponse>> GetAll(PagingRequest pagingRequest)
         {
-            PagingResponse<CustomerResponse> result = _mapper.Map<PagingResponse<CustomerResponse>>(await _customerRepository.GetAll(pagingRequest));
-           return result;
+            return _mapper.Map<PagingResponse<CustomerResponse>>(await _customerRepository.GetAll(pagingRequest));
         }
 
         public async Task<List<CustomerResponse>> GetCustomers(string contactNo)

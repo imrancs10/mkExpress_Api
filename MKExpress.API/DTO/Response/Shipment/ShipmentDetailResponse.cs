@@ -1,6 +1,8 @@
-﻿namespace MKExpress.API.DTO.Response
+﻿using MKExpress.API.DTO.Base;
+
+namespace MKExpress.API.DTO.Response
 {
-    public class ShipmentDetailResponse
+    public class ShipmentDetailResponse:BaseResponse
     {
         public Guid ShipmentId { get; set; }
         public Guid FromStoreId { get; set; }
@@ -23,7 +25,7 @@
         public Guid ConsigneeCityId { get; set; }
         public decimal Weight { get; set; }
         public int TotalPieces { get; set; }
-        public decimal Dimension { get; set; }
-        public decimal Description { get; set; }
+        public string Dimension { get; set; }
+        public string Description { get; set; }
     }
 }

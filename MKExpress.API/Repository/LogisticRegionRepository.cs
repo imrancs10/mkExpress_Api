@@ -71,9 +71,6 @@ namespace MKExpress.API.Repository
 
         public async Task<PagingResponse<LogisticRegion>> GetAll(PagingRequest pagingRequest)
         {
-            try
-            {
-
                 var data = _context.LogisticRegions
                        .Include(x => x.City)
                      .Include(x => x.Country)
@@ -92,12 +89,6 @@ namespace MKExpress.API.Repository
                     TotalRecords = await data.CountAsync()
                 };
                 return pagingResponse;
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
         }
 
         public async Task<PagingResponse<LogisticRegion>> Search(SearchPagingRequest pagingRequest)

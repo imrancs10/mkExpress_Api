@@ -50,6 +50,8 @@
 
         #region Shipment
         public const string ShipmentPath = APIPrefix;
+        public const string ShipmentByIdPath = APIPrefix + "get/{id}";
+        public const string ShipmentTrackingByShipmentIdPath = APIPrefix + "get/tracking/{id}";
         #endregion
 
         #region Temple
@@ -94,6 +96,9 @@
         public const string ErrorType_EmailAlreadyVerified = "EmailAlreadyVerified";
         public const string ErrorType_CustomerAlreadyExist= "CustomerAlreadyExist";
         public const string ErrorType_CustomerNotFoundError = "CustomerNotFoundError";
+        public const string ErrorType_InvalidParameters = "InvalidParameters!";
+        public const string ErrorType_InvalidGUID = "InvalidGUID!";
+        public const string ErrorType_UserIdNotPresentInHeader = "UserIdNotPresentInHeader!";
         #endregion
 
         #region Error Message
@@ -107,17 +112,20 @@
         public const string RecordAlreadyCancelledMessage = "Record already cancelled!";
         public const string RecordAlreadyDeletedError = "RecordAlreadyDeletedError!";
         public const string RecordAlreadyDeletedMessage = "Record already deleted!";
-        public const string InvalidMasterDataTypeError = "InvalidMasterDataTypeError!";
+        public const string InvalidMasterDataTypeError = "Invalid master data type!";
         public const string InvalidMasterDataTypeMessage = "Master data type is invalid!";
-        public const string Error_InvalidOldPassword = "Error_InvalidOldPassword";
+        public const string Error_InvalidOldPassword = "Invalid old password";
         public const string Error_UserNotFound = "Error_UserNotFound";
         public const string Error_InvalidCredentials = "Error_InvalidCredentials";
         public const string Error_UserAccountBlocked = "";
         public const string Error_UserAccountLocked = "";
         public const string Error_UserAccountEmailNotVerified = "";
         public const string Error_EmailAlreadyVerified = "";
-        public const string Error_CustomerAlreadyExist = "Customer already exist";
-        public const string Error_CustomerNotFoundError = "Customer not found";
+        public const string Error_CustomerAlreadyExist = "Customer already exist!";
+        public const string Error_CustomerNotFoundError = "Customer not found!";
+        public const string Error_InvalidParameters= "Invalid parameters!";
+        public const string Error_InvalidGUID = "Invalid GUID!";
+        public const string Error_UserIdNotPresentInHeader = "User id is not present in header!";
 
         public static string RecordAlreadyExistMessage(string recordType)
         {
@@ -126,6 +134,8 @@
         #endregion
 
         #region Constant Values
+        public const string ConstValue_UserId = "UserId";
+        public const string ConstValue_CreatedAt = "CreatedAt";
         #endregion
     }
 }

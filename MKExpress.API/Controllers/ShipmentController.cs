@@ -23,9 +23,39 @@ namespace MKExpress.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpPut(StaticValues.ShipmentPath)]
-        public async Task<ShipmentResponse> CreateShipment(ShipmentRequest request)
+        public async Task<ShipmentResponse> CreateShipment([FromBody] ShipmentRequest request)
         {
             return await _shipmentService.CreateShipment(request);
+        }
+
+        [ProducesResponseType(typeof(PagingResponse<ShipmentResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpGet(StaticValues.ShipmentPath)]
+        public async Task<PagingResponse<ShipmentResponse>> GetAllShipment([FromQuery] PagingRequest request)
+        {
+            return await _shipmentService.GetAllShipment(request);
+        }
+
+        [ProducesResponseType(typeof(ShipmentResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpGet(StaticValues.ShipmentByIdPath)]
+        public async Task<ShipmentResponse> GetShipment([FromRoute] Guid id)
+        {
+            return await _shipmentService.GetShipment(id);
+        }
+
+        [ProducesResponseType(typeof(List<ShipmentTrackingResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpGet(StaticValues.ShipmentTrackingByShipmentIdPath)]
+        public async Task<List<ShipmentTrackingResponse>> GetTrackingByShipmentId([FromRoute] Guid id)
+        {
+            return await _shipmentService.GetTrackingByShipmentId(id);
         }
     }
 }

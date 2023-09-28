@@ -3,6 +3,7 @@ using MKExpress.API.DTO.Response;
 using MKExpress.API.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using MKExpress.API.Contants;
 
 namespace MKExpress.API.Data
 {
@@ -54,15 +55,15 @@ namespace MKExpress.API.Data
             {
                 var hasChange = entityEntry.State == EntityState.Added || entityEntry.State == EntityState.Modified;
                 if (!hasChange) continue;
-                if (!(entityEntry.Entity is BaseModel baseModel)) continue;
+                if (entityEntry.Entity is not BaseModel baseModel) continue;
                 var now = DateTime.Now;
-                int? userId = null;
-                if ((bool)_httpContextAccessor.HttpContext?.Request.Headers.ContainsKey("userId"))
+                Guid? userId = null;
+                if ((bool)_httpContextAccessor.HttpContext?.Request.Headers.ContainsKey(StaticValues.ConstValue_UserId))
                 {
-                    string value = _httpContextAccessor.HttpContext?.Request.Headers["userId"].ToString();
+                    string? value = _httpContextAccessor.HttpContext?.Request.Headers[StaticValues.ConstValue_UserId].ToString();
                     if (!string.IsNullOrEmpty(value))
                     {
-                        if (int.TryParse(value, out int newUserId))
+                        if (Guid.TryParse(value, out Guid newUserId))
                         {
                             userId = newUserId;
                         }
@@ -72,12 +73,11 @@ namespace MKExpress.API.Data
                 {
                     baseModel.CreatedBy = 0;
                     baseModel.CreatedAt = now;
-                    baseModel.Id = Guid.NewGuid();
                 }
                 else
                 {
                     baseModel.UpdatedBy = 0;
-                    entityEntry.Property("CreatedAt").IsModified = false;
+                    entityEntry.Property(StaticValues.ConstValue_CreatedAt).IsModified = false;
                     baseModel.UpdatedAt = now;
                 }
             }

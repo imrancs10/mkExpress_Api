@@ -1,6 +1,8 @@
-﻿namespace MKExpress.API.DTO.Request
+﻿using MKExpress.API.DTO.Base;
+
+namespace MKExpress.API.DTO.Request
 {
-    public class ShipmentDetailRequest
+    public class ShipmentDetailRequest:BaseRequest
     {
         public Guid ShipmentId { get; set; }
         public Guid FromStoreId { get; set; }

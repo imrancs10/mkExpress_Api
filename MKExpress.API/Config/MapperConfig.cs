@@ -59,14 +59,22 @@ namespace MKExpress.API.Config
             CreateMap<PagingResponse<LogisticRegion>, PagingResponse<LogisticRegionResponse>>();
             #endregion
 
+            #region Member
+            CreateMap<MemberRequest, Member>();
+            CreateMap<Member, MemberResponse>();
+            CreateMap<PagingResponse<Member>, PagingResponse<MemberResponse>>();
+            #endregion
+
             #region Shipment
             CreateMap<ShipmentRequest, Shipment>();
-            CreateMap<Shipment, ShipmentResponse>();
+            CreateMap<Shipment, ShipmentResponse>()
+                  .ForMember(des => des.CustomerName, src => src.MapFrom(x => x.Customer.Name));
             CreateMap<PagingResponse<Shipment>, PagingResponse<ShipmentResponse>>();
 
             CreateMap<ShipmentDetailRequest, ShipmentDetail>();
             CreateMap<ShipmentDetail, ShipmentDetailResponse>();
-            CreateMap<PagingResponse<ShipmentDetail>, PagingResponse<ShipmentDetailResponse>>();
+            CreateMap<PagingResponse<ShipmentDetail>, PagingResponse<ShipmentDetailResponse>>()
+                 .ForMember(des => des.Data, src => src.MapFrom(x => x.Data));
 
             CreateMap<ShipmentTrackingRequest, ShipmentTracking>();
             CreateMap<ShipmentTracking, ShipmentTrackingResponse>();
