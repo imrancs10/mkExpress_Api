@@ -27,5 +27,9 @@ namespace MKExpress.API.DTO.Response
         public int TotalPieces { get; set; }
         public string Dimension { get; set; }
         public string Description { get; set; }
+        public string FromStore { get; set; }
+        public string ToStore { get; set; }
+        public string ShipperCity { get; set; }
+        public string ConsigneeCity { get; set; }
     }
 }

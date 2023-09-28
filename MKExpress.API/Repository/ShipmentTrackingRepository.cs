@@ -33,7 +33,20 @@ namespace MKExpress.API.Repository
         {
             return await _context.ShipmentTrackings
                 .Include(x=>x.Shipment)
+                .ThenInclude(x=>x.Customer)
+                .Include(x => x.Shipment)
                 .ThenInclude(x=>x.ShipmentDetails)
+                .ThenInclude(x=>x.FromStore)
+                 .Include(x => x.Shipment)
+                .ThenInclude(x => x.ShipmentDetails)
+                .ThenInclude(x => x.ToStore)
+                  .Include(x => x.Shipment)
+                .ThenInclude(x => x.ShipmentDetails)
+                .ThenInclude(x => x.ShipperCity)
+                  .Include(x => x.Shipment)
+                .ThenInclude(x => x.ShipmentDetails)
+                .ThenInclude(x => x.ConsigneeCity)
+                .Include(x=>x.CommentByMember)
                 .Where(x=>!x.IsDeleted && x.ShipmentId==shipmentId).ToListAsync();
         }
 

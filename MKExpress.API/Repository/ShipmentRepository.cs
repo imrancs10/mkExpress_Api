@@ -48,6 +48,13 @@ namespace MKExpress.API.Repository
             var data = _context.Shipments
                 .Include(x=>x.Customer)
                 .Include(x => x.ShipmentDetails)
+                .ThenInclude(x => x.FromStore)
+                .Include(x => x.ShipmentDetails)
+                .ThenInclude(x => x.ToStore)
+                .Include(x => x.ShipmentDetails)
+                .ThenInclude(x => x.ShipperCity)
+                .Include(x => x.ShipmentDetails)
+                .ThenInclude(x => x.ConsigneeCity)
                 .Where(x => !x.IsDeleted)
                 .OrderByDescending(x => x.ShipmentNumber)
                 .AsQueryable();
@@ -67,6 +74,13 @@ namespace MKExpress.API.Repository
         {
             return await _context.Shipments
                   .Include(x => x.ShipmentDetails)
+                .ThenInclude(x => x.FromStore)
+                .Include(x => x.ShipmentDetails)
+                .ThenInclude(x => x.ToStore)
+                .Include(x => x.ShipmentDetails)
+                .ThenInclude(x => x.ShipperCity)
+                .Include(x => x.ShipmentDetails)
+                .ThenInclude(x => x.ConsigneeCity)
                   .Where(x => !x.IsDeleted && x.Id == id).FirstOrDefaultAsync();
         }
     }
