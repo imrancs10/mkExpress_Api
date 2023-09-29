@@ -9,5 +9,6 @@ namespace MKExpress.API.Repository.IRepository
         Task<Shipment> CreateShipment(Shipment shipment);
         Task<PagingResponse<Shipment>> GetAllShipment(PagingRequest pagingRequest);
         Task<Shipment> GetShipment(Guid id);
+        Task<List<Shipment>> GetShipment(List<Guid> ids);
     }
 }

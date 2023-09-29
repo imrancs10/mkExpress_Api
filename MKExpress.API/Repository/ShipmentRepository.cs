@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using Microsoft.EntityFrameworkCore;
 using MKExpress.API.Contants;
 using MKExpress.API.Data;
 using MKExpress.API.DTO.Request;
@@ -82,6 +83,20 @@ namespace MKExpress.API.Repository
                 .Include(x => x.ShipmentDetails)
                 .ThenInclude(x => x.ConsigneeCity)
                   .Where(x => !x.IsDeleted && x.Id == id).FirstOrDefaultAsync();
+        }
+
+        public async Task<List<Shipment>> GetShipment(List<Guid> ids)
+        {
+            return await _context.Shipments
+                 .Include(x => x.ShipmentDetails)
+               .ThenInclude(x => x.FromStore)
+               .Include(x => x.ShipmentDetails)
+               .ThenInclude(x => x.ToStore)
+               .Include(x => x.ShipmentDetails)
+               .ThenInclude(x => x.ShipperCity)
+               .Include(x => x.ShipmentDetails)
+            .ThenInclude(x => x.ConsigneeCity)
+                 .Where(x => !x.IsDeleted && ids.Contains(x.Id)).ToListAsync();
         }
     }
 }

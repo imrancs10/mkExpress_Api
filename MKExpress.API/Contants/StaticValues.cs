@@ -52,6 +52,7 @@
         public const string ShipmentPath = APIPrefix;
         public const string ShipmentByIdPath = APIPrefix + "get/{id}";
         public const string ShipmentTrackingByShipmentIdPath = APIPrefix + "get/tracking/{id}";
+        public const string ShipmentByIdsPath = APIPrefix + "get/by-ids/{id}";
         #endregion
 
         #region Temple

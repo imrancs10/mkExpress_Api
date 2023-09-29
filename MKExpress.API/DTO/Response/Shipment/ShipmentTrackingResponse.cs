@@ -10,8 +10,9 @@ namespace MKExpress.API.DTO.Response
         public string? Comment2 { get; set; }
         public string? Comment3 { get; set; }
         public Guid? CommentBy { get; set; }
-        public string CommentByName { get; set; }
-        public ShipmentResponse Shipment { get; set; }
+        public string? CommentByName { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public ShipmentResponse? Shipment { get; set; }
 
     }
 }

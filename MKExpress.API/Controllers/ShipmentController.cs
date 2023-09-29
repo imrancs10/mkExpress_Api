@@ -57,5 +57,14 @@ namespace MKExpress.API.Controllers
         {
             return await _shipmentService.GetTrackingByShipmentId(id);
         }
+        [ProducesResponseType(typeof(List<ShipmentResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpGet(StaticValues.ShipmentByIdsPath)]
+        public async Task<List<ShipmentResponse>> GetTrackingByShipmentIds([FromRoute] string id)
+        {
+            return await _shipmentService.GetShipment(id);
+        }
     }
 }
