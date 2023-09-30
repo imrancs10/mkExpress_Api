@@ -7,6 +7,7 @@ namespace MKExpress.API.Exceptions
             base(message)
         {
             ErrorResponseType = errorResponseType;
+            message = message;
             Errors = errors;
         }
 

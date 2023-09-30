@@ -29,7 +29,10 @@ namespace MKExpress.API.Middleware
                 .AddScoped<ILogisticRegionSerivce, LogisticRegionSerivce>()
                 .AddScoped<IShipmentRepository, ShipmentRepository>()
                 .AddScoped<IShipmentService, ShipmentService>()
-                 .AddScoped<IShipmentTrackingRepository, ShipmentTrackingRepository>()
+                .AddScoped<IUserRepository, UserRepository>()
+                .AddScoped<IMemberRepository, MemberRepository>()
+                .AddScoped<IMemberService, MemberService>()
+                .AddScoped<IShipmentTrackingRepository, ShipmentTrackingRepository>()
                 .AddScoped<IMailService, MailService>()
                 .AddScoped<IExcelReader, ExcelReader>()
                 .AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

@@ -21,6 +21,7 @@ namespace MKExpress.API.Models
         public DateTime PasswordResetCodeExpireOn { get; set; }
         public string? EmailVerificationCode { get; set; }
         public string Role { get; set; } = "User";
+        public bool IsCustomer { get; set; }
         public DateTime? EmailVerificationCodeExpireOn { get; set; }
     }
 }

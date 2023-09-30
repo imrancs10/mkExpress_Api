@@ -55,18 +55,15 @@
         public const string ShipmentByIdsPath = APIPrefix + "get/by-ids/{id}";
         #endregion
 
-        #region Temple
-        public const string TemplePath = "temple";
-        public const string TempleGetByIdPath = "temple/get/{id}";
-        public const string TempleGetByIdOrBarcodeIdPath = "barcodetemple/get/{barcodeId}";
-        public const string TempleGetByYatraIdPath = "temple/get/yatra/{yatraId}";
-        public const string TempleGetByPadavIdPath = "temple/get/padav/{padavId}";
-        public const string TempleGetByYatraPadavIdPath = "temple/get/yatrapadav/{yatraId}/{padavId}";
-        public const string TempleSearchPath = "temple/search";
-        public const string TempleDeletePath = "temple/delete/{id}";
-        public const string TempleCategoryPath = "get/templeCategories";
-        public const string GenerateTempleQrCodePath = "temple/generate/temple/qr/code";
-        public const string TempleUpdateFromExcelPath = "temple/update/excel";
+        #region Member
+        public const string MemberDeletePath = APIPrefix + "{id}";
+        public const string MemberByIdPath = APIPrefix + "get/{id}";
+        public const string MemberSearchPath = APIPrefix + "search";
+        public const string MemberChangePasswordPath = APIPrefix + "password/change";
+        public const string MemberResetPasswordPath = APIPrefix + "password/reset/{userId}";
+        public const string MemberChangeStationPath = APIPrefix + "update/station/{memberId}/{stationId}";
+        public const string MemberChangeActiveStatusPath = APIPrefix + "update/active/{id}";
+        public const string MemberPath = APIPrefix;
         #endregion
 
         #region Image Upload
@@ -92,6 +89,8 @@
         public const string ErrorType_InvalidModuleName = "InvalidModuleName";
         public const string ErrorType_ImageNotSelected = "ImageNotSelected";
         public const string ErrorType_RecordNotFound = "RecordNotFound";
+        public const string EmailAlreadyExist_Error = "EmailAlreadyExist!";
+        public const string NewAndConfirmPasswordNotSame_Error = "NewAndConfirmPasswordNotSame!";
         public const string ErrorType_AlreadyDeleted = "AlreadyDeleted";
         public const string ErrorType_AlreadyExist = "AlreadyExist";
         public const string ErrorType_EmailAlreadyVerified = "EmailAlreadyVerified";
@@ -103,6 +102,8 @@
         #endregion
 
         #region Error Message
+        public const string EmailAlreadyExist_Message = "Email already exist!";
+        public const string NewAndConfirmPasswordNotSame_Message = "New & confirm password are not same!";
         public const string MasterDataTypeAlreadyExistError = "MasterDataTypeAlreadyExist!";
         public const string MasterDataTypeAlreadyExistMessage = "Master data type is already exist!";
         public const string InvalidEmail = "Email address is invalid!";
@@ -116,11 +117,13 @@
         public const string InvalidMasterDataTypeError = "Invalid master data type!";
         public const string InvalidMasterDataTypeMessage = "Master data type is invalid!";
         public const string Error_InvalidOldPassword = "Invalid old password";
-        public const string Error_UserNotFound = "Error_UserNotFound";
-        public const string Error_InvalidCredentials = "Error_InvalidCredentials";
-        public const string Error_UserAccountBlocked = "";
-        public const string Error_UserAccountLocked = "";
-        public const string Error_UserAccountEmailNotVerified = "";
+        public const string UserNotFound_Message = "User isn't register with us!";
+        public const string UserNotFound_Error= "UserNotFound";
+        public const string InvalidCredentials_Error = "Error_InvalidCredentials";
+        public const string InvalidCredentials_Message = "Wrong username/password!";
+        public const string Error_UserAccountBlocked = "User's account is blocked!";
+        public const string Error_UserAccountLocked = "User's account is locked!";
+        public const string Error_UserAccountEmailNotVerified = "User's email is not varified!";
         public const string Error_EmailAlreadyVerified = "";
         public const string Error_CustomerAlreadyExist = "Customer already exist!";
         public const string Error_CustomerNotFoundError = "Customer not found!";

@@ -28,7 +28,7 @@ namespace MKExpress.API.Repository
             }
             else if (oldData.IsDeleted)
             {
-                throw new BusinessRuleViolationException(StaticValues.ErrorType_UserNotFound, StaticValues.Error_UserNotFound);
+                throw new BusinessRuleViolationException(StaticValues.ErrorType_UserNotFound, StaticValues.UserNotFound_Error);
             }
 
             oldData.Password = request.NewPassword;
@@ -46,11 +46,11 @@ namespace MKExpress.API.Repository
                                            .FirstOrDefaultAsync();
                 if (oldData == null)
                 {
-                    throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidCredentials, StaticValues.Error_InvalidCredentials);
+                    throw new BusinessRuleViolationException(StaticValues.InvalidCredentials_Error, StaticValues.InvalidCredentials_Message);
                 }
                 else if (oldData.IsDeleted)
                 {
-                    throw new BusinessRuleViolationException(StaticValues.ErrorType_UserNotFound, StaticValues.Error_UserNotFound);
+                    throw new BusinessRuleViolationException(StaticValues.UserNotFound_Error, StaticValues.UserNotFound_Message);
                 }
                 else if (oldData.IsBlocked)
                 {

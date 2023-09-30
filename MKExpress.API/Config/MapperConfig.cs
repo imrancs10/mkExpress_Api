@@ -61,7 +61,12 @@ namespace MKExpress.API.Config
 
             #region Member
             CreateMap<MemberRequest, Member>();
-            CreateMap<Member, MemberResponse>();
+            CreateMap<Member, User>()
+                 .ForMember(des => des.UserName, src => src.MapFrom(x => x.Email));
+            CreateMap<Member, MemberResponse>()
+                 .ForMember(des => des.GenderName, src => src.MapFrom(x => x.Gender.ToString()))
+                 .ForMember(des => des.Station, src => src.MapFrom(x => x.Station.Value))
+                 .ForMember(des => des.Role, src => src.MapFrom(x => x.Role.Value));
             CreateMap<PagingResponse<Member>, PagingResponse<MemberResponse>>();
             #endregion
 

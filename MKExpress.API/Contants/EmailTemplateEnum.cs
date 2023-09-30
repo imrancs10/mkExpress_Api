@@ -2,6 +2,7 @@
 {
     public enum EmailTemplateEnum
     {
-        EmailVerification
+        EmailVerification,
+        ResetPassword
     }
 }
