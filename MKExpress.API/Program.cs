@@ -77,9 +77,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy(_policyName,
         builder =>
         {
-            builder.SetIsOriginAllowed(isOriginAllowed: _ => true).WithOrigins("http://localhost:3000/", "*")
-                                .AllowAnyHeader()
-                                .AllowAnyMethod();
+            builder
+                .WithOrigins("http://localhost:3000", "http://imkexpress.com") // Replace with the origins you want to allow
+                .AllowAnyHeader()
+                .AllowAnyMethod();
         });
 });
 var app = builder.Build();
