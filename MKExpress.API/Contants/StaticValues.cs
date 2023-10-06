@@ -30,7 +30,10 @@
         public const string MasterDataTypeByIdPath = APIPrefix + "master-data-type/get/{id}";
         public const string MasterDataTypeSearchPath = APIPrefix + "master-data-type/search";
 
-
+        public const string MasterJourneyPath = APIPrefix + "master-journey";
+        public const string MasterJourneyDeletePath = APIPrefix + "master-journey/{id}";
+        public const string MasterJourneyByIdPath = APIPrefix + "master-journey/get/{id}";
+        public const string MasterJourneySearchPath = APIPrefix + "master-journey/search";
         #endregion
 
         #region Customer API Path

@@ -4,6 +4,7 @@ using MKExpress.API.Contants;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
 using MKExpress.API.Services.Interfaces;
+using MKExpress.API.Services.IServices;
 
 namespace MKExpress.Web.API.Controllers
 {
@@ -13,10 +14,12 @@ namespace MKExpress.Web.API.Controllers
     {
         private readonly IMasterDataService _masterDataService;
         private readonly IMasterDataTypeService _masterDataTypeService;
-        public MasterDataController(IMasterDataService masterDataService, IMasterDataTypeService masterDataTypeService)
+        private readonly IMasterJourneyService _masterJourneyService;
+        public MasterDataController(IMasterDataService masterDataService, IMasterDataTypeService masterDataTypeService, IMasterJourneyService masterJourneyService)
         {
             _masterDataService = masterDataService;
             _masterDataTypeService = masterDataTypeService;
+            _masterJourneyService = masterJourneyService;
         }
 
         [ProducesResponseType(typeof(MasterDataResponse), StatusCodes.Status200OK)]
@@ -165,5 +168,64 @@ namespace MKExpress.Web.API.Controllers
             return await _masterDataTypeService.Search(searchPagingRequest);
         }
 
+        [ProducesResponseType(typeof(MasterJourneyResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpPut(StaticValues.MasterJourneyPath)]
+        public async Task<MasterJourneyResponse> AddJourney([FromBody] MasterJourneyRequest request)
+        {
+            return await _masterJourneyService.Add(request);
+        }
+
+        [ProducesResponseType(typeof(MasterJourneyResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpPost(StaticValues.MasterJourneyPath)]
+        public async Task<MasterJourneyResponse> Update([FromBody] MasterJourneyRequest request)
+        {
+            return await _masterJourneyService.Update(request);
+        }
+
+        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpDelete(StaticValues.MasterJourneyDeletePath)]
+        public async Task<int> Delete([FromRoute] Guid id)
+        {
+            return await _masterJourneyService.Delete(id);
+        }
+
+        [ProducesResponseType(typeof(MasterJourneyResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpGet(StaticValues.MasterJourneyByIdPath)]
+        public async Task<MasterJourneyResponse> Get([FromRoute] Guid id)
+        {
+            return await _masterJourneyService.Get(id);
+        }
+
+        [ProducesResponseType(typeof(PagingResponse<MasterJourneyResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpGet(StaticValues.MasterJourneyPath)]
+        public async Task<PagingResponse<MasterJourneyResponse>> GetAll([FromQuery]PagingRequest pagingRequest)
+        {
+           return await _masterJourneyService.GetAll(pagingRequest);
+        }
+
+        [ProducesResponseType(typeof(PagingResponse<MasterJourneyResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpGet(StaticValues.MasterJourneySearchPath)]
+        public async Task<PagingResponse<MasterJourneyResponse>> Search([FromQuery] SearchPagingRequest searchPagingRequest)
+        {
+            return await _masterJourneyService.Search(searchPagingRequest);
+        }
     }
 }

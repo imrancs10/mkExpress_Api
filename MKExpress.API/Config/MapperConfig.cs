@@ -90,6 +90,21 @@ namespace MKExpress.API.Config
             CreateMap<PagingResponse<ShipmentTracking>, PagingResponse<ShipmentTrackingResponse>>();
             #endregion
 
+            #region Master Journey
+            CreateMap<MasterJourneyRequest, MasterJourney>();
+            CreateMap<MasterJourney, MasterJourneyResponse>()
+                .ForMember(des => des.ToStationName, src => src.MapFrom(x => x.ToStation.Value))
+                .ForMember(des => des.ToStationCode, src => src.MapFrom(x => x.ToStation.Code))
+                .ForMember(des => des.FromStationName, src => src.MapFrom(x => x.FromStation.Value))
+                .ForMember(des => des.FromStationCode, src => src.MapFrom(x => x.FromStation.Code));
+            CreateMap<PagingResponse<MasterJourney>, PagingResponse<MasterJourneyResponse>>();
+
+            CreateMap<MasterJourneyDetailRequest, MasterJourneyDetail>();
+            CreateMap<MasterJourneyDetail, MasterJourneyDetailResponse>()
+                  .ForMember(des => des.SubStationName, src => src.MapFrom(x => x.SubStation.Value))
+                .ForMember(des => des.SubStationCode, src => src.MapFrom(x => x.SubStation.Code));
+            #endregion
+
         }
 
         public static IMapper GetMapperConfig()

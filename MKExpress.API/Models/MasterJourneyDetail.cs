@@ -6,7 +6,7 @@ namespace MKExpress.API.Models
     {
         public Guid MasterJourneyId { get; set; }
         [ForeignKey("MasterJourneyId")]
-        public MasterJouney MasterJouney { get; set; }
+        public MasterJourney MasterJouney { get; set; }
         public Guid SubStationId { get; set; }
         [ForeignKey("SubStationId")]
         public MasterData SubStation { get; set; }

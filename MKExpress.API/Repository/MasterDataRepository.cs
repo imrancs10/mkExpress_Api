@@ -79,6 +79,10 @@ namespace MKExpress.API.Repositories
             var oldData=await _context.MasterDatas.Where(x=>!x.IsDeleted && x.Id==masterData.Id).FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.DataNotFoundMessage);
             oldData.MasterDataType = masterData.MasterDataType;
             oldData.Value = masterData.Value;
+            if (masterData.MasterDataType == "station")
+            {
+                oldData.Code = masterData.Code;
+            }
 
             EntityEntry<MasterData> entity = _context.Update(oldData);
             entity.State = EntityState.Modified;
@@ -114,8 +118,7 @@ namespace MKExpress.API.Repositories
         }
 
         public async Task<PagingResponse<MasterData>> GetAll(PagingRequest pagingRequest)
-        {
-            
+        {            
             var data = _context.MasterDatas
                 .Where(x => !x.IsDeleted)
                 .OrderBy(x => x.MasterDataType)

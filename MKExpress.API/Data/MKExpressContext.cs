@@ -49,7 +49,7 @@ namespace MKExpress.API.Data
         public DbSet<ContainerTracking> ContainerTrackings { get; set; }
         public DbSet<ContainerJourney> ContainerJourneys { get; set; }
         public DbSet<LogisticRegion> LogisticRegions { get; set; }
-        public DbSet<MasterJouney> MasterJouneys { get; set; }
+        public DbSet<MasterJourney> MasterJouneys { get; set; }
         public DbSet<MasterJourneyDetail> masterJourneyDetails { get; set; }
         public override int SaveChanges()
         {

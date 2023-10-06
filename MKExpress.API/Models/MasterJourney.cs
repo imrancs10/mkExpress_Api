@@ -2,7 +2,7 @@
 
 namespace MKExpress.API.Models
 {
-    public class MasterJouney:BaseModel
+    public class MasterJourney:BaseModel
     {
         public Guid FromStationId { get; set; }
         public Guid ToStationId { get; set; }
@@ -11,5 +11,7 @@ namespace MKExpress.API.Models
         public MasterData? FromStation { get; set; }
         [ForeignKey("ToStationId")]
         public MasterData? ToStation { get; set; }
+
+        public List<MasterJourneyDetail> MasterJourneyDetails { get; set; }
     }
 }
