@@ -10,5 +10,6 @@ namespace MKExpress.API.Services.IServices
         Task<bool> ChangeStation(Guid memberId, Guid stationId);
         Task<bool> ChangePassword(PasswordChangeRequest changeRequest);
         Task<bool> ResetPassword(string userId);
+        Task<bool> ChangeRole(Guid userId, Guid roleId);
     }
 }

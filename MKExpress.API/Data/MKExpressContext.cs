@@ -27,6 +27,14 @@ namespace MKExpress.API.Data
             options.UseSqlServer(_defaultConnection);
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+           modelBuilder
+                .Entity<Container>()
+                .Property(x=>x.ContainerNo)
+                .ValueGeneratedOnAdd();
+        }
+
         public DbSet<User> Users { get; set; }
         public DbSet<MasterData> MasterDatas { get; set; }
         public DbSet<MasterDataType> MasterDataTypes { get; set; }
@@ -35,8 +43,14 @@ namespace MKExpress.API.Data
         public DbSet<ShipmentDetail> ShipmentDetails { get; set; }
         public DbSet<ShipmentImage>? ShipmentImages { get; set; }
         public DbSet<ShipmentTracking> ShipmentTrackings { get; set; }
-        public DbSet<Customer> Customers { get; set; } 
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Container> Containers { get; set; }
+        public DbSet<ContainerDetail> ContainerDetails { get; set; }
+        public DbSet<ContainerTracking> ContainerTrackings { get; set; }
+        public DbSet<ContainerJourney> ContainerJourneys { get; set; }
         public DbSet<LogisticRegion> LogisticRegions { get; set; }
+        public DbSet<MasterJouney> MasterJouneys { get; set; }
+        public DbSet<MasterJourneyDetail> masterJourneyDetails { get; set; }
         public override int SaveChanges()
         {
             AddDateTimeStamp();

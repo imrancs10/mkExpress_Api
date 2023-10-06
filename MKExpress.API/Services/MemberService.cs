@@ -35,6 +35,11 @@ namespace MKExpress.API.Services
             return await _memberRepository.ChangePassword(changeRequest);
         }
 
+        public async Task<bool> ChangeRole(Guid userId, Guid roleId)
+        {
+            return await _memberRepository.ChangeRole(userId, roleId);
+        }
+
         public async Task<bool> ChangeStation(Guid memberId, Guid stationId)
         {
             return await _memberRepository.ChangeStation(memberId,stationId);

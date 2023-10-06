@@ -4,6 +4,7 @@ using MKExpress.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MKExpress.API.Migrations
 {
     [DbContext(typeof(MKExpressContext))]
-    partial class MKExpressContextModelSnapshot : ModelSnapshot
+    [Migration("20231006065644_Add_Master_Journey_Table")]
+    partial class Add_Master_Journey_Table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -411,93 +414,6 @@ namespace MKExpress.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("MasterDataTypes");
-                });
-
-            modelBuilder.Entity("MKExpress.API.Models.MasterJouney", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("FromStationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("ToStationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("UpdatedBy")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FromStationId");
-
-                    b.HasIndex("ToStationId");
-
-                    b.ToTable("MasterJouneys");
-                });
-
-            modelBuilder.Entity("MKExpress.API.Models.MasterJourneyDetail", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("MasterJourneyId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("SequenceNo")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("SubStationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("UpdatedBy")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MasterJourneyId");
-
-                    b.HasIndex("SubStationId");
-
-                    b.ToTable("masterJourneyDetails");
                 });
 
             modelBuilder.Entity("MKExpress.API.Models.Member", b =>
@@ -1091,44 +1007,6 @@ namespace MKExpress.API.Migrations
                     b.Navigation("Province");
 
                     b.Navigation("Station");
-                });
-
-            modelBuilder.Entity("MKExpress.API.Models.MasterJouney", b =>
-                {
-                    b.HasOne("MKExpress.API.Models.MasterData", "FromStation")
-                        .WithMany()
-                        .HasForeignKey("FromStationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MKExpress.API.Models.MasterData", "ToStation")
-                        .WithMany()
-                        .HasForeignKey("ToStationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("FromStation");
-
-                    b.Navigation("ToStation");
-                });
-
-            modelBuilder.Entity("MKExpress.API.Models.MasterJourneyDetail", b =>
-                {
-                    b.HasOne("MKExpress.API.Models.MasterJouney", "MasterJouney")
-                        .WithMany()
-                        .HasForeignKey("MasterJourneyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MKExpress.API.Models.MasterData", "SubStation")
-                        .WithMany()
-                        .HasForeignKey("SubStationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("MasterJouney");
-
-                    b.Navigation("SubStation");
                 });
 
             modelBuilder.Entity("MKExpress.API.Models.Member", b =>

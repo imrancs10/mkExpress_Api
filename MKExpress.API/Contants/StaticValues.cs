@@ -62,7 +62,8 @@
         public const string MemberChangePasswordPath = APIPrefix + "password/change";
         public const string MemberResetPasswordPath = APIPrefix + "password/reset/{userId}";
         public const string MemberChangeStationPath = APIPrefix + "update/station/{memberId}/{stationId}";
-        public const string MemberChangeActiveStatusPath = APIPrefix + "update/active/{id}";
+        public const string MemberChangeRolePath = APIPrefix + "update/role/{userId}/{roleId}";
+        public const string MemberChangeActiveStatusPath = APIPrefix + "update/active/{memberId}";
         public const string MemberPath = APIPrefix;
         #endregion
 
@@ -116,6 +117,7 @@
         public const string RecordAlreadyDeletedMessage = "Record already deleted!";
         public const string InvalidMasterDataTypeError = "Invalid master data type!";
         public const string InvalidMasterDataTypeMessage = "Master data type is invalid!";
+        public const string Error_RecordNotFound = "Record not found!";
         public const string Error_InvalidOldPassword = "Invalid old password";
         public const string UserNotFound_Message = "User isn't register with us!";
         public const string UserNotFound_Error= "UserNotFound";

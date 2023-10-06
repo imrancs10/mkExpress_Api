@@ -17,5 +17,6 @@ namespace MKExpress.API.DTO.Response
         public string Role { get; set; }
         public string Station { get; set; }
         public string GenderName { get; set; }
+        public bool IsActive { get; set; }
     }
 }

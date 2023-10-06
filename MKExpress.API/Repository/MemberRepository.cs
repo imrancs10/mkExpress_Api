@@ -51,6 +51,7 @@ namespace MKExpress.API.Repository
             var oldData = await _context.Members.Where(x => x.Email == request.Email).FirstOrDefaultAsync();
             if (oldData != null) throw new BusinessRuleViolationException(StaticValues.EmailAlreadyExist_Error, StaticValues.EmailAlreadyExist_Message);
             var trans = _context.Database.BeginTransaction();
+            request.IsActive = true;
             var entity = _context.Members.Add(request);
             if (await _context.SaveChangesAsync() > 0)
             {
@@ -84,9 +85,18 @@ namespace MKExpress.API.Repository
         public async Task<bool> ChangeStation(Guid memberId, Guid stationId)
         {
             var oldData = await _context.Members.Where(x => !x.IsDeleted && x.Id == memberId).FirstOrDefaultAsync();
-            if (oldData != null) throw new BusinessRuleViolationException(StaticValues.EmailAlreadyExist_Error, StaticValues.EmailAlreadyExist_Message);
+            if (oldData == null) throw new BusinessRuleViolationException(StaticValues.ErrorType_RecordNotFound, StaticValues.Error_RecordNotFound);
 
             oldData.StationId = stationId;
+            return await _context.SaveChangesAsync()>0;
+        }
+
+        public async Task<bool> ChangeRole(Guid userId, Guid roleId)
+        {
+            var oldData = await _context.Members.Where(x => x.Id == userId && !x.IsDeleted).FirstOrDefaultAsync()??throw new BusinessRuleViolationException(StaticValues.ErrorType_RecordNotFound, StaticValues.Error_RecordNotFound);
+            
+            oldData.RoleId = roleId;
+            _context.Attach(oldData);
             return await _context.SaveChangesAsync()>0;
         }
 

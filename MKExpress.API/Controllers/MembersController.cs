@@ -56,6 +56,16 @@ namespace MKExpress.API.Controllers
             return await _memberService.ChangeStation(memberId, stationId);
         }
 
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpPost(StaticValues.MemberChangeRolePath)]
+        public async Task<bool> ChangeRole([FromRoute] Guid userId, [FromRoute] Guid roleId)
+        {
+            return await _memberService.ChangeRole(userId, roleId);
+        }
+
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
