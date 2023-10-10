@@ -57,6 +57,7 @@ namespace MKExpress.API.Controllers
         {
             return await _shipmentService.GetTrackingByShipmentId(id);
         }
+
         [ProducesResponseType(typeof(List<ShipmentResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -65,6 +66,16 @@ namespace MKExpress.API.Controllers
         public async Task<List<ShipmentResponse>> GetTrackingByShipmentIds([FromRoute] string id)
         {
             return await _shipmentService.GetShipment(id);
+        }
+        
+        [ProducesResponseType(typeof(ShipmentValidateResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpPost(StaticValues.ShipmentValidatePath)]
+        public async Task<ShipmentValidateResponse> ValidateContainerShipment([FromBody] List<string> shipmentNo, [FromRoute] Guid id)
+        {
+            return await _shipmentService.ValidateContainerShipment(shipmentNo,id);
         }
     }
 }

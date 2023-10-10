@@ -3,14 +3,12 @@
 namespace MKExpress.API.Models
 {
     public class ContainerJourney:BaseModel
-    { 
-        public Guid FromStationId { get; set; }
-        public Guid ToStationId { get; set; }
-
-        [ForeignKey("FromStationId")]
-        public MasterData? FromStation { get; set; }
-        [ForeignKey("ToStationId")]
-        public MasterData? ToStation { get; set; }
+    {
+        public Guid ContainerId { get; set; }
+        public string StationName { get; set; }
+        public DateTime ArrivalAt{ get; set; }
+        public DateTime DepartureOn { get; set; }
+        public int SequenceNo { get; set; }
         [ForeignKey("ContainerId")]
         public Container Container { get; set; }
     }

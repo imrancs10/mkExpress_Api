@@ -9,6 +9,7 @@ namespace MKExpress.API.Models
 
         [ForeignKey("ContainerId")]
         public Container Container { get; set; }
+
         [ForeignKey("ShipmentId")]
         public Shipment Shipment { get; set; }
     }

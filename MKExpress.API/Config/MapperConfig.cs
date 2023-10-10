@@ -32,9 +32,9 @@ namespace MKExpress.API.Config
 
             #region Master Data
             CreateMap<MasterDataRequest, MasterData>();
-            CreateMap<MasterData,MasterDataResponse>();
+            CreateMap<MasterData, MasterDataResponse>();
             CreateMap<MasterData, MasterDataResponse>()
-                 .ForMember(des => des.MasterDataTypeCode, src => src.MapFrom(x=>x.MasterDataType));
+                 .ForMember(des => des.MasterDataTypeCode, src => src.MapFrom(x => x.MasterDataType));
             CreateMap<MasterDataTypeRequest, MasterDataType>();
             CreateMap<MasterDataType, MasterDataTypeResponse>();
             CreateMap<PagingResponse<MasterDataType>, PagingResponse<MasterDataTypeResponse>>();
@@ -54,7 +54,7 @@ namespace MKExpress.API.Config
                  .ForMember(des => des.Province, src => src.MapFrom(x => x.Province.Value))
                   .ForMember(des => des.City, src => src.MapFrom(x => x.City.Value))
                    .ForMember(des => des.Station, src => src.MapFrom(x => x.Station.Value))
-                    .ForMember(des => des.District, src => src.MapFrom(x => x.District.Value??string.Empty))
+                    .ForMember(des => des.District, src => src.MapFrom(x => x.District.Value ?? string.Empty))
                      .ForMember(des => des.ParentStation, src => src.MapFrom(x => x.ParentStation.Value));
             CreateMap<PagingResponse<LogisticRegion>, PagingResponse<LogisticRegionResponse>>();
             #endregion
@@ -83,7 +83,7 @@ namespace MKExpress.API.Config
                 .ForMember(des => des.ShipperCity, src => src.MapFrom(x => x.ShipperCity.Value))
                 .ForMember(des => des.ConsigneeCity, src => src.MapFrom(x => x.ConsigneeCity.Value));
             CreateMap<PagingResponse<ShipmentDetail>, PagingResponse<ShipmentDetailResponse>>();
-                
+
 
             CreateMap<ShipmentTrackingRequest, ShipmentTracking>();
             CreateMap<ShipmentTracking, ShipmentTrackingResponse>();
@@ -103,14 +103,43 @@ namespace MKExpress.API.Config
             CreateMap<MasterJourneyDetail, MasterJourneyDetailResponse>()
                   .ForMember(des => des.SubStationName, src => src.MapFrom(x => x.SubStation.Value))
                 .ForMember(des => des.SubStationCode, src => src.MapFrom(x => x.SubStation.Code));
+
+            CreateMap<MasterJourney, DropdownResponse>()
+                 .ForMember(des => des.Value, src => src.MapFrom(x => x.FromStation.Value + " -> " + x.ToStation.Value))
+                    .ForMember(des => des.Code, src => src.MapFrom(x => x.FromStation.Code.ToUpper() + " -> " + x.ToStation.Code.ToUpper()));
+            #endregion
+
+            #region Container
+         
+
+        CreateMap<ContainerRequest, Container>();
+            CreateMap<Container, ContainerResponse>()
+                 .ForMember(des => des.Journey, src => src.MapFrom<JourneyResolver>())
+                   .ForMember(des => des.TotalShipments, src => src.MapFrom(x=>x.ContainerJourneys.Count));
+            CreateMap<PagingResponse<Container>, PagingResponse<ContainerResponse>>();
+
             #endregion
 
         }
 
-        public static IMapper GetMapperConfig()
+    public static IMapper GetMapperConfig()
+    {
+        var config = new MapperConfiguration(cfg => { cfg.AddProfile(new MapperConfig()); });
+        return config.CreateMapper();
+    }
+}
+    public class JourneyResolver : IValueResolver<Container, ContainerResponse, string>
+    {
+        public string Resolve(Container a, ContainerResponse b, string destMember, ResolutionContext context)
         {
-            var config = new MapperConfiguration(cfg => { cfg.AddProfile(new MapperConfig()); });
-            return config.CreateMapper();
+            string jour = a.Journey.FromStation.Value + " -> ";
+            foreach(MasterJourneyDetail masterJourneyDetail in a.Journey.MasterJourneyDetails)
+            {
+                jour+=masterJourneyDetail.SubStation.Value + " -> ";
+            }
+            jour += a.Journey.ToStation.Value + " -> ";
+
+            return jour;
         }
     }
 }

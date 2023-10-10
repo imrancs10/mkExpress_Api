@@ -21,7 +21,7 @@ namespace MKExpress.API.Models
         [ForeignKey("CustomerId")]
         public Customer Customer { get; set; }
 
-        public List<ShipmentDetail> ShipmentDetails { get; set; }
+        public ShipmentDetail ShipmentDetail { get; set; }
 
     }
 }

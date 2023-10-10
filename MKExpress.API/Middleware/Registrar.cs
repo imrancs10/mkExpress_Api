@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using MKExpress.API.Repositories.Interfaces;
 using MKExpress.API.Repositories;
 using SalehGarib.API.Repositories;
+using MKExpress.API.Logger;
 
 namespace MKExpress.API.Middleware
 {
@@ -39,6 +40,7 @@ namespace MKExpress.API.Middleware
                 .AddScoped<IShipmentTrackingRepository, ShipmentTrackingRepository>()
                 .AddScoped<IMailService, MailService>()
                 .AddScoped<IExcelReader, ExcelReader>()
+                .AddSingleton<ILoggerManager, LoggerManager>()
                 .AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             return services;

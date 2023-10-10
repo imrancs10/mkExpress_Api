@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MKExpress.API.Contants;
 using MKExpress.API.Data;
+using MKExpress.API.DTO.BaseDto;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
 using MKExpress.API.Exceptions;
@@ -75,6 +76,16 @@ namespace MKExpress.API.Repository
                 TotalRecords = await data.CountAsync()
             };
             return pagingResponse;
+        }
+
+        public async Task<List<MasterJourney>> GetJourneyList()
+        {
+            return await _context.MasterJouneys
+                 .Include(x => x.FromStation)
+                 .Include(x => x.ToStation)
+                 .Where(x => !x.IsDeleted)
+                 .OrderBy(x => x.FromStation.Value)
+                 .ThenBy(x => x.ToStation.Value).ToListAsync();
         }
 
         public async Task<PagingResponse<MasterJourney>> Search(SearchPagingRequest pagingRequest)

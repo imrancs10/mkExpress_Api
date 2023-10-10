@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using DocumentFormat.OpenXml.Office2010.Excel;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
 using MKExpress.API.Models;
@@ -38,6 +37,11 @@ namespace MKExpress.API.Services
         public async Task<PagingResponse<MasterJourneyResponse>> GetAll(PagingRequest pagingRequest)
         {
             return _mapper.Map<PagingResponse<MasterJourneyResponse>>(await _repository.GetAll(pagingRequest));
+        }
+
+        public async Task<List<DropdownResponse>> GetJourneyList()
+        {
+           return _mapper.Map<List<DropdownResponse>>(await _repository.GetJourneyList());
         }
 
         public async Task<PagingResponse<MasterJourneyResponse>> Search(SearchPagingRequest searchPagingRequest)

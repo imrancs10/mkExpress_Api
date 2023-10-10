@@ -11,5 +11,6 @@ namespace MKExpress.API.Services.IServices
         Task<PagingResponse<ShipmentResponse>> GetAllShipment(PagingRequest pagingRequest);
         Task<ShipmentResponse> GetShipment(Guid id);
         Task<List<ShipmentResponse>> GetShipment(string ids);
+        Task<ShipmentValidateResponse> ValidateContainerShipment(List<string> shipmentNo,Guid containerJourneyId);
     }
 }

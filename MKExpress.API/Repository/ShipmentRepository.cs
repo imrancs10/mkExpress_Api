@@ -48,13 +48,13 @@ namespace MKExpress.API.Repository
         {
             var data = _context.Shipments
                 .Include(x=>x.Customer)
-                .Include(x => x.ShipmentDetails)
+                .Include(x => x.ShipmentDetail)
                 .ThenInclude(x => x.FromStore)
-                .Include(x => x.ShipmentDetails)
+                .Include(x => x.ShipmentDetail)
                 .ThenInclude(x => x.ToStore)
-                .Include(x => x.ShipmentDetails)
+                .Include(x => x.ShipmentDetail)
                 .ThenInclude(x => x.ShipperCity)
-                .Include(x => x.ShipmentDetails)
+                .Include(x => x.ShipmentDetail)
                 .ThenInclude(x => x.ConsigneeCity)
                 .Where(x => !x.IsDeleted)
                 .OrderByDescending(x => x.ShipmentNumber)
@@ -74,13 +74,13 @@ namespace MKExpress.API.Repository
         public async Task<Shipment> GetShipment(Guid id)
         {
             return await _context.Shipments
-                  .Include(x => x.ShipmentDetails)
+                  .Include(x => x.ShipmentDetail)
                 .ThenInclude(x => x.FromStore)
-                .Include(x => x.ShipmentDetails)
+                .Include(x => x.ShipmentDetail)
                 .ThenInclude(x => x.ToStore)
-                .Include(x => x.ShipmentDetails)
+                .Include(x => x.ShipmentDetail)
                 .ThenInclude(x => x.ShipperCity)
-                .Include(x => x.ShipmentDetails)
+                .Include(x => x.ShipmentDetail)
                 .ThenInclude(x => x.ConsigneeCity)
                   .Where(x => !x.IsDeleted && x.Id == id).FirstOrDefaultAsync();
         }
@@ -88,15 +88,26 @@ namespace MKExpress.API.Repository
         public async Task<List<Shipment>> GetShipment(List<Guid> ids)
         {
             return await _context.Shipments
-                 .Include(x => x.ShipmentDetails)
+                 .Include(x => x.ShipmentDetail)
                .ThenInclude(x => x.FromStore)
-               .Include(x => x.ShipmentDetails)
+               .Include(x => x.ShipmentDetail)
                .ThenInclude(x => x.ToStore)
-               .Include(x => x.ShipmentDetails)
+               .Include(x => x.ShipmentDetail)
                .ThenInclude(x => x.ShipperCity)
-               .Include(x => x.ShipmentDetails)
+               .Include(x => x.ShipmentDetail)
             .ThenInclude(x => x.ConsigneeCity)
                  .Where(x => !x.IsDeleted && ids.Contains(x.Id)).ToListAsync();
+        }
+
+        public async Task<List<Shipment>> ValidateShipment(List<string> shipmentNo)
+        {
+            return await _context.Shipments
+                .Include(x=>x.ShipmentDetail)
+                .ThenInclude(x=>x.ConsigneeCity)
+                  .Include(x => x.ShipmentDetail)
+                .ThenInclude(x => x.ShipperCity)
+                .Where(x => !x.IsDeleted && shipmentNo.Contains(x.ShipmentNumber))
+                .ToListAsync();
         }
     }
 }

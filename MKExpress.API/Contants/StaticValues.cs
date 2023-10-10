@@ -34,6 +34,7 @@
         public const string MasterJourneyDeletePath = APIPrefix + "master-journey/{id}";
         public const string MasterJourneyByIdPath = APIPrefix + "master-journey/get/{id}";
         public const string MasterJourneySearchPath = APIPrefix + "master-journey/search";
+        public const string MasterJourneyDropdownPath = APIPrefix + "master-journey/dropdown/journey";
         #endregion
 
         #region Customer API Path
@@ -42,6 +43,11 @@
         public const string CustomerByContactNoPath = APIPrefix + "get/by-contact";
         public const string CustomerSearchPath = APIPrefix + "search";
         public const string CustomerPath = APIPrefix;
+        #endregion
+
+        #region Container API Path
+        public const string ContainerPath = APIPrefix;
+        public const string ContainerGetByIdPath = APIPrefix + "get/{id}";
         #endregion
 
         #region Logistic Region API Path
@@ -56,6 +62,7 @@
         public const string ShipmentByIdPath = APIPrefix + "get/{id}";
         public const string ShipmentTrackingByShipmentIdPath = APIPrefix + "get/tracking/{id}";
         public const string ShipmentByIdsPath = APIPrefix + "get/by-ids/{id}";
+        public const string ShipmentValidatePath = APIPrefix + "validate/{id}";
         #endregion
 
         #region Member
@@ -134,6 +141,7 @@
         public const string Error_CustomerNotFoundError = "Customer not found!";
         public const string Error_InvalidParameters= "Invalid parameters!";
         public const string Error_InvalidGUID = "Invalid GUID!";
+        public const string Error_ShipmentStatusShouldBeStored = "Shipment status should be stored!";
         public const string Error_UserIdNotPresentInHeader = "User id is not present in header!";
 
         public static string RecordAlreadyExistMessage(string recordType)

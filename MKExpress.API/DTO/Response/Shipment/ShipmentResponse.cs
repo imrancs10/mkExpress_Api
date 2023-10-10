@@ -19,7 +19,7 @@ namespace MKExpress.API.DTO.Response
         public DateTime? DeliveryDate { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? ScheduleDeliveryDate { get; set; }
-        public List<ShipmentDetailResponse> ShipmentDetails { get; set; }
+        public ShipmentDetailResponse ShipmentDetail { get; set; }
         public string CustomerName { get; set; }
 
     }

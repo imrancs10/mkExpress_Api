@@ -1,15 +1,9 @@
-﻿using MKExpress.API.DTO.Base;
-using MKExpress.API.DTO.BaseDto;
+﻿using MKExpress.API.DTO.BaseDto;
 
-namespace MKExpress.API.DTO.Response.Common
+namespace MKExpress.API.DTO.Response
 {
-    public class DropdownResponse:BaseResponse
+    public class DropdownResponse:BaseDropdownResponse
     {
-        public string EnValue { get; set; }
-        public string HiValue { get; set; }
-        public string TaValue { get; set; }
-        public string TeValue { get; set; }
-        public int ParentId { get; set; }
         public int DisplayOrder { get; set; }
     }
 }

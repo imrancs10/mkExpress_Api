@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Text;
 using MKExpress.API.Dto;
 using Microsoft.Extensions.Configuration;
+using NLog;
 
 var _policyName = "CorsPolicy";
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +25,7 @@ builder.Services.AddControllers()
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {

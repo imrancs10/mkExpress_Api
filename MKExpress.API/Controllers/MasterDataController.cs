@@ -227,5 +227,15 @@ namespace MKExpress.Web.API.Controllers
         {
             return await _masterJourneyService.Search(searchPagingRequest);
         }
+
+        [ProducesResponseType(typeof(List<DropdownResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpGet(StaticValues.MasterJourneyDropdownPath)]
+        public async Task<List<DropdownResponse>> GetJourneyList()
+        {
+            return await _masterJourneyService.GetJourneyList();
+        }
     }
 }

@@ -15,12 +15,14 @@ namespace MKExpress.API.Services
         private readonly IShipmentRepository _repo;
         private readonly IMapper _mapper;
         private readonly IShipmentTrackingRepository _shipmentTrackingRepository;
+        private readonly IMasterJourneyService _masterJourneyService;
 
-        public ShipmentService(IShipmentRepository repo, IMapper mapper, IShipmentTrackingRepository shipmentTrackingRepository)
+        public ShipmentService(IShipmentRepository repo, IMapper mapper, IShipmentTrackingRepository shipmentTrackingRepository, IMasterJourneyService masterJourneyService)
         {
             _mapper = mapper;
             _repo = repo;
             _shipmentTrackingRepository = shipmentTrackingRepository;
+            _masterJourneyService = masterJourneyService;
         }
         public async Task<ShipmentResponse> CreateShipment(ShipmentRequest request)
         {
@@ -58,6 +60,53 @@ namespace MKExpress.API.Services
         public async Task<List<ShipmentTrackingResponse>> GetTrackingByShipmentId(Guid shipmentId)
         {
             return _mapper.Map<List<ShipmentTrackingResponse>>(await _shipmentTrackingRepository.GetTrackingByShipmentId(shipmentId));
+        }
+
+        public async Task<ShipmentValidateResponse> ValidateContainerShipment(List<string> shipmentNo, Guid containerJourneyId)
+        {
+            var res = await _repo.ValidateShipment(shipmentNo);
+            if (res == null || res.Count == 0)
+                throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.DataNotFoundMessage);
+            var containerJourney = await _masterJourneyService.Get(containerJourneyId);
+            ShipmentValidateResponse shipmentValidateResponse = new();
+            List<ShipmentErrorResponse> shipmentErrors = new();
+            shipmentValidateResponse.Shipments = _mapper.Map<List<ShipmentResponse>>(res);
+            foreach (Shipment shipment in res)
+            {
+                if (shipment.Status.ToLower() != ShipmentStatusEnum.Stored.ToString().ToLower())
+                {
+                    shipmentErrors.Add(new ShipmentErrorResponse()
+                    {
+                        ShipmentNo = shipment.ShipmentNumber,
+                        IsValid = false,
+                        Error = StaticValues.Error_ShipmentStatusShouldBeStored
+                    });
+                }
+                else if(shipment.ShipmentDetail.ShipperCityId!=containerJourney.FromStationId)
+                    shipmentErrors.Add(new ShipmentErrorResponse()
+                    {
+                        ShipmentNo = shipment.ShipmentNumber,
+                        IsValid = false,
+                        Error = StaticValues.Error_ShipmentStatusShouldBeStored
+                    });
+                else if (shipment.ShipmentDetail.ConsigneeCityId != containerJourney.ToStationId)
+                    shipmentErrors.Add(new ShipmentErrorResponse()
+                    {
+                        ShipmentNo = shipment.ShipmentNumber,
+                        IsValid = false,
+                        Error = StaticValues.Error_ShipmentStatusShouldBeStored
+                    });
+                else
+                    shipmentErrors.Add(new ShipmentErrorResponse()
+                    {
+                        ShipmentNo = shipment.ShipmentNumber,
+                        IsValid = true,
+                        Error = string.Empty
+                    });
+
+            }
+            shipmentValidateResponse.Errors = shipmentErrors;
+            return shipmentValidateResponse;
         }
     }
 }

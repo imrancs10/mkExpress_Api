@@ -46,7 +46,6 @@ namespace MKExpress.API.Data
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Container> Containers { get; set; }
         public DbSet<ContainerDetail> ContainerDetails { get; set; }
-        public DbSet<ContainerTracking> ContainerTrackings { get; set; }
         public DbSet<ContainerJourney> ContainerJourneys { get; set; }
         public DbSet<LogisticRegion> LogisticRegions { get; set; }
         public DbSet<MasterJourney> MasterJouneys { get; set; }
