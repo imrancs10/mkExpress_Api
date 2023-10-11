@@ -48,6 +48,9 @@
         #region Container API Path
         public const string ContainerPath = APIPrefix;
         public const string ContainerGetByIdPath = APIPrefix + "get/{id}";
+        public const string ContainerGetJourneyPath = APIPrefix + "get/journey/{id}";
+        public const string ContainerCheckInPath = APIPrefix + "in/{containerId}/{containerJourneyId}";
+        public const string ContainerCheckOutPath = APIPrefix + "out/{containerId}/{containerJourneyId}";
         #endregion
 
         #region Logistic Region API Path
@@ -109,7 +112,11 @@
         public const string ErrorType_CustomerNotFoundError = "CustomerNotFoundError";
         public const string ErrorType_InvalidParameters = "InvalidParameters!";
         public const string ErrorType_InvalidGUID = "InvalidGUID!";
-        public const string ErrorType_UserIdNotPresentInHeader = "UserIdNotPresentInHeader!";
+        public const string Error_UserIdNotPresentInHeader = "UserIdNotPresentInHeader!";
+        public const string Error_UserIdHeaderNotPresentInRequest = "UserIdHeaderNotPresentInRequest!";
+        public const string Error_UserIdInvalidPresentInHeader = "UserIdNotPresentInHeader!";
+        public const string Error_CantCheckinAtSourceStation = "CantCheckedInAtDestinationStation!";
+        public const string Error_CantCheckOutAtDestinationStation = "CantCheckOutAtDestinationStation!";
         #endregion
 
         #region Error Message
@@ -120,6 +127,7 @@
         public const string InvalidEmail = "Email address is invalid!";
         public const string DataNotFoundError = "DataNotFound!";
         public const string DataNotFoundMessage = "Data does not exist!";
+        public const string ContainerJourneyDetailsNotFound = "Container journey details not found!";
         public const string RecordAlreadyExistError = "RecordAlreadyExist!";
         public const string RecordAlreadyCancelledError = "RecordAlreadyCancelledError!";
         public const string RecordAlreadyCancelledMessage = "Record already cancelled!";
@@ -142,7 +150,15 @@
         public const string Error_InvalidParameters= "Invalid parameters!";
         public const string Error_InvalidGUID = "Invalid GUID!";
         public const string Error_ShipmentStatusShouldBeStored = "Shipment status should be stored!";
-        public const string Error_UserIdNotPresentInHeader = "User id is not present in header!";
+        public const string Message_UserIdNotPresentInHeader = "User id is not present in header!";
+        public const string Error_ContainerAlreadyCheckedInAtStation = "ContainerAlreadyCheckedInAtStation!";
+        public const string Error_ContainerAlreadyCheckedOutAtStation = "ContainerAlreadyCheckedOutAtStation!";
+        public const string Message_ContainerAlreadyCheckedInAtStation = "Container already checked-in at station!";
+        public const string Message_ContainerAlreadyCheckedOutAtStation = "Container already checked-out at station!";
+        public const string Message_UserIdInvalidPresentInHeader = "UserId is invalid present in header!";
+        public const string Message_UserIdHeaderNotPresentInRequest = "Userid header not present in request!";
+        public const string Message_CantCheckinAtSourceStation = "Can't check-in at source station!";
+        public const string Message_CantCheckOutAtDestinationStation = "Can't check-our at source station!";
 
         public static string RecordAlreadyExistMessage(string recordType)
         {

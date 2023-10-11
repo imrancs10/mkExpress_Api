@@ -38,6 +38,7 @@ namespace MKExpress.API.Middleware
                 .AddScoped<IContainerRepository, ContainerRepository>()
                 .AddScoped<IContainerService, ContainerService>()
                 .AddScoped<IShipmentTrackingRepository, ShipmentTrackingRepository>()
+                .AddScoped<ICommonService, CommonService>()
                 .AddScoped<IMailService, MailService>()
                 .AddScoped<IExcelReader, ExcelReader>()
                 .AddSingleton<ILoggerManager, LoggerManager>()

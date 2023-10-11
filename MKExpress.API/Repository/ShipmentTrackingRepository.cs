@@ -4,17 +4,18 @@ using MKExpress.API.Data;
 using MKExpress.API.Exceptions;
 using MKExpress.API.Models;
 using MKExpress.API.Repository.IRepository;
+using MKExpress.API.Services.IServices;
 
 namespace MKExpress.API.Repository
 {
     public class ShipmentTrackingRepository: IShipmentTrackingRepository
     {
         private readonly MKExpressContext _context;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        public ShipmentTrackingRepository(MKExpressContext context, IHttpContextAccessor httpContextAccessor)
+        private readonly ICommonService _commonService;
+        public ShipmentTrackingRepository(MKExpressContext context, ICommonService commonService)
         {
             _context = context;
-            _httpContextAccessor = httpContextAccessor;
+            _commonService = commonService;
         }
 
         public async Task<bool> AddTracking(ShipmentTracking shipmentTracking)
@@ -23,7 +24,7 @@ namespace MKExpress.API.Repository
             {
                 throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidParameters, StaticValues.Error_InvalidParameters);
             }
-            shipmentTracking.CommentBy = GetUpdatedBy();
+            shipmentTracking.CommentBy = _commonService.GetLoggedInUserId();
             var entity = _context.ShipmentTrackings.Add(shipmentTracking);
             entity.State = Microsoft.EntityFrameworkCore.EntityState.Added;
             return await _context.SaveChangesAsync() > 0;
@@ -48,26 +49,6 @@ namespace MKExpress.API.Repository
                 .ThenInclude(x => x.ConsigneeCity)
                 .Include(x=>x.CommentByMember)
                 .Where(x=>!x.IsDeleted && x.ShipmentId==shipmentId).ToListAsync();
-        }
-
-        private Guid GetUpdatedBy()
-        {
-            if (!(bool)_httpContextAccessor.HttpContext?.Request.Headers.ContainsKey(StaticValues.ConstValue_UserId))
-            {
-                throw new BusinessRuleViolationException(StaticValues.ErrorType_UserIdNotPresentInHeader, StaticValues.Error_UserIdNotPresentInHeader);
-            }
-            else
-            {
-                string? value = _httpContextAccessor.HttpContext?.Request.Headers[StaticValues.ConstValue_UserId].ToString();
-                if (!string.IsNullOrEmpty(value))
-                {
-                    if (Guid.TryParse(value, out Guid newUserId))
-                    {
-                        return newUserId;
-                    }
-                }
-            }
-            throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidGUID, StaticValues.Error_InvalidGUID);
         }
     }
 }

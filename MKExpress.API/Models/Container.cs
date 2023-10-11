@@ -12,6 +12,7 @@ namespace MKExpress.API.Models
 
         public List<ContainerDetail> ContainerDetails { get; set; }
         public List<ContainerJourney> ContainerJourneys { get; set; }
+        public List<ContainerTracking> ContainerTrackings { get; set; }
 
         [ForeignKey("ClosedBy")]
         public Member ClosedByMember { get; set; }

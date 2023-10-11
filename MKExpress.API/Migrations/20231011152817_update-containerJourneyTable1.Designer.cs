@@ -4,6 +4,7 @@ using MKExpress.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MKExpress.API.Migrations
 {
     [DbContext(typeof(MKExpressContext))]
-    partial class MKExpressContextModelSnapshot : ModelSnapshot
+    [Migration("20231011152817_update-containerJourneyTable1")]
+    partial class updatecontainerJourneyTable1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -129,6 +132,12 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime?>("ArrivalAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid?>("CheckInById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CheckOutById")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("ContainerId")
                         .HasColumnType("uniqueidentifier");
 
@@ -170,62 +179,15 @@ namespace MKExpress.API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CheckInById");
+
+                    b.HasIndex("CheckOutById");
+
                     b.HasIndex("ContainerId");
 
                     b.HasIndex("StationId");
 
                     b.ToTable("ContainerJourneys");
-                });
-
-            modelBuilder.Entity("MKExpress.API.Models.ContainerTracking", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("ContainerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ContainerJourneyId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("UpdatedBy")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContainerId");
-
-                    b.HasIndex("ContainerJourneyId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.ToTable("ContainerTrackings");
                 });
 
             modelBuilder.Entity("MKExpress.API.Models.Customer", b =>
@@ -513,7 +475,7 @@ namespace MKExpress.API.Migrations
 
                     b.HasIndex("SubStationId");
 
-                    b.ToTable("MasterJourneyDetails");
+                    b.ToTable("masterJourneyDetails");
                 });
 
             modelBuilder.Entity("MKExpress.API.Models.Member", b =>
@@ -1023,6 +985,14 @@ namespace MKExpress.API.Migrations
 
             modelBuilder.Entity("MKExpress.API.Models.ContainerJourney", b =>
                 {
+                    b.HasOne("MKExpress.API.Models.Member", "CheckInBy")
+                        .WithMany()
+                        .HasForeignKey("CheckInById");
+
+                    b.HasOne("MKExpress.API.Models.Member", "CheckOutBy")
+                        .WithMany()
+                        .HasForeignKey("CheckOutById");
+
                     b.HasOne("MKExpress.API.Models.Container", "Container")
                         .WithMany("ContainerJourneys")
                         .HasForeignKey("ContainerId")
@@ -1035,36 +1005,13 @@ namespace MKExpress.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("CheckInBy");
+
+                    b.Navigation("CheckOutBy");
+
                     b.Navigation("Container");
 
                     b.Navigation("Station");
-                });
-
-            modelBuilder.Entity("MKExpress.API.Models.ContainerTracking", b =>
-                {
-                    b.HasOne("MKExpress.API.Models.Container", "Container")
-                        .WithMany("ContainerTrackings")
-                        .HasForeignKey("ContainerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MKExpress.API.Models.ContainerJourney", "ContainerJourney")
-                        .WithMany()
-                        .HasForeignKey("ContainerJourneyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MKExpress.API.Models.Member", "CreatedMember")
-                        .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Container");
-
-                    b.Navigation("ContainerJourney");
-
-                    b.Navigation("CreatedMember");
                 });
 
             modelBuilder.Entity("MKExpress.API.Models.LogisticRegion", b =>
@@ -1262,8 +1209,6 @@ namespace MKExpress.API.Migrations
                     b.Navigation("ContainerDetails");
 
                     b.Navigation("ContainerJourneys");
-
-                    b.Navigation("ContainerTrackings");
                 });
 
             modelBuilder.Entity("MKExpress.API.Models.MasterJourney", b =>

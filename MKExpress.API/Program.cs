@@ -74,6 +74,7 @@ builder.Services.AddAuthentication(opt =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ConfigManager.AppSetting["JWT:Secret"]))
     };
 });
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(_policyName,
@@ -99,7 +100,7 @@ app.UseSwaggerUI(options =>
 {
     if (app.Environment.IsDevelopment())
         options.SwaggerEndpoint("/swagger/V1/swagger.json", "IMK Express Web API");
-    else 
+    else
         options.SwaggerEndpoint("/swagger/V1/swagger.json", "IMK Express Web API");
     options.DocExpansion(DocExpansion.None);
 });

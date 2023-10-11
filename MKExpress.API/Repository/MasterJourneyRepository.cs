@@ -125,7 +125,7 @@ namespace MKExpress.API.Repository
                .Where(x => x.Id == request.Id && !x.IsDeleted)
                .FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.ErrorType_RecordNotFound, StaticValues.Error_RecordNotFound);
             var trans=_context.Database.BeginTransaction();
-            _context.masterJourneyDetails.RemoveRange(oldData.MasterJourneyDetails);
+            _context.MasterJourneyDetails.RemoveRange(oldData.MasterJourneyDetails);
             if(await _context.SaveChangesAsync()>0)
             {
                 oldData.MasterJourneyDetails=request.MasterJourneyDetails;

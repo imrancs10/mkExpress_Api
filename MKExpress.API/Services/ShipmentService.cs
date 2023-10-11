@@ -65,38 +65,39 @@ namespace MKExpress.API.Services
         public async Task<ShipmentValidateResponse> ValidateContainerShipment(List<string> shipmentNo, Guid containerJourneyId)
         {
             var res = await _repo.ValidateShipment(shipmentNo);
-            if (res == null || res.Count == 0)
-                throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.DataNotFoundMessage);
-            var containerJourney = await _masterJourneyService.Get(containerJourneyId);
+           // if (res == null || res.Count == 0)
+           //     throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.DataNotFoundMessage);
+
+           // var containerJourney = await _masterJourneyService.Get(containerJourneyId);
             ShipmentValidateResponse shipmentValidateResponse = new();
             List<ShipmentErrorResponse> shipmentErrors = new();
             shipmentValidateResponse.Shipments = _mapper.Map<List<ShipmentResponse>>(res);
             foreach (Shipment shipment in res)
             {
-                if (shipment.Status.ToLower() != ShipmentStatusEnum.Stored.ToString().ToLower())
-                {
-                    shipmentErrors.Add(new ShipmentErrorResponse()
-                    {
-                        ShipmentNo = shipment.ShipmentNumber,
-                        IsValid = false,
-                        Error = StaticValues.Error_ShipmentStatusShouldBeStored
-                    });
-                }
-                else if(shipment.ShipmentDetail.ShipperCityId!=containerJourney.FromStationId)
-                    shipmentErrors.Add(new ShipmentErrorResponse()
-                    {
-                        ShipmentNo = shipment.ShipmentNumber,
-                        IsValid = false,
-                        Error = StaticValues.Error_ShipmentStatusShouldBeStored
-                    });
-                else if (shipment.ShipmentDetail.ConsigneeCityId != containerJourney.ToStationId)
-                    shipmentErrors.Add(new ShipmentErrorResponse()
-                    {
-                        ShipmentNo = shipment.ShipmentNumber,
-                        IsValid = false,
-                        Error = StaticValues.Error_ShipmentStatusShouldBeStored
-                    });
-                else
+                //if (shipment.Status.ToLower() != ShipmentStatusEnum.Stored.ToString().ToLower())
+                //{
+                //    shipmentErrors.Add(new ShipmentErrorResponse()
+                //    {
+                //        ShipmentNo = shipment.ShipmentNumber,
+                //        IsValid = false,
+                //        Error = StaticValues.Error_ShipmentStatusShouldBeStored
+                //    });
+                //}
+                //else if(shipment.ShipmentDetail.ShipperCityId!=containerJourney.FromStationId)
+                //    shipmentErrors.Add(new ShipmentErrorResponse()
+                //    {
+                //        ShipmentNo = shipment.ShipmentNumber,
+                //        IsValid = false,
+                //        Error = StaticValues.Error_ShipmentStatusShouldBeStored
+                //    });
+                //else if (shipment.ShipmentDetail.ConsigneeCityId != containerJourney.ToStationId)
+                //    shipmentErrors.Add(new ShipmentErrorResponse()
+                //    {
+                //        ShipmentNo = shipment.ShipmentNumber,
+                //        IsValid = false,
+                //        Error = StaticValues.Error_ShipmentStatusShouldBeStored
+                //    });
+                //else
                     shipmentErrors.Add(new ShipmentErrorResponse()
                     {
                         ShipmentNo = shipment.ShipmentNumber,

@@ -1,13 +1,10 @@
 ﻿#nullable enable
+using Microsoft.EntityFrameworkCore;
 using MKExpress.API.DTO.Response;
 using MKExpress.API.Exceptions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using System;
+using MKExpress.API.Logger;
 using System.Net;
-using System.Net.Http;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace MKExpress.API.Middleware
 {
@@ -16,12 +13,14 @@ namespace MKExpress.API.Middleware
     {
         private readonly Func<Exception, ExceptionResponse>? _localExceptionHandlerFunc;
         private readonly RequestDelegate _next;
+        private readonly ILoggerManager _loggerManager;
 
-        public GlobalExceptionHandlerMiddleware(RequestDelegate next,
+        public GlobalExceptionHandlerMiddleware(RequestDelegate next,ILoggerManager loggerManager,
             Func<Exception, ExceptionResponse>? localExceptionHandlerFunc = null)
         {
             _next = next;
             _localExceptionHandlerFunc = localExceptionHandlerFunc;
+            _loggerManager = loggerManager;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -32,6 +31,7 @@ namespace MKExpress.API.Middleware
             }
             catch (Exception ex)
             {
+                _loggerManager.LogError(ex, ex.Message); // Logging the global exception;
                 await HandleExecptionAsync(context, ex);
             }
         }

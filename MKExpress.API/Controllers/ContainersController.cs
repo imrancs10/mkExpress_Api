@@ -7,7 +7,6 @@ using MKExpress.API.Services.IServices;
 
 namespace MKExpress.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
     public class ContainersController : ControllerBase
     {
@@ -34,7 +33,7 @@ namespace MKExpress.API.Controllers
         [HttpGet(StaticValues.ContainerPath)]
         public async Task<PagingResponse<ContainerResponse>> GetAllContainer([FromQuery] PagingRequest pagingRequest)
         {
-           return await _containerService.GetAllContainer(pagingRequest);
+          return await _containerService.GetAllContainer(pagingRequest);
         }
 
         [ProducesResponseType(typeof(ContainerResponse), StatusCodes.Status200OK)]
@@ -45,6 +44,36 @@ namespace MKExpress.API.Controllers
         public async Task<ContainerResponse> GetContainer([FromRoute]Guid id)
         {
            return await _containerService.GetContainer(id);
+        }
+
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpPost(StaticValues.ContainerCheckOutPath)]
+        public async Task<bool> CheckOutContainer([FromRoute] Guid containerId, [FromRoute] Guid containerJourneyId)
+        {
+            return await _containerService.CheckOutContainer(containerId,containerJourneyId);
+        }
+
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpPost(StaticValues.ContainerCheckInPath)]
+        public async Task<bool> CheckInContainer([FromRoute] Guid containerId, [FromRoute] Guid containerJourneyId)
+        {
+            return await _containerService.CheckInContainer(containerId, containerJourneyId);
+        }
+
+        [ProducesResponseType(typeof(List<ContainerJourneyResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpGet(StaticValues.ContainerGetJourneyPath)]
+        public async Task<List<ContainerJourneyResponse>> CheckInContainer([FromRoute] int id)
+        {
+            return await _containerService.GetContainerJourney(id);
         }
     }
 }

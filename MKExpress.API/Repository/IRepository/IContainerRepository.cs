@@ -7,9 +7,9 @@ namespace MKExpress.API.Repository.IRepository
     public interface IContainerRepository
     {
         Task<Container> AddContainer(Container container);
-        Task<ContainerJourney> GetContainerJourney(Guid containerId);
-        Task<ContainerJourney> CheckInContainer(Guid containerId,Guid containerJourneyId);
-        Task<ContainerJourney> CheckOutContainer(Guid containerId, Guid containerJourneyId);
+        Task<List<ContainerJourney>> GetContainerJourney(int containerNo);
+        Task<bool> CheckInContainer(Guid containerId,Guid containerJourneyId);
+        Task<bool> CheckOutContainer(Guid containerId, Guid containerJourneyId);
         Task<Container> GetContainer(Guid id);
         Task<PagingResponse<Container>> GetAllContainer(PagingRequest pagingRequest);
     }

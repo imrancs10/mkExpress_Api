@@ -105,37 +105,51 @@ namespace MKExpress.API.Config
                 .ForMember(des => des.SubStationCode, src => src.MapFrom(x => x.SubStation.Code));
 
             CreateMap<MasterJourney, DropdownResponse>()
-                 .ForMember(des => des.Value, src => src.MapFrom(x => x.FromStation.Value + " -> " + x.ToStation.Value))
+                 .ForMember(des => des.Value, src => src.MapFrom(x => x.FromStation.Value + " -> " + x.ToStation.Value??string.Empty))
                     .ForMember(des => des.Code, src => src.MapFrom(x => x.FromStation.Code.ToUpper() + " -> " + x.ToStation.Code.ToUpper()));
             #endregion
 
             #region Container
-         
 
-        CreateMap<ContainerRequest, Container>();
+
+            CreateMap<ContainerRequest, Container>();
             CreateMap<Container, ContainerResponse>()
-                 .ForMember(des => des.Journey, src => src.MapFrom<JourneyResolver>())
-                   .ForMember(des => des.TotalShipments, src => src.MapFrom(x=>x.ContainerJourneys.Count));
+                   .ForMember(des => des.Journey, src => src.MapFrom<JourneyResolver>())
+                   .ForMember(des => des.ClosedByMember, src => src.MapFrom(x=>$"{x.ClosedByMember.FirstName} ${x.ClosedByMember.LastName}"))
+                   .ForMember(des => des.ContainerType, src => src.MapFrom(x=>x.ContainerType.Value))
+                   .ForMember(des => des.TotalShipments, src => src.MapFrom(x => x.ContainerDetails.Count));
             CreateMap<PagingResponse<Container>, PagingResponse<ContainerResponse>>();
 
+            CreateMap<ContainerDetailRequest, ContainerDetail>();
+            CreateMap<ContainerDetail, ContainerDetailResponse>();
+
+            CreateMap<ContainerJourneyRequest, ContainerJourney>();
+            CreateMap<ContainerJourney, ContainerJourneyResponse>()
+                 .ForMember(des => des.StationName, src => src.MapFrom(x => x.Station.Value));
+
+            CreateMap<ContainerTracking, ContainerTrackingResponse>()
+              .ForMember(des => des.StationName, src => src.MapFrom(x => x.ContainerJourney.Station.Value))
+            .ForMember(des => des.CreatedMember, src => src.MapFrom(x => $"{x.CreatedMember.FirstName} ${x.CreatedMember.LastName}"));
             #endregion
 
         }
 
-    public static IMapper GetMapperConfig()
-    {
-        var config = new MapperConfiguration(cfg => { cfg.AddProfile(new MapperConfig()); });
-        return config.CreateMapper();
+        public static IMapper GetMapperConfig()
+        {
+            var config = new MapperConfiguration(cfg => { cfg.AddProfile(new MapperConfig()); });
+            return config.CreateMapper();
+        }
     }
-}
     public class JourneyResolver : IValueResolver<Container, ContainerResponse, string>
     {
         public string Resolve(Container a, ContainerResponse b, string destMember, ResolutionContext context)
         {
+            if (a.Journey == null)
+                return string.Empty;
             string jour = a.Journey.FromStation.Value + " -> ";
-            foreach(MasterJourneyDetail masterJourneyDetail in a.Journey.MasterJourneyDetails)
+            foreach (MasterJourneyDetail masterJourneyDetail in a.Journey.MasterJourneyDetails)
             {
-                jour+=masterJourneyDetail.SubStation.Value + " -> ";
+                jour += masterJourneyDetail.SubStation.Value + " -> ";
             }
             jour += a.Journey.ToStation.Value + " -> ";
 

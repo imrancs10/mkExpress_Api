@@ -4,6 +4,7 @@ using MKExpress.API.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MKExpress.API.Contants;
+using MKExpress.API.Services.IServices;
 
 namespace MKExpress.API.Data
 {
@@ -11,12 +12,12 @@ namespace MKExpress.API.Data
     {
         protected readonly IConfiguration Configuration;
         private readonly string _defaultConnection;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ICommonService _commonService;
 
-        public MKExpressContext(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        public MKExpressContext(IConfiguration configuration, ICommonService commonService)
         {
             Configuration = configuration;
-            _httpContextAccessor = httpContextAccessor;
+            _commonService=commonService;
             //_defaultConnection = "workstation id=mssql-88450-0.cloudclusters.net,12597;TrustServerCertificate=true;user id=LaBeachUser;pwd=Gr8@54321;data source=mssql-88450-0.cloudclusters.net,12597;persist security info=False;initial catalog=KaashiYatri";
             _defaultConnection = "workstation id=mssql-88450-0.cloudclusters.net,12597;TrustServerCertificate=true;user id=mkExpress_User;pwd=Gr8@12345;data source=mssql-88450-0.cloudclusters.net,12597;persist security info=False;initial catalog=mkExpress_Db_test";
         }
@@ -49,7 +50,8 @@ namespace MKExpress.API.Data
         public DbSet<ContainerJourney> ContainerJourneys { get; set; }
         public DbSet<LogisticRegion> LogisticRegions { get; set; }
         public DbSet<MasterJourney> MasterJouneys { get; set; }
-        public DbSet<MasterJourneyDetail> masterJourneyDetails { get; set; }
+        public DbSet<MasterJourneyDetail> MasterJourneyDetails { get; set; }
+        public DbSet<ContainerTracking> ContainerTrackings { get; set; }
         public override int SaveChanges()
         {
             AddDateTimeStamp();
@@ -69,29 +71,18 @@ namespace MKExpress.API.Data
                 var hasChange = entityEntry.State == EntityState.Added || entityEntry.State == EntityState.Modified;
                 if (!hasChange) continue;
                 if (entityEntry.Entity is not BaseModel baseModel) continue;
-                var now = DateTime.Now;
-                Guid? userId = null;
-                if ((bool)_httpContextAccessor.HttpContext?.Request.Headers.ContainsKey(StaticValues.ConstValue_UserId))
-                {
-                    string? value = _httpContextAccessor.HttpContext?.Request.Headers[StaticValues.ConstValue_UserId].ToString();
-                    if (!string.IsNullOrEmpty(value))
-                    {
-                        if (Guid.TryParse(value, out Guid newUserId))
-                        {
-                            userId = newUserId;
-                        }
-                    }
-                }
+                Guid? userId = _commonService.GetLoggedInUserId();
+               
                 if (entityEntry.State is EntityState.Added)
                 {
                     baseModel.CreatedBy = 0;
-                    baseModel.CreatedAt = now;
+                    baseModel.CreatedAt = DateTime.Now;
                 }
                 else
                 {
                     baseModel.UpdatedBy = 0;
                     entityEntry.Property(StaticValues.ConstValue_CreatedAt).IsModified = false;
-                    baseModel.UpdatedAt = now;
+                    baseModel.UpdatedAt = DateTime.Now;
                 }
             }
         }
