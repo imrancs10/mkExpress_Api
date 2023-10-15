@@ -13,6 +13,7 @@ namespace MKExpress.API.DTO.Response
         public Guid ContainerTypeId { get; set; }
         public DateTime? ClosedOn { get; set; }
         public Guid? ClosedBy { get; set; }
+        public bool IsClosed { get; set; }
         public Guid JourneyId { get; set; }
         public DateTime? CreatedAt { get; set; }
         public string? ClosedByMember { get; set; }

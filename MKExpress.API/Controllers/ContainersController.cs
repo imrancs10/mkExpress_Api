@@ -71,9 +71,49 @@ namespace MKExpress.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpGet(StaticValues.ContainerGetJourneyPath)]
-        public async Task<List<ContainerJourneyResponse>> CheckInContainer([FromRoute] int id)
+        public async Task<List<ContainerJourneyResponse>> CheckInContainer([FromRoute] int containerNo)
         {
-            return await _containerService.GetContainerJourney(id);
+            return await _containerService.GetContainerJourney(containerNo);
+        }
+
+        [ProducesResponseType(typeof(PagingResponse<ContainerResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpGet(StaticValues.ContainerSearchPath)]
+        public async Task<PagingResponse<ContainerResponse>> SearchContainer([FromQuery] SearchPagingRequest searchPagingRequest)
+        {
+            return await _containerService.SearchContainer(searchPagingRequest);
+        }
+
+        [ProducesResponseType(typeof(ShipmentValidateResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpPost(StaticValues.ContainerAddShipmentPath)]
+        public async Task<ShipmentValidateResponse> ValidateAndAddShipmentInContainer([FromRoute] Guid containerId, [FromRoute] string shipmentNo)
+        {
+            return await _containerService.ValidateAndAddShipmentInContainer(containerId,shipmentNo);
+        }
+
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpPost(StaticValues.ContainerRemoveShipmentPath)]
+        public async Task<bool> RemoveShipmentInContainer([FromRoute] Guid containerId, [FromRoute] string shipmentNo)
+        {
+            return await _containerService.RemoveShipmentFromContainer(containerId, shipmentNo);
+        }
+
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpPost(StaticValues.ContainerClosePath)]
+        public async Task<bool> CloseContainer([FromRoute] Guid containerId)
+        {
+            return await _containerService.CloseContainer(containerId);
         }
     }
 }

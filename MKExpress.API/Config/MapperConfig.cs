@@ -115,7 +115,7 @@ namespace MKExpress.API.Config
             CreateMap<ContainerRequest, Container>();
             CreateMap<Container, ContainerResponse>()
                    .ForMember(des => des.Journey, src => src.MapFrom<JourneyResolver>())
-                   .ForMember(des => des.ClosedByMember, src => src.MapFrom(x=>$"{x.ClosedByMember.FirstName} ${x.ClosedByMember.LastName}"))
+                   .ForMember(des => des.ClosedByMember, src => src.MapFrom(x=>$"{x.ClosedByMember.FirstName} {x.ClosedByMember.LastName}"))
                    .ForMember(des => des.ContainerType, src => src.MapFrom(x=>x.ContainerType.Value))
                    .ForMember(des => des.TotalShipments, src => src.MapFrom(x => x.ContainerDetails.Count));
             CreateMap<PagingResponse<Container>, PagingResponse<ContainerResponse>>();

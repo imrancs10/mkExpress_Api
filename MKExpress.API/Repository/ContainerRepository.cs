@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MKExpress.API.Contants;
 using MKExpress.API.Data;
 using MKExpress.API.DTO.Request;
@@ -18,26 +17,29 @@ namespace MKExpress.API.Repository
         private readonly ILoggerManager _loggerManager;
         private readonly ICommonService _commonService;
         private readonly IMasterJourneyRepository _masterJourneyRepository;
-
-        public ContainerRepository(MKExpressContext context, ILoggerManager loggerManager, ICommonService commonService, IMasterJourneyRepository masterJourneyRepository)
+        private readonly IShipmentService _shipmentService;
+        private readonly IShipmentRepository _shipmentRepository;
+        public ContainerRepository(MKExpressContext context, ILoggerManager loggerManager, ICommonService commonService, IMasterJourneyRepository masterJourneyRepository, IShipmentService shipmentService, IShipmentRepository shipmentRepository)
         {
             _context = context;
             _loggerManager = loggerManager;
             _commonService = commonService;
             _masterJourneyRepository = masterJourneyRepository;
+            _shipmentService = shipmentService;
+            _shipmentRepository = shipmentRepository;
         }
         public async Task<Container> AddContainer(Container container)
         {
-            var journey = await _masterJourneyRepository.Get(container.JourneyId)??throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.ContainerJourneyDetailsNotFound);
+            var journey = await _masterJourneyRepository.Get(container.JourneyId) ?? throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.ContainerJourneyDetailsNotFound);
 
             List<ContainerJourney> containerJourneys = new List<ContainerJourney>();
             containerJourneys.Add(new ContainerJourney()
             {
                 ContainerId = container.Id,
                 Id = Guid.NewGuid(),
-                StationId=journey.FromStationId,
-                IsSourceStation=true,
-                SequenceNo=1,                
+                StationId = journey.FromStationId,
+                IsSourceStation = true,
+                SequenceNo = 1,
             });
 
             journey.MasterJourneyDetails.ForEach(res =>
@@ -56,7 +58,7 @@ namespace MKExpress.API.Repository
                 Id = Guid.NewGuid(),
                 StationId = journey.ToStationId,
                 IsDestinationStation = true,
-                SequenceNo = containerJourneys.Count+1,
+                SequenceNo = containerJourneys.Count + 1,
             });
             container.ContainerDetails.ForEach(res =>
             {
@@ -76,40 +78,102 @@ namespace MKExpress.API.Repository
         public async Task<bool> CheckInContainer(Guid containerId, Guid containerJourneyId)
         {
             var oldData = await _context.ContainerJourneys
+                .Include(x => x.Container)
                 .Where(x => !x.IsDeleted && x.Id == containerJourneyId && x.ContainerId == containerId)
                 .FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.DataNotFoundMessage);
-            
-            if (oldData.ArrivalAt != DateTime.MinValue)
+
+            if (!oldData.Container.IsClosed)
+                throw new BusinessRuleViolationException(StaticValues.Error_ContainerIsNotClosed, StaticValues.Message_ContainerIsNotClosed);
+
+            if (oldData.ArrivalAt != null && oldData.ArrivalAt != DateTime.MinValue)
                 throw new BusinessRuleViolationException(StaticValues.Error_ContainerAlreadyCheckedInAtStation, StaticValues.Message_ContainerAlreadyCheckedInAtStation);
-            
+
             if (oldData.IsSourceStation)
                 throw new BusinessRuleViolationException(StaticValues.Error_CantCheckinAtSourceStation, StaticValues.Message_CantCheckinAtSourceStation);
-            
+
             oldData.ArrivalAt = DateTime.Now;
             oldData.UpdatedBy = 0;// _commonService.GetLoggedInUserId();
-
+            var trans = _context.Database.BeginTransaction();
             var entity = _context.ContainerJourneys.Attach(oldData);
             entity.State = EntityState.Modified;
-            return await _context.SaveChangesAsync() > 0;
+            if (await _context.SaveChangesAsync() > 0)
+            {
+                var tracking = new ContainerTracking()
+                {
+                    Code = GetTrackingCode(ContainerTrackingCodeEnum.CheckedIn),
+                    ContainerId = containerId,
+                    ContainerJourneyId = containerJourneyId,
+                    CreatedById = _commonService.GetLoggedInUserId(),
+                    Id = Guid.NewGuid()
+                };
+                _context.ContainerTrackings.Add(tracking);
+                if (await _context.SaveChangesAsync() > 0)
+                {
+                    trans.Commit();
+                    return true;
+                }
+            }
+            trans.Rollback();
+            return false;
         }
 
         public async Task<bool> CheckOutContainer(Guid containerId, Guid containerJourneyId)
         {
-            var oldData = await _context.ContainerJourneys
+            var oldData = await _context.ContainerJourneys.Include(x => x.Container)
                 .Where(x => !x.IsDeleted && x.Id == containerJourneyId && x.ContainerId == containerId)
                 .FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.DataNotFoundMessage);
 
-            if (oldData.DepartureOn != DateTime.MinValue)
+            if (!oldData.Container.IsClosed)
+                throw new BusinessRuleViolationException(StaticValues.Error_ContainerIsNotClosed, StaticValues.Message_ContainerIsNotClosed);
+
+            if (oldData.DepartureOn != null && oldData.DepartureOn != DateTime.MinValue)
                 throw new BusinessRuleViolationException(StaticValues.Error_ContainerAlreadyCheckedOutAtStation, StaticValues.Message_ContainerAlreadyCheckedOutAtStation);
 
-            if (oldData.IsSourceStation)
+            if (oldData.IsDestinationStation)
                 throw new BusinessRuleViolationException(StaticValues.Error_CantCheckOutAtDestinationStation, StaticValues.Message_CantCheckOutAtDestinationStation);
 
             oldData.DepartureOn = DateTime.Now;
             oldData.UpdatedBy = 0;// _commonService.GetLoggedInUserId();
 
+            var trans = _context.Database.BeginTransaction();
             var entity = _context.ContainerJourneys.Attach(oldData);
             entity.State = EntityState.Modified;
+            if (await _context.SaveChangesAsync() > 0)
+            {
+                var tracking = new ContainerTracking()
+                {
+                    Code = GetTrackingCode(ContainerTrackingCodeEnum.CheckedOut),
+                    ContainerId = containerId,
+                    ContainerJourneyId = containerJourneyId,
+                    CreatedById = _commonService.GetLoggedInUserId(),
+                    Id = Guid.NewGuid()
+                };
+                _context.ContainerTrackings.Add(tracking);
+                if (await _context.SaveChangesAsync() > 0)
+                {
+                    trans.Commit();
+                    return true;
+                }
+            }
+            trans.Rollback();
+            return false;
+        }
+
+        public async Task<bool> CloseContainer(Guid containerId)
+        {
+            var oldData = await _context.Containers
+              .Where(x => !x.IsDeleted && x.Id == containerId)
+              .FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.DataNotFoundMessage);
+
+            if (oldData.IsClosed)
+            {
+                throw new BusinessRuleViolationException(StaticValues.Error_ContainerAlreadyClosed, StaticValues.Message_ContainerAlreadyClosed);
+            }
+
+            oldData.IsClosed = true;
+            oldData.ClosedOn = DateTime.Now;
+            oldData.ClosedBy = _commonService.GetLoggedInUserId();
+            _context.Containers.Attach(oldData);
             return await _context.SaveChangesAsync() > 0;
         }
 
@@ -118,18 +182,20 @@ namespace MKExpress.API.Repository
             var data = _context.Containers
                .Include(x => x.ContainerDetails)
                .ThenInclude(x => x.Shipment)
-             //.ThenInclude(x => x.ShipmentDetail)
-             //.Include(x => x.ContainerJourneys)
-               .Include(x=>x.Journey)
-               .ThenInclude(x=>x.FromStation)
+               //.ThenInclude(x => x.ShipmentDetail)
+               //.Include(x => x.ContainerJourneys)
+               .Include(x => x.Journey)
+               .ThenInclude(x => x.FromStation)
                .Include(x => x.Journey)
                .ThenInclude(x => x.ToStation)
                .Include(x => x.Journey)
-               .ThenInclude(x=>x.MasterJourneyDetails)
-               .ThenInclude(x=>x.SubStation)
+               .ThenInclude(x => x.MasterJourneyDetails)
+               .ThenInclude(x => x.SubStation)
                .Include(x => x.ContainerType)
-               .Include(x=>x.ClosedByMember)
-               .Where(x => !x.IsDeleted)
+               .Include(x => x.ClosedByMember)
+               .Where(x => !x.IsDeleted &&
+               x.CreatedAt.Date >= pagingRequest.FromDate.Date &&
+                x.CreatedAt.Date <= pagingRequest.ToDate.Date)
                .AsQueryable();
             PagingResponse<Container> pagingResponse = new()
             {
@@ -137,7 +203,9 @@ namespace MKExpress.API.Repository
                 PageSize = pagingRequest.PageSize,
                 Data = await data
                .Skip(pagingRequest.PageSize * (pagingRequest.PageNo - 1))
-               .Take(pagingRequest.PageSize).ToListAsync(),
+               .Take(pagingRequest.PageSize)
+               .OrderByDescending(x=>x.ContainerNo)
+               .ToListAsync(),
                 TotalRecords = await data.CountAsync()
             };
             return pagingResponse;
@@ -145,17 +213,18 @@ namespace MKExpress.API.Repository
 
         public async Task<Container> GetContainer(Guid id)
         {
-            var res= await _context.Containers
+            var res = await _context.Containers
                .Include(x => x.ContainerDetails)
                .ThenInclude(x => x.Shipment)
                .ThenInclude(x => x.ShipmentDetail)
-               .ThenInclude(x=>x.ShipperCity)
+               .ThenInclude(x => x.ShipperCity)
                .Include(x => x.ContainerDetails)
                .ThenInclude(x => x.Shipment)
                .ThenInclude(x => x.ShipmentDetail)
                .ThenInclude(x => x.ConsigneeCity)
-               .Include(x=>x.ContainerTrackings)
-               .ThenInclude(x=>x.CreatedMember)
+               .Include(x => x.ContainerTrackings)
+               .ThenInclude(x => x.CreatedMember)
+               .Include(x => x.ContainerJourneys)
                .Include(x => x.Journey)
                .ThenInclude(x => x.FromStation)
                .Include(x => x.Journey)
@@ -172,14 +241,130 @@ namespace MKExpress.API.Repository
 
         public async Task<List<ContainerJourney>> GetContainerJourney(int containerNo)
         {
-            var data= await _context.Containers
-                .Include(x=>x.ContainerJourneys)
-                .ThenInclude(x=>x.Station)
-                .Where(x=>!x.IsDeleted && x.ContainerNo== containerNo)
+            var data = await _context.Containers
+                .Include(x => x.ContainerJourneys)
+                .ThenInclude(x => x.Station)
+                .Where(x => !x.IsDeleted && x.ContainerNo == containerNo)
                 .FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.DataNotFoundMessage);
 
             return data.ContainerJourneys;
 
+        }
+
+        public async Task<bool> RemoveShipmentFromContainer(Guid containerId, string shipmentNo)
+        {
+            var oldData = await _context.ContainerDetails
+                .Include(x => x.Shipment)
+               .Include(x => x.Container)
+            .Where(x => !x.IsDeleted && x.ContainerId == containerId && x.Shipment.ShipmentNumber == shipmentNo)
+            .FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.DataNotFoundMessage);
+
+            if (oldData.Container.IsClosed)
+            {
+                throw new BusinessRuleViolationException(StaticValues.Error_ContainerAlreadyClosed, StaticValues.Message_ContainerAlreadyClosed);
+            }
+
+            var validateShipmentResponse = await _shipmentRepository.ValidateShipment(new List<string> { shipmentNo });
+
+
+            if (validateShipmentResponse.Count > 0)
+            {
+                var entity = _context.ContainerDetails.Remove(oldData);
+                entity.State = EntityState.Deleted;
+                return await _context.SaveChangesAsync() > 0;
+            }
+            return false;
+
+        }
+
+        public async Task<PagingResponse<Container>> SearchContainer(SearchPagingRequest pagingRequest)
+        {
+            string searchTerm = string.IsNullOrEmpty(pagingRequest.SearchTerm) ? "" : pagingRequest.SearchTerm.ToLower();
+            pagingRequest.FromDate = pagingRequest.FromDate == DateTime.MinValue ? DateTime.Now.AddYears(-1).Date : pagingRequest.FromDate;
+            pagingRequest.ToDate = pagingRequest.ToDate == DateTime.MinValue ? DateTime.Now.Date : pagingRequest.ToDate;
+            var data = _context.Containers
+               .Include(x => x.ContainerDetails)
+               .ThenInclude(x => x.Shipment)
+               //.ThenInclude(x => x.ShipmentDetail)
+               //.Include(x => x.ContainerJourneys)
+               .Include(x => x.Journey)
+               .ThenInclude(x => x.FromStation)
+               .Include(x => x.Journey)
+               .ThenInclude(x => x.ToStation)
+               .Include(x => x.Journey)
+               .ThenInclude(x => x.MasterJourneyDetails)
+               .ThenInclude(x => x.SubStation)
+               .Include(x => x.ContainerType)
+               .Include(x => x.ClosedByMember)
+               .ThenInclude(x => x.Role)
+               .Where(x => !x.IsDeleted && 
+               x.CreatedAt.Date>=pagingRequest.FromDate.Date &&
+                x.CreatedAt.Date <= pagingRequest.ToDate.Date &&
+               (searchTerm == "" ||
+               x.ContainerNo.ToString().Contains(searchTerm) ||
+               x.ClosedByMember.FirstName.Contains(searchTerm) ||
+                x.ClosedByMember.LastName.Contains(searchTerm) ||
+                 x.ClosedByMember.Role.Value.Contains(searchTerm) ||
+                  x.ContainerType.Value.Contains(searchTerm) ||
+                    x.Journey.FromStation.Value.Contains(searchTerm) ||
+                     x.Journey.ToStation.Value.Contains(searchTerm)
+               ))
+               .AsQueryable();
+            PagingResponse<Container> pagingResponse = new()
+            {
+                PageNo = pagingRequest.PageNo,
+                PageSize = pagingRequest.PageSize,
+                Data = await data
+               .Skip(pagingRequest.PageSize * (pagingRequest.PageNo - 1))
+               .Take(pagingRequest.PageSize)
+               .OrderByDescending(x => x.ContainerNo)
+               .ToListAsync(),
+                TotalRecords = await data.CountAsync()
+            };
+            return pagingResponse;
+        }
+
+        public async Task<ShipmentValidateResponse> ValidateAndAddShipmentInContainer(Guid containerId, string shipmentNo)
+        {
+
+            var oldData = await _context.Containers
+                .Include(x => x.ContainerJourneys)
+             .Where(x => !x.IsDeleted && x.Id == containerId)
+             .FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.DataNotFoundMessage);
+
+            if (oldData.IsClosed)
+            {
+                throw new BusinessRuleViolationException(StaticValues.Error_ContainerAlreadyClosed, StaticValues.Message_ContainerAlreadyClosed);
+            }
+
+            var validateShipmentResponse = await _shipmentService.ValidateContainerShipment(new List<string> { shipmentNo }, oldData.JourneyId);
+
+
+            if (validateShipmentResponse.Errors.FirstOrDefault()?.IsValid ?? false)
+            {
+                _context.ContainerDetails.Add(new ContainerDetail()
+                {
+                    ContainerId = containerId,
+                    Id = Guid.NewGuid(),
+                    ShipmentId = validateShipmentResponse.Shipments.First().Id,
+                });
+                if (await _context.SaveChangesAsync() == 0)
+                {
+                    _loggerManager.LogWarn(StaticValues.Message_UnableToSaveData, "ContainerRepository", "ValidateAndAddShipmentInContainer");
+                    throw new BusinessRuleViolationException(StaticValues.Error_UnableToSaveData, StaticValues.Message_UnableToSaveData);
+                }
+            }
+            return validateShipmentResponse;
+        }
+
+        private string GetTrackingCode(ContainerTrackingCodeEnum codeEnum)
+        {
+            return codeEnum switch
+            {
+                ContainerTrackingCodeEnum.CheckedIn => "Checked-In",
+                ContainerTrackingCodeEnum.CheckedOut => "Checked-Out",
+                _ => throw new NotImplementedException()
+            };
         }
     }
 }

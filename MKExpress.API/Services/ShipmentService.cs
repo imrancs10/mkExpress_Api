@@ -65,12 +65,22 @@ namespace MKExpress.API.Services
         public async Task<ShipmentValidateResponse> ValidateContainerShipment(List<string> shipmentNo, Guid containerJourneyId)
         {
             var res = await _repo.ValidateShipment(shipmentNo);
-           // if (res == null || res.Count == 0)
-           //     throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.DataNotFoundMessage);
-
-           // var containerJourney = await _masterJourneyService.Get(containerJourneyId);
+            // if (res == null)
+            //     throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.DataNotFoundMessage);
             ShipmentValidateResponse shipmentValidateResponse = new();
             List<ShipmentErrorResponse> shipmentErrors = new();
+
+            if (res.Count == 0)
+
+                shipmentErrors.Add(new ShipmentErrorResponse()
+                {
+                    ShipmentNo = shipmentNo.FirstOrDefault() ?? "",
+                    IsValid = false,
+                    Error = StaticValues.Messgae_ShipmentNoNotFound
+                });
+
+            // var containerJourney = await _masterJourneyService.Get(containerJourneyId);
+
             shipmentValidateResponse.Shipments = _mapper.Map<List<ShipmentResponse>>(res);
             foreach (Shipment shipment in res)
             {
@@ -98,12 +108,12 @@ namespace MKExpress.API.Services
                 //        Error = StaticValues.Error_ShipmentStatusShouldBeStored
                 //    });
                 //else
-                    shipmentErrors.Add(new ShipmentErrorResponse()
-                    {
-                        ShipmentNo = shipment.ShipmentNumber,
-                        IsValid = true,
-                        Error = string.Empty
-                    });
+                shipmentErrors.Add(new ShipmentErrorResponse()
+                {
+                    ShipmentNo = shipment.ShipmentNumber,
+                    IsValid = true,
+                    Error = string.Empty
+                });
 
             }
             shipmentValidateResponse.Errors = shipmentErrors;

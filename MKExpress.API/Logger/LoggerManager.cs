@@ -31,5 +31,10 @@ namespace MKExpress.API.Logger
         public void LogError(Exception ex, string message) => logger.Error(ex,message);
         public void LogInfo(string message) => logger.Info(message);
         public void LogWarn(string message) => logger.Warn(message);
+
+        public void LogWarn(string message, string className, string methodName)
+        {
+            logger.Warn($"Message : {message}, Class: {className}, Method:{methodName}");
+        }
     }
 }

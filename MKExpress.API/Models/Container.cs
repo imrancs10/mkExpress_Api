@@ -8,6 +8,7 @@ namespace MKExpress.API.Models
         public Guid ContainerTypeId { get; set; }
         public DateTime? ClosedOn { get; set; }
         public Guid? ClosedBy { get; set; }
+        public bool IsClosed { get; set; }
         public Guid JourneyId { get; set; }
 
         public List<ContainerDetail> ContainerDetails { get; set; }

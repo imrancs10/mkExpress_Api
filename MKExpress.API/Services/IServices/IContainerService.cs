@@ -12,5 +12,9 @@ namespace MKExpress.API.Services.IServices
         Task<List<ContainerJourneyResponse>> GetContainerJourney(int containerNo);
         Task<bool> CheckInContainer(Guid containerId, Guid containerJourneyId);
         Task<bool> CheckOutContainer(Guid containerId, Guid containerJourneyId);
+        Task<bool> CloseContainer(Guid containerId);
+        Task<ShipmentValidateResponse> ValidateAndAddShipmentInContainer(Guid containerId, string shipmentNo);
+        Task<bool> RemoveShipmentFromContainer(Guid containerId, string shipmentNo);
+        Task<PagingResponse<ContainerResponse>> SearchContainer(SearchPagingRequest pagingRequest);
     }
 }

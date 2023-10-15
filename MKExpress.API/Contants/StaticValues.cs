@@ -48,7 +48,11 @@
         #region Container API Path
         public const string ContainerPath = APIPrefix;
         public const string ContainerGetByIdPath = APIPrefix + "get/{id}";
-        public const string ContainerGetJourneyPath = APIPrefix + "get/journey/{id}";
+        public const string ContainerSearchPath = APIPrefix + "search";
+        public const string ContainerGetJourneyPath = APIPrefix + "get/journey/{containerNo}";
+        public const string ContainerClosePath = APIPrefix + "close/{containerId}";
+        public const string ContainerAddShipmentPath = APIPrefix + "add/shipments/{containerId}/{shipmentNo}";
+        public const string ContainerRemoveShipmentPath = APIPrefix + "remove/shipments/{containerId}/{shipmentNo}";
         public const string ContainerCheckInPath = APIPrefix + "in/{containerId}/{containerJourneyId}";
         public const string ContainerCheckOutPath = APIPrefix + "out/{containerId}/{containerJourneyId}";
         #endregion
@@ -117,6 +121,7 @@
         public const string Error_UserIdInvalidPresentInHeader = "UserIdNotPresentInHeader!";
         public const string Error_CantCheckinAtSourceStation = "CantCheckedInAtDestinationStation!";
         public const string Error_CantCheckOutAtDestinationStation = "CantCheckOutAtDestinationStation!";
+        public const string Error_ShipmentNoNotFound = "ShipmentNoNotFound!";
         #endregion
 
         #region Error Message
@@ -151,14 +156,21 @@
         public const string Error_InvalidGUID = "Invalid GUID!";
         public const string Error_ShipmentStatusShouldBeStored = "Shipment status should be stored!";
         public const string Message_UserIdNotPresentInHeader = "User id is not present in header!";
+        public const string Error_UnableToSaveData = "UnableToSaveData!";
         public const string Error_ContainerAlreadyCheckedInAtStation = "ContainerAlreadyCheckedInAtStation!";
         public const string Error_ContainerAlreadyCheckedOutAtStation = "ContainerAlreadyCheckedOutAtStation!";
+        public const string Error_ContainerIsNotClosed = "ContainerIsNotClosed!";
+        public const string Error_ContainerAlreadyClosed = "ContainerAlreadyClosed!";
         public const string Message_ContainerAlreadyCheckedInAtStation = "Container already checked-in at station!";
         public const string Message_ContainerAlreadyCheckedOutAtStation = "Container already checked-out at station!";
         public const string Message_UserIdInvalidPresentInHeader = "UserId is invalid present in header!";
         public const string Message_UserIdHeaderNotPresentInRequest = "Userid header not present in request!";
         public const string Message_CantCheckinAtSourceStation = "Can't check-in at source station!";
-        public const string Message_CantCheckOutAtDestinationStation = "Can't check-our at source station!";
+        public const string Message_CantCheckOutAtDestinationStation = "Can't check-out at destination station!";
+        public const string Message_ContainerIsNotClosed = "Container is open, Please close the container!";
+        public const string Message_ContainerAlreadyClosed = "Container is already closed!";
+        public const string Message_UnableToSaveData = "Unable to save data!";
+        public const string Messgae_ShipmentNoNotFound = "Shipment number not found!";
 
         public static string RecordAlreadyExistMessage(string recordType)
         {
