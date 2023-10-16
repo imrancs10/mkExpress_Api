@@ -111,7 +111,6 @@ namespace MKExpress.API.Config
 
             #region Container
 
-
             CreateMap<ContainerRequest, Container>();
             CreateMap<Container, ContainerResponse>()
                    .ForMember(des => des.Journey, src => src.MapFrom<JourneyResolver>())
@@ -129,7 +128,7 @@ namespace MKExpress.API.Config
 
             CreateMap<ContainerTracking, ContainerTrackingResponse>()
               .ForMember(des => des.StationName, src => src.MapFrom(x => x.ContainerJourney.Station.Value))
-            .ForMember(des => des.CreatedMember, src => src.MapFrom(x => $"{x.CreatedMember.FirstName} ${x.CreatedMember.LastName}"));
+            .ForMember(des => des.CreatedMember, src => src.MapFrom(x => $"{x.CreatedMember.FirstName} {x.CreatedMember.LastName}"));
             #endregion
 
         }
@@ -146,12 +145,12 @@ namespace MKExpress.API.Config
         {
             if (a.Journey == null)
                 return string.Empty;
-            string jour = a.Journey.FromStation.Value + " -> ";
-            foreach (MasterJourneyDetail masterJourneyDetail in a.Journey.MasterJourneyDetails)
+            string jour = a?.Journey?.FromStation?.Value??"" + " -> ";
+            foreach (MasterJourneyDetail masterJourneyDetail in a?.Journey?.MasterJourneyDetails)
             {
                 jour += masterJourneyDetail.SubStation.Value + " -> ";
             }
-            jour += a.Journey.ToStation.Value + " -> ";
+            jour += a.Journey?.ToStation?.Value??"";
 
             return jour;
         }

@@ -66,12 +66,12 @@ namespace MKExpress.API.Controllers
             return await _containerService.CheckInContainer(containerId, containerJourneyId);
         }
 
-        [ProducesResponseType(typeof(List<ContainerJourneyResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ContainerResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpGet(StaticValues.ContainerGetJourneyPath)]
-        public async Task<List<ContainerJourneyResponse>> CheckInContainer([FromRoute] int containerNo)
+        public async Task<ContainerResponse> CheckInContainer([FromRoute] int containerNo)
         {
             return await _containerService.GetContainerJourney(containerNo);
         }

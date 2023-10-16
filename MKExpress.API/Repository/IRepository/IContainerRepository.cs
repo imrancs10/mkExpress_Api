@@ -7,9 +7,10 @@ namespace MKExpress.API.Repository.IRepository
     public interface IContainerRepository
     {
         Task<Container> AddContainer(Container container);
-        Task<List<ContainerJourney>> GetContainerJourney(int containerNo);
+        Task<Container> GetContainerJourney(int containerNo);
         Task<bool> CheckInContainer(Guid containerId, Guid containerJourneyId);
         Task<bool> CheckOutContainer(Guid containerId, Guid containerJourneyId);
+        Task<bool> DeleteContainer(Guid containerId,string deleteReason);
         Task<bool> CloseContainer(Guid containerId);
         Task<ShipmentValidateResponse> ValidateAndAddShipmentInContainer(Guid containerId, string shipmentNo);
         Task<bool> RemoveShipmentFromContainer(Guid containerId, string shipmentNo);

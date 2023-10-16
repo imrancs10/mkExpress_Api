@@ -177,6 +177,29 @@ namespace MKExpress.API.Repository
             return await _context.SaveChangesAsync() > 0;
         }
 
+        public async Task<bool> DeleteContainer(Guid containerId, string deleteReason)
+        {
+            var oldData = await _context.Containers
+                .Include(x=>x.ContainerDetails)
+                .Include(x => x.ContainerTrackings)
+                .Include(x => x.ContainerJourneys)
+              .Where(x => !x.IsDeleted && x.Id == containerId)
+              .FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.DataNotFoundMessage);
+
+            if (oldData.IsClosed)
+            {
+                throw new BusinessRuleViolationException(StaticValues.Error_ContainerClosedCantDelete, StaticValues.Message_ContainerClosedCantDelete);
+            }
+
+            oldData.IsDeleted = true;
+            oldData.DeletedAt = DateTime.Now;
+            oldData.DeletedBy = 0;// _commonService.GetLoggedInUserId(),
+
+            var entity=_context.Attach(oldData);
+            entity.State = EntityState.Modified;
+            return await _context.SaveChangesAsync() > 0;
+        }
+
         public async Task<PagingResponse<Container>> GetAllContainer(PagingRequest pagingRequest)
         {
             var data = _context.Containers
@@ -239,7 +262,7 @@ namespace MKExpress.API.Repository
             return res;
         }
 
-        public async Task<List<ContainerJourney>> GetContainerJourney(int containerNo)
+        public async Task<Container> GetContainerJourney(int containerNo)
         {
             var data = await _context.Containers
                 .Include(x => x.ContainerJourneys)
@@ -247,7 +270,7 @@ namespace MKExpress.API.Repository
                 .Where(x => !x.IsDeleted && x.ContainerNo == containerNo)
                 .FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.DataNotFoundMessage);
 
-            return data.ContainerJourneys;
+            return data;
 
         }
 

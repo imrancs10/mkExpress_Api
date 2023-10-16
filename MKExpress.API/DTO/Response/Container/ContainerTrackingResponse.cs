@@ -11,6 +11,7 @@ namespace MKExpress.API.DTO.Response
         public string Code { get; set; }
         public Guid CreatedById { get; set; }
         public string CreatedMember { get; set; }
+        public DateTime CreatedAt { get; set; }
         public string StationName { get; set; }
 
     }

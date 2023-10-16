@@ -39,6 +39,11 @@ namespace MKExpress.API.Services
            return await _repository.CloseContainer(containerId);
         }
 
+        public async Task<bool> DeleteContainer(Guid containerId, string deleteReason)
+        {
+           return await _repository.DeleteContainer(containerId, deleteReason);
+        }
+
         public async Task<PagingResponse<ContainerResponse>> GetAllContainer(PagingRequest pagingRequest)
         {
             return _mapper.Map<PagingResponse<ContainerResponse>>(await _repository.GetAllContainer(pagingRequest));
@@ -49,9 +54,9 @@ namespace MKExpress.API.Services
             return _mapper.Map<ContainerResponse>(await _repository.GetContainer(id));
         }
 
-        public async Task<List<ContainerJourneyResponse>> GetContainerJourney(int containerNo)
+        public async Task<ContainerResponse> GetContainerJourney(int containerNo)
         {
-           return _mapper.Map<List<ContainerJourneyResponse>>(await _repository.GetContainerJourney(containerNo));
+           return _mapper.Map<ContainerResponse>(await _repository.GetContainerJourney(containerNo));
         }
 
         public async Task<bool> RemoveShipmentFromContainer(Guid containerId, string shipmentNo)

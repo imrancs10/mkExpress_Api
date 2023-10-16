@@ -161,6 +161,7 @@
         public const string Error_ContainerAlreadyCheckedOutAtStation = "ContainerAlreadyCheckedOutAtStation!";
         public const string Error_ContainerIsNotClosed = "ContainerIsNotClosed!";
         public const string Error_ContainerAlreadyClosed = "ContainerAlreadyClosed!";
+        public const string Error_ContainerClosedCantDelete = "ContainerClosedCantDelete!";
         public const string Message_ContainerAlreadyCheckedInAtStation = "Container already checked-in at station!";
         public const string Message_ContainerAlreadyCheckedOutAtStation = "Container already checked-out at station!";
         public const string Message_UserIdInvalidPresentInHeader = "UserId is invalid present in header!";
@@ -171,6 +172,7 @@
         public const string Message_ContainerAlreadyClosed = "Container is already closed!";
         public const string Message_UnableToSaveData = "Unable to save data!";
         public const string Messgae_ShipmentNoNotFound = "Shipment number not found!";
+        public const string Message_ContainerClosedCantDelete = "Container is closed, We cant delete container!";
 
         public static string RecordAlreadyExistMessage(string recordType)
         {
