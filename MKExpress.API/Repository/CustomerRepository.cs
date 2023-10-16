@@ -39,11 +39,8 @@ namespace MKExpress.API.Repositories
         {
             Customer customer = await _context.Customers
                 .Where(customer => customer.Id == customerId)
-                .FirstOrDefaultAsync();
-            if (customer == null)
-            {
-                throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.DataNotFoundMessage);
-            }
+                .FirstOrDefaultAsync()?? throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.DataNotFoundMessage);
+            
             if (customer.IsDeleted)
             {
                 throw new BusinessRuleViolationException(StaticValues.RecordAlreadyDeletedError, StaticValues.RecordAlreadyDeletedMessage);
@@ -56,7 +53,10 @@ namespace MKExpress.API.Repositories
 
         public async Task<Customer> Get(Guid customerId)
         {
-            return await _context.Customers.Where(customer => customer.Id == customerId).FirstOrDefaultAsync();
+            return await _context.Customers
+                .Include(x => x.City)
+                .Where(customer => customer.Id == customerId)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<Customer> Update(Customer customer)
@@ -70,10 +70,11 @@ namespace MKExpress.API.Repositories
         public async Task<PagingResponse<Customer>> GetAll(PagingRequest pagingRequest)
         {  
             var data = _context.Customers
-                .Where(x => !x.IsDeleted)
+              .Include(x => x.City)
+             .Where(x => !x.IsDeleted)
                 .OrderBy(x => x.Name)
                 .AsQueryable();
-            PagingResponse<Customer> pagingResponse = new PagingResponse<Customer>()
+            PagingResponse<Customer> pagingResponse = new ()
             {
                 PageNo = pagingRequest.PageNo,
                 PageSize = pagingRequest.PageSize,
@@ -86,23 +87,28 @@ namespace MKExpress.API.Repositories
         public async Task<PagingResponse<Customer>> Search(SearchPagingRequest searchPagingRequest)
         {
            string searchTerm = string.IsNullOrEmpty(searchPagingRequest.SearchTerm) ? string.Empty : searchPagingRequest.SearchTerm.ToLower();
-            var data = await _context.Customers
+            var data = _context.Customers
+                .Include(x=>x.City)
                 .Where(customer => !customer.IsDeleted &&(
                         string.IsNullOrEmpty(searchTerm) ||
                         customer.Name.Contains(searchTerm) ||
+                         customer.Email.Contains(searchTerm) ||
+                           customer.Address.Contains(searchTerm) ||
+                             customer.ZipCode.Contains(searchTerm) ||
+                               customer.City.Value.Contains(searchTerm) ||
                         customer.MaxDeliveryAttempt.ToString().Contains(searchTerm))
                     )
                 .OrderBy(x => x.Name)
-                    .ToListAsync();
-            //GetOrderCountByContactNo
-            var filterData = data.Skip(searchPagingRequest.PageSize * (searchPagingRequest.PageNo - 1)).Take(searchPagingRequest.PageSize).ToList();
-          
-            PagingResponse<Customer> pagingResponse = new PagingResponse<Customer>()
+                    .AsQueryable();
+
+            var filterData =await data.Skip(searchPagingRequest.PageSize * (searchPagingRequest.PageNo - 1)).Take(searchPagingRequest.PageSize).ToListAsync();
+
+            PagingResponse<Customer> pagingResponse = new ()
             {
                 PageNo = searchPagingRequest.PageNo,
                 PageSize = searchPagingRequest.PageSize,
                 Data = filterData,
-                TotalRecords = data.Count()
+                TotalRecords =await data.CountAsync()
             };
             return pagingResponse;
         }
@@ -111,6 +117,7 @@ namespace MKExpress.API.Repositories
         {
 
             return await _context.Customers
+                 .Include(x => x.City)
                .Where(x => !x.IsDeleted && x.ContactNo == contactNo)
                .OrderBy(x => x.Name)
                .ToListAsync();

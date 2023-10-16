@@ -13,6 +13,6 @@ namespace MKExpress.API.Models
         public DateTime? UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
         public bool IsDeleted { get; set; }
-        public string DeleteNote { get; set; }
+        public string? DeleteNote { get; set; }
     }
 }

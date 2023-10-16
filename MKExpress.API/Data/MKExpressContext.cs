@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MKExpress.API.Contants;
 using MKExpress.API.Services.IServices;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace MKExpress.API.Data
 {
@@ -33,7 +34,22 @@ namespace MKExpress.API.Data
            modelBuilder
                 .Entity<Container>()
                 .Property(x=>x.ContainerNo)
-                .ValueGeneratedOnAdd();
+                .ValueGeneratedOnAdd()// this will add Autogenerate Contain No. on add
+                .Metadata
+                .SetAfterSaveBehavior(PropertySaveBehavior.Ignore);  // this will prevent EF to insert new value in Container No. on update
+           
+            modelBuilder
+                .Entity<Shipment>()
+                .Property(x => x.CODAmount)
+                .HasColumnType("decimal")
+                .HasPrecision(5);
+
+            modelBuilder
+               .Entity<ShipmentDetail>()
+               .Property(x => x.Weight)
+               .HasColumnType("decimal")
+               .HasPrecision(5);
+
         }
 
         public DbSet<User> Users { get; set; }

@@ -86,6 +86,16 @@ namespace MKExpress.API.Controllers
             return await _containerService.SearchContainer(searchPagingRequest);
         }
 
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpDelete(StaticValues.ContainerDeletePath)]
+        public async Task<bool> DeleteContainer([FromRoute] Guid id, [FromQuery] string note)
+        {
+            return await _containerService.DeleteContainer(id,note);
+        }
+
         [ProducesResponseType(typeof(ShipmentValidateResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]

@@ -4,6 +4,7 @@ using MKExpress.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MKExpress.API.Migrations
 {
     [DbContext(typeof(MKExpressContext))]
-    partial class MKExpressContextModelSnapshot : ModelSnapshot
+    [Migration("20231016105910_Update_CustomerTable")]
+    partial class Update_CustomerTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,6 +53,7 @@ namespace MKExpress.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DeleteNote")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
@@ -100,6 +104,7 @@ namespace MKExpress.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DeleteNote")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
@@ -148,6 +153,7 @@ namespace MKExpress.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DeleteNote")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
@@ -215,6 +221,7 @@ namespace MKExpress.API.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("DeleteNote")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
@@ -270,6 +277,7 @@ namespace MKExpress.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DeleteNote")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
@@ -332,6 +340,7 @@ namespace MKExpress.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DeleteNote")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
@@ -396,6 +405,7 @@ namespace MKExpress.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DeleteNote")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
@@ -447,6 +457,7 @@ namespace MKExpress.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DeleteNote")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
@@ -486,6 +497,7 @@ namespace MKExpress.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DeleteNote")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
@@ -531,6 +543,7 @@ namespace MKExpress.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DeleteNote")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
@@ -579,6 +592,7 @@ namespace MKExpress.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DeleteNote")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
@@ -647,8 +661,7 @@ namespace MKExpress.API.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal?>("CODAmount")
-                        .HasPrecision(5)
-                        .HasColumnType("decimal");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -660,6 +673,7 @@ namespace MKExpress.API.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("DeleteNote")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
@@ -761,6 +775,7 @@ namespace MKExpress.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DeleteNote")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
@@ -826,8 +841,7 @@ namespace MKExpress.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Weight")
-                        .HasPrecision(5)
-                        .HasColumnType("decimal");
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -858,6 +872,7 @@ namespace MKExpress.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DeleteNote")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
@@ -922,6 +937,7 @@ namespace MKExpress.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DeleteNote")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
@@ -964,6 +980,7 @@ namespace MKExpress.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DeleteNote")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")

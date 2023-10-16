@@ -48,6 +48,7 @@
         #region Container API Path
         public const string ContainerPath = APIPrefix;
         public const string ContainerGetByIdPath = APIPrefix + "get/{id}";
+        public const string ContainerDeletePath = APIPrefix + "delete/{id}";
         public const string ContainerSearchPath = APIPrefix + "search";
         public const string ContainerGetJourneyPath = APIPrefix + "get/journey/{containerNo}";
         public const string ContainerClosePath = APIPrefix + "close/{containerId}";

@@ -190,12 +190,40 @@ namespace MKExpress.API.Repository
             {
                 throw new BusinessRuleViolationException(StaticValues.Error_ContainerClosedCantDelete, StaticValues.Message_ContainerClosedCantDelete);
             }
+            var deletedBy = 0;// _commonService.GetLoggedInUserId();
+            var deletedAt = DateTime.UtcNow;
 
             oldData.IsDeleted = true;
-            oldData.DeletedAt = DateTime.Now;
-            oldData.DeletedBy = 0;// _commonService.GetLoggedInUserId(),
+            oldData.DeletedAt = deletedAt;
+            oldData.DeletedBy = deletedBy;
+            oldData.DeleteNote = deleteReason;
 
-            var entity=_context.Attach(oldData);
+            oldData.ContainerDetails.ForEach(res =>
+            {
+                res.IsDeleted = true;
+                res.DeletedAt = deletedAt;
+                res.DeletedBy = deletedBy;
+                res.DeleteNote = deleteReason;
+            });
+
+            oldData.ContainerJourneys.ForEach(res =>
+            {
+                res.IsDeleted = true;
+                res.DeletedAt = deletedAt;
+                res.DeletedBy = deletedBy;
+                res.DeleteNote = deleteReason;
+            });
+
+            oldData.ContainerTrackings.ForEach(res =>
+            {
+                res.IsDeleted = true;
+                res.DeletedAt = deletedAt;
+                res.DeletedBy = deletedBy;
+                res.DeleteNote = deleteReason;
+            });
+
+
+            var entity=_context.Containers.Update(oldData);
             entity.State = EntityState.Modified;
             return await _context.SaveChangesAsync() > 0;
         }

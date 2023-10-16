@@ -43,7 +43,8 @@ namespace MKExpress.API.Config
 
             #region Customer
             CreateMap<CustomerRequest, Customer>();
-            CreateMap<Customer, CustomerResponse>();
+            CreateMap<Customer, CustomerResponse>()
+                 .ForMember(des => des.City, src => src.MapFrom(x => x.City.Value));
             CreateMap<PagingResponse<Customer>, PagingResponse<CustomerResponse>>();
             #endregion
 
