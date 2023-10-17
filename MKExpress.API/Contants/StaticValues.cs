@@ -76,6 +76,7 @@
         #region Member
         public const string MemberDeletePath = APIPrefix + "{id}";
         public const string MemberByIdPath = APIPrefix + "get/{id}";
+        public const string MemberByRolePath = APIPrefix + "get/by-role";
         public const string MemberSearchPath = APIPrefix + "search";
         public const string MemberChangePasswordPath = APIPrefix + "password/change";
         public const string MemberResetPasswordPath = APIPrefix + "password/reset/{userId}";

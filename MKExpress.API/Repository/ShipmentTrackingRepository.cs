@@ -32,7 +32,7 @@ namespace MKExpress.API.Repository
 
         public async Task<List<ShipmentTracking>> GetTrackingByShipmentId(Guid shipmentId)
         {
-            return await _context.ShipmentTrackings
+            var data= await _context.ShipmentTrackings
                 .Include(x=>x.Shipment)
                 .ThenInclude(x=>x.Customer)
                 .Include(x => x.Shipment)
@@ -48,7 +48,9 @@ namespace MKExpress.API.Repository
                 .ThenInclude(x => x.ShipmentDetail)
                 .ThenInclude(x => x.ConsigneeCity)
                 .Include(x=>x.CommentByMember)
-                .Where(x=>!x.IsDeleted && x.ShipmentId==shipmentId).ToListAsync();
+                .Where(x=>!x.IsDeleted && x.ShipmentId==shipmentId)
+                .ToListAsync();
+            return data;
         }
     }
 }

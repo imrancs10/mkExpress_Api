@@ -86,6 +86,16 @@ namespace MKExpress.API.Controllers
             return await _memberService.Get(id);
         }
 
+        [ProducesResponseType(typeof(List<MemberResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpGet(StaticValues.MemberByRolePath)]
+        public async Task<List<MemberResponse>> GetMemberByRole([FromQuery] string role)
+        {
+            return await _memberService.GetMemberByRole(role);
+        }
+
         [ProducesResponseType(typeof(PagingResponse<MemberResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]

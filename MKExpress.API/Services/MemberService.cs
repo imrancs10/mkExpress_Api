@@ -60,6 +60,11 @@ namespace MKExpress.API.Services
             return _mapper.Map<PagingResponse<MemberResponse>>(await _memberRepository.GetAll(pagingRequest));
         }
 
+        public async Task<List<MemberResponse>> GetMemberByRole(string role)
+        {
+            return _mapper.Map<List<MemberResponse>>(await _memberRepository.GetMemberByRole(role));
+        }
+
         public async Task<bool> ResetPassword(string userId)
         {
             return await _memberRepository.ResetPassword(userId);

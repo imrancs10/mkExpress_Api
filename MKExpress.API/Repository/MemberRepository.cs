@@ -198,5 +198,15 @@ namespace MKExpress.API.Repository
             return default;
 
         }
+
+        public async Task<List<Member>> GetMemberByRole(string role)
+        {
+            return await _context
+                .Members
+                .Include(x=>x.Role)
+                .Where(x=>!x.IsDeleted && x.Role.Value.ToLower()==role.ToLower())
+                .OrderBy(x=>x.FirstName)
+                .ToListAsync();
+        }
     }
 }
