@@ -37,6 +37,8 @@ namespace MKExpress.API.Middleware
                 .AddScoped<IMasterJourneyService, MasterJourneyService>()
                 .AddScoped<IContainerRepository, ContainerRepository>()
                 .AddScoped<IContainerService, ContainerService>()
+                 .AddScoped<IThirdPartyCourierRepository, ThirdPartyCourierRepository>()
+                .AddScoped<IThirdPartyCourierService, ThirdPartyCourierService>()
                 .AddScoped<IShipmentTrackingRepository, ShipmentTrackingRepository>()
                 .AddScoped<ICommonService, CommonService>()
                 .AddScoped<IMailService, MailService>()

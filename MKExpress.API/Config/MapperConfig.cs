@@ -132,6 +132,15 @@ namespace MKExpress.API.Config
             .ForMember(des => des.CreatedMember, src => src.MapFrom(x => $"{x.CreatedMember.FirstName} {x.CreatedMember.LastName}"));
             #endregion
 
+            #region ThirdPartyShipment
+            CreateMap<ThirdPartyCourierCompanyRequest, ThirdPartyCourierCompany>();
+            CreateMap<ThirdPartyCourierCompany, ThirdPartyCourierResponse>();
+            CreateMap<PagingResponse<ThirdPartyCourierCompany>, PagingResponse<ThirdPartyCourierResponse>>();
+
+            CreateMap<ThirdPartyShipment, ThirdPartyShipmentResponse>()
+                .ForMember(des => des.AssignBy, src => src.MapFrom(x => $"{x.AssignBy.FirstName} {x.AssignBy.LastName}"));
+            #endregion
+
         }
 
         public static IMapper GetMapperConfig()

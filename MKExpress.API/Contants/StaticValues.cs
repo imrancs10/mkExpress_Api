@@ -45,6 +45,15 @@
         public const string CustomerPath = APIPrefix;
         #endregion
 
+        #region Third Party API Path
+        public const string ThirdPartyDeletePath = APIPrefix + "{id}";
+        public const string ThirdPartyByIdPath = APIPrefix + "get/{id}";
+        public const string ThirdPartyGetShipmentPath = APIPrefix + "get/shipment/{id}";
+        public const string ThirdPartyByContactNoPath = APIPrefix + "get/by-contact";
+        public const string ThirdPartySearchPath = APIPrefix + "search";
+        public const string ThirdPartyPath = APIPrefix;
+        #endregion
+
         #region Container API Path
         public const string ContainerPath = APIPrefix;
         public const string ContainerGetByIdPath = APIPrefix + "get/{id}";

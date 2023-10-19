@@ -68,6 +68,8 @@ namespace MKExpress.API.Data
         public DbSet<MasterJourney> MasterJouneys { get; set; }
         public DbSet<MasterJourneyDetail> MasterJourneyDetails { get; set; }
         public DbSet<ContainerTracking> ContainerTrackings { get; set; }
+        public DbSet<ThirdPartyCourierCompany> ThirdPartyCourierCompanies { get; set; }
+        public DbSet<ThirdPartyShipment> ThirdPartyShipments { get; set; }
         public override int SaveChanges()
         {
             AddDateTimeStamp();
