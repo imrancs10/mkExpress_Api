@@ -23,7 +23,7 @@ namespace MKExpress.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpPut(StaticValues.ThirdPartyPath)]
-        public async Task<ThirdPartyCourierResponse> Add(ThirdPartyCourierCompanyRequest request)
+        public async Task<ThirdPartyCourierResponse> Add([FromBody] ThirdPartyCourierCompanyRequest request)
         {
            return await _thirdPartyCourierService.Add(request);
         }
@@ -33,7 +33,7 @@ namespace MKExpress.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpDelete(StaticValues.ThirdPartyDeletePath)]
-        public async Task<int> Delete(Guid id)
+        public async Task<int> Delete([FromRoute] Guid id)
         {
             return await _thirdPartyCourierService.Delete(id);
         }
@@ -43,7 +43,7 @@ namespace MKExpress.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpGet(StaticValues.ThirdPartyByIdPath)]
-        public async Task<ThirdPartyCourierResponse> Get(Guid id)
+        public async Task<ThirdPartyCourierResponse> Get([FromRoute] Guid id)
         {
             return await _thirdPartyCourierService.Get(id);
         }
@@ -53,7 +53,7 @@ namespace MKExpress.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpGet(StaticValues.ThirdPartyPath)]
-        public async Task<PagingResponse<ThirdPartyCourierResponse>> GetAll(PagingRequest pagingRequest)
+        public async Task<PagingResponse<ThirdPartyCourierResponse>> GetAll([FromQuery] PagingRequest pagingRequest)
         {
             return await _thirdPartyCourierService.GetAll(pagingRequest);
         }
@@ -63,9 +63,9 @@ namespace MKExpress.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpGet(StaticValues.ThirdPartyGetShipmentPath)]
-        public async Task<List<ShipmentResponse>> GetShipments(Guid id)
+        public async Task<List<ShipmentResponse>> GetShipments([FromRoute]Guid id, [FromRoute] DateTime fromDate, [FromRoute] DateTime toDate)
         {
-            return await _thirdPartyCourierService.GetShipments(id);
+            return await _thirdPartyCourierService.GetShipments(id, fromDate, toDate);
         }
 
         [ProducesResponseType(typeof(PagingResponse<ThirdPartyCourierResponse>), StatusCodes.Status200OK)]
@@ -73,7 +73,7 @@ namespace MKExpress.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpGet(StaticValues.ThirdPartySearchPath)]
-        public async Task<PagingResponse<ThirdPartyCourierResponse>> Search(SearchPagingRequest searchPagingRequest)
+        public async Task<PagingResponse<ThirdPartyCourierResponse>> Search([FromQuery] SearchPagingRequest searchPagingRequest)
         {
             return await _thirdPartyCourierService.Search(searchPagingRequest);
         }
@@ -83,9 +83,20 @@ namespace MKExpress.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpPost(StaticValues.ThirdPartyPath)]
-        public async Task<ThirdPartyCourierResponse> Update(ThirdPartyCourierCompanyRequest request)
+        public async Task<ThirdPartyCourierResponse> Update([FromBody] ThirdPartyCourierCompanyRequest request)
         {
             return await _thirdPartyCourierService.Update(request);
+        }
+
+
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpPut(StaticValues.ThirdPartyAddShipmentPath)]
+        public async Task<bool> GetShipments([FromBody] List<ThirdPartyShipmentRequest> request)
+        {
+            return await _thirdPartyCourierService.AddShipmentToThirdParty(request);
         }
     }
 }

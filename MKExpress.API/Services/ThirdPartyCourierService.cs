@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using MKExpress.API.Contants;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
+using MKExpress.API.Exceptions;
 using MKExpress.API.Models;
 using MKExpress.API.Repository.IRepository;
 using MKExpress.API.Services.IServices;
@@ -12,10 +14,13 @@ namespace MKExpress.API.Services
     {
         private readonly IThirdPartyCourierRepository _repository;
         private readonly IMapper _mapper;
-        public ThirdPartyCourierService(IThirdPartyCourierRepository repository,IMapper mapper)
+        private readonly ICommonService _commonService;
+        public ThirdPartyCourierService(IThirdPartyCourierRepository repository,IMapper mapper, ICommonService commonService)
         {
             _repository = repository;
             _mapper = mapper;
+            _commonService = commonService;
+
         }
         public async Task<ThirdPartyCourierResponse> Add(ThirdPartyCourierCompanyRequest thirdPartyCourierCompanyRequest)
         {
@@ -38,9 +43,9 @@ namespace MKExpress.API.Services
             return _mapper.Map<PagingResponse<ThirdPartyCourierResponse>>(await _repository.GetAll(pagingRequest));
         }
 
-        public async Task<List<ShipmentResponse>> GetShipments(Guid thirdPartyId)
+        public async Task<List<ShipmentResponse>> GetShipments(Guid thirdPartyId, DateTime fromDate, DateTime toDate)
         {
-            return _mapper.Map<List<ShipmentResponse>>(await _repository.GetShipments(thirdPartyId));
+            return _mapper.Map<List<ShipmentResponse>>(await _repository.GetShipments(thirdPartyId,fromDate,toDate));
         }
 
         public async Task<PagingResponse<ThirdPartyCourierResponse>> Search(SearchPagingRequest pagingRequest)
@@ -52,6 +57,19 @@ namespace MKExpress.API.Services
         {
             var request = _mapper.Map<ThirdPartyCourierCompany>(thirdPartyCourierCompanyRequest);
             return _mapper.Map<ThirdPartyCourierResponse>(await _repository.Update(request));
+        }
+        public async Task<bool> AddShipmentToThirdParty(List<ThirdPartyShipmentRequest> request)
+        {
+            if (request == null) 
+                throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidParameters, StaticValues.Error_InvalidParameters);
+
+            var loggedInId=_commonService.GetLoggedInUserId();
+            request.ForEach(res =>
+            {
+                res.AssignById = loggedInId;
+                res.AssignAt=DateTime.UtcNow;
+            });
+            return await _repository.AddShipmentToThirdParty(request);
         }
     }
 }
