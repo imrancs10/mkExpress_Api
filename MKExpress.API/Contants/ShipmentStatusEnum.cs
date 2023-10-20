@@ -6,13 +6,15 @@
         ReadyForPickup,
         AssignedForPickup,
         PickedUp,
+        PickupRescheduled,
         Received,
         Stored,
         AssignedForDelivery,
         OutForDelivery,
+        CalledConsignee,
         AssignedForReturn,
         Delivered,
-        FailedAttempt,
+        FailedDelivery,
         OnHold,
         OutForReturn,
         Returned,
@@ -22,6 +24,14 @@
         Canceled,
         Lost,
         Owned,
-        Released
+        Released,
+        ContainerSealed,
+        ReceivedInTransit,
+        ConsigneeInfoUpdated,
+        MarkAsResolved,
+        ReturnedToCustomer,
+        MarkedAsLost,
+        NoStatus,
+        ChangedManually
     }
 }

@@ -138,6 +138,7 @@
         public const string Error_InvalidShipmentStatus = "InvalidShipmentStatus!";
         public const string Error_InvalidShipmentStatusForThirdParty = "InvalidShipmentStatusForThirdParty!";
         public const string Error_SomeShipmentsAlreadyAddedToThirdParty = "SomeShipmentsAlreadyAddedToThirdParty!";
+        public const string Error_InvalidShipmentStatusAssign = "InvalidShipmentStatusAssign!";
         #endregion
 
         #region Error Message
@@ -192,6 +193,7 @@
         public const string Message_InvalidShipmentNo = "Invalid shipment Number!";
         public const string Message_InvalidShipmentStatus = "Invalid shipment status!";
         public const string Message_InvalidShipmentStatusForThirdParty = "Invalid shipment status for third party!";
+        public const string Message_InvalidShipmentStatusAssign = "You are assigning invalid shipment status!";
 
         public static string RecordAlreadyExistMessage(string recordType)
         {

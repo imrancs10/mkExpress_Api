@@ -14,7 +14,7 @@ namespace MKExpress.API.Extension
 
         public static string EncodeBase64(this String str)
         {
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(str);
+            var plainTextBytes = Encoding.UTF8.GetBytes(str);
             return Convert.ToBase64String(plainTextBytes);
         } 
         public static bool MinimumLength(this String str,int length)
