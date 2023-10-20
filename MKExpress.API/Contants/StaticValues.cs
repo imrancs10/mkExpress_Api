@@ -80,6 +80,7 @@
         public const string ShipmentTrackingByShipmentIdPath = APIPrefix + "get/tracking/{id}";
         public const string ShipmentByIdsPath = APIPrefix + "get/by-ids/{id}";
         public const string ShipmentValidatePath = APIPrefix + "validate/{id}";
+        public const string ShipmentValidateThirdPartyPath = APIPrefix + "validate/thirdparty";
         #endregion
 
         #region Member
@@ -133,6 +134,10 @@
         public const string Error_CantCheckinAtSourceStation = "CantCheckedInAtDestinationStation!";
         public const string Error_CantCheckOutAtDestinationStation = "CantCheckOutAtDestinationStation!";
         public const string Error_ShipmentNoNotFound = "ShipmentNoNotFound!";
+        public const string Error_InvalidShipmentNo = "InvalidShipmentNo!";
+        public const string Error_InvalidShipmentStatus = "InvalidShipmentStatus!";
+        public const string Error_InvalidShipmentStatusForThirdParty = "InvalidShipmentStatusForThirdParty!";
+        public const string Error_SomeShipmentsAlreadyAddedToThirdParty = "SomeShipmentsAlreadyAddedToThirdParty!";
         #endregion
 
         #region Error Message
@@ -182,8 +187,11 @@
         public const string Message_ContainerIsNotClosed = "Container is open, Please close the container!";
         public const string Message_ContainerAlreadyClosed = "Container is already closed!";
         public const string Message_UnableToSaveData = "Unable to save data!";
-        public const string Messgae_ShipmentNoNotFound = "Shipment number not found!";
+        public const string Message_ShipmentNoNotFound = "Shipment number not found!";
         public const string Message_ContainerClosedCantDelete = "Container is closed, We cant delete container!";
+        public const string Message_InvalidShipmentNo = "Invalid shipment Number!";
+        public const string Message_InvalidShipmentStatus = "Invalid shipment status!";
+        public const string Message_InvalidShipmentStatusForThirdParty = "Invalid shipment status for third party!";
 
         public static string RecordAlreadyExistMessage(string recordType)
         {

@@ -16,13 +16,19 @@ namespace MKExpress.API.Services
         private readonly IMapper _mapper;
         private readonly IShipmentTrackingRepository _shipmentTrackingRepository;
         private readonly IMasterJourneyService _masterJourneyService;
+        private readonly ICommonService _commonService;
 
-        public ShipmentService(IShipmentRepository repo, IMapper mapper, IShipmentTrackingRepository shipmentTrackingRepository, IMasterJourneyService masterJourneyService)
+        public ShipmentService(IShipmentRepository repo,
+            IMapper mapper,
+            IShipmentTrackingRepository shipmentTrackingRepository,
+            IMasterJourneyService masterJourneyService,
+            ICommonService commonService)
         {
             _mapper = mapper;
             _repo = repo;
             _shipmentTrackingRepository = shipmentTrackingRepository;
             _masterJourneyService = masterJourneyService;
+            _commonService = commonService;
         }
         public async Task<ShipmentResponse> CreateShipment(ShipmentRequest request)
         {
@@ -76,7 +82,7 @@ namespace MKExpress.API.Services
                 {
                     ShipmentNo = shipmentNo.FirstOrDefault() ?? "",
                     IsValid = false,
-                    Error = StaticValues.Messgae_ShipmentNoNotFound
+                    Error = StaticValues.Message_ShipmentNoNotFound
                 });
 
             // var containerJourney = await _masterJourneyService.Get(containerJourneyId);
@@ -118,6 +124,28 @@ namespace MKExpress.API.Services
             }
             shipmentValidateResponse.Errors = shipmentErrors;
             return shipmentValidateResponse;
+        }
+
+        public async Task<ShipmentResponse> ValidateThirdPartyShipment(string shipmentNo)
+        {
+            if (string.IsNullOrEmpty(shipmentNo))
+                throw new BusinessRuleViolationException(StaticValues.Error_InvalidShipmentNo, StaticValues.Message_InvalidShipmentNo);
+
+            var shipments = await _repo.ValidateShipment(new List<string>() { shipmentNo });
+
+            if (shipments == null || shipments.Count == 0)
+                throw new BusinessRuleViolationException(StaticValues.Error_ShipmentNoNotFound, StaticValues.Message_ShipmentNoNotFound);
+
+            var shipment = shipments.FirstOrDefault();
+            bool isValidStatus = Enum.TryParse(shipment?.Status, out ShipmentStatusEnum currentStatus);
+
+            if(!isValidStatus)
+                throw new BusinessRuleViolationException(StaticValues.Error_InvalidShipmentStatus, StaticValues.Message_InvalidShipmentStatus);
+
+            if (!_commonService.ValidateThirdPartyShipmentStatus(currentStatus))
+                throw new BusinessRuleViolationException(StaticValues.Error_InvalidShipmentStatusForThirdParty, StaticValues.Message_InvalidShipmentStatusForThirdParty);
+
+           return _mapper.Map<ShipmentResponse>(shipment);
         }
     }
 }

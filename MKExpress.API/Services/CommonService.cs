@@ -38,5 +38,14 @@ namespace MKExpress.API.Services
             }
             return newUserId;
         }
+
+        public bool ValidateThirdPartyShipmentStatus(ShipmentStatusEnum shipmentStatus)
+        {
+            return shipmentStatus switch
+            {
+                ShipmentStatusEnum.Created or ShipmentStatusEnum.Stored => true,
+                _ => false,
+            };
+        }
     }
 }

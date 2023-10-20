@@ -7,6 +7,7 @@ namespace MKExpress.API.Repository.IRepository
     public interface IThirdPartyCourierRepository:ICrudRepository<ThirdPartyCourierCompany>
     {
         Task<List<ThirdPartyShipment>> GetShipments(Guid thirdPartyId,DateTime fromDate,DateTime toDate);
-        Task<bool> AddShipmentToThirdParty(List<ThirdPartyShipmentRequest> request);
+        Task<bool> AddShipmentToThirdParty(List<ThirdPartyShipment> request);
+        Task<List<ThirdPartyShipment>> IsShipmentAddedInThirdParty(List<Guid> shipmentIds);
     }
 }

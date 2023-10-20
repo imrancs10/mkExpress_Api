@@ -15,7 +15,7 @@ namespace MKExpress.API.Services
         private readonly IThirdPartyCourierRepository _repository;
         private readonly IMapper _mapper;
         private readonly ICommonService _commonService;
-        public ThirdPartyCourierService(IThirdPartyCourierRepository repository,IMapper mapper, ICommonService commonService)
+        public ThirdPartyCourierService(IThirdPartyCourierRepository repository, IMapper mapper, ICommonService commonService)
         {
             _repository = repository;
             _mapper = mapper;
@@ -30,7 +30,7 @@ namespace MKExpress.API.Services
 
         public async Task<int> Delete(Guid id)
         {
-           return await _repository.Delete(id);
+            return await _repository.Delete(id);
         }
 
         public async Task<ThirdPartyCourierResponse> Get(Guid id)
@@ -45,7 +45,7 @@ namespace MKExpress.API.Services
 
         public async Task<List<ShipmentResponse>> GetShipments(Guid thirdPartyId, DateTime fromDate, DateTime toDate)
         {
-            return _mapper.Map<List<ShipmentResponse>>(await _repository.GetShipments(thirdPartyId,fromDate,toDate));
+            return _mapper.Map<List<ShipmentResponse>>(await _repository.GetShipments(thirdPartyId, fromDate, toDate));
         }
 
         public async Task<PagingResponse<ThirdPartyCourierResponse>> Search(SearchPagingRequest pagingRequest)
@@ -60,16 +60,26 @@ namespace MKExpress.API.Services
         }
         public async Task<bool> AddShipmentToThirdParty(List<ThirdPartyShipmentRequest> request)
         {
-            if (request == null) 
+            if (request == null)
                 throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidParameters, StaticValues.Error_InvalidParameters);
 
-            var loggedInId=_commonService.GetLoggedInUserId();
+            var shipmentIds = request.Select(x => x.ShipmentId).ToList();
+
+            var alreadyAddedShipment = await _repository.IsShipmentAddedInThirdParty(shipmentIds);
+            if (alreadyAddedShipment.Any())
+            {
+                throw new BusinessRuleViolationException(StaticValues.Error_SomeShipmentsAlreadyAddedToThirdParty,
+                   "These shipment already added to third party courier : "+ string.Join(", ", alreadyAddedShipment.Select(x => x.Shipment.ShipmentNumber)));
+            }
+
+            var loggedInId = _commonService.GetLoggedInUserId();
             request.ForEach(res =>
             {
                 res.AssignById = loggedInId;
-                res.AssignAt=DateTime.UtcNow;
+                res.AssignAt = DateTime.UtcNow;
             });
-            return await _repository.AddShipmentToThirdParty(request);
+            var thirdPartyShipment = _mapper.Map<List<ThirdPartyShipment>>(request);
+            return await _repository.AddShipmentToThirdParty(thirdPartyShipment);
         }
     }
 }

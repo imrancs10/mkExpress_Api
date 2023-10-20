@@ -31,7 +31,7 @@ namespace MKExpress.API.Repository
             return entity.Entity;
         }
 
-        public async Task<bool> AddShipmentToThirdParty(List<ThirdPartyShipmentRequest> request)
+        public async Task<bool> AddShipmentToThirdParty(List<ThirdPartyShipment> request)
         {
            _context.AddRange(request);
             return await _context.SaveChangesAsync() > 0;
@@ -63,7 +63,7 @@ namespace MKExpress.API.Repository
         public async Task<PagingResponse<ThirdPartyCourierCompany>> GetAll(PagingRequest pagingRequest)
         {
             var data = _context.ThirdPartyCourierCompanies
-            .Where(x => !x.IsDeleted && (pagingRequest.FetchAll || x.IsActive)) 
+            .Where(x => !x.IsDeleted && (pagingRequest.FetchAll || x.IsActive==true)) 
                .OrderBy(x => x.Name)
                .AsQueryable();
             PagingResponse<ThirdPartyCourierCompany> pagingResponse = new()
@@ -85,6 +85,17 @@ namespace MKExpress.API.Repository
                 x.AssignAt <= toDate.Date)
                 .OrderByDescending(x => x.CreatedBy)
                 .ToListAsync();
+        }
+
+        public async Task<List<ThirdPartyShipment>> IsShipmentAddedInThirdParty(List<Guid> shipmentIds)
+        {
+            var oldData=await _context.ThirdPartyShipments.Include(x=>x.Shipment)
+                .Where(x=>!x.IsDeleted && shipmentIds.Contains(x.Shipment.Id) && !x.Shipment.IsDeleted)
+                .ToListAsync();
+            if(oldData.Count==0)
+            return new List<ThirdPartyShipment>();
+            return oldData;
+
         }
 
         public async Task<PagingResponse<ThirdPartyCourierCompany>> Search(SearchPagingRequest pagingRequest)

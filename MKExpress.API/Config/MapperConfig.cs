@@ -137,6 +137,7 @@ namespace MKExpress.API.Config
             CreateMap<ThirdPartyCourierCompany, ThirdPartyCourierResponse>();
             CreateMap<PagingResponse<ThirdPartyCourierCompany>, PagingResponse<ThirdPartyCourierResponse>>();
 
+            CreateMap<ThirdPartyShipmentRequest, ThirdPartyShipment>();
             CreateMap<ThirdPartyShipment, ThirdPartyShipmentResponse>()
                 .ForMember(des => des.AssignBy, src => src.MapFrom(x => $"{x.AssignBy.FirstName} {x.AssignBy.LastName}"));
             #endregion
