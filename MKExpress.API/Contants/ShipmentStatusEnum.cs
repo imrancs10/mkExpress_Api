@@ -32,6 +32,7 @@
         ReturnedToCustomer,
         MarkedAsLost,
         NoStatus,
-        ChangedManually
+        ChangedManually,
+        PickupFailed
     }
 }

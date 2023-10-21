@@ -3,7 +3,9 @@ using MKExpress.API.Contants;
 using MKExpress.API.Data;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
+using MKExpress.API.Enums;
 using MKExpress.API.Exceptions;
+using MKExpress.API.Extension;
 using MKExpress.API.Logger;
 using MKExpress.API.Models;
 using MKExpress.API.Repository.IRepository;
@@ -162,6 +164,8 @@ namespace MKExpress.API.Repository
         public async Task<bool> CloseContainer(Guid containerId)
         {
             var oldData = await _context.Containers
+              .Include(x => x.ContainerDetails)
+              .Include(x => x.ContainerTrackings)
               .Where(x => !x.IsDeleted && x.Id == containerId)
               .FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.DataNotFoundMessage);
 
@@ -173,14 +177,39 @@ namespace MKExpress.API.Repository
             oldData.IsClosed = true;
             oldData.ClosedOn = DateTime.Now;
             oldData.ClosedBy = _commonService.GetLoggedInUserId();
+            var trans = _context.Database.BeginTransaction();
             _context.Containers.Attach(oldData);
-            return await _context.SaveChangesAsync() > 0;
+
+            if (await _context.SaveChangesAsync() > 0)
+            {
+                var shipmentIds = oldData.ContainerDetails.Select(x => x.ShipmentId).ToList();
+                if (await _shipmentRepository.UpdateShipmentStatus(shipmentIds, ShipmentStatusEnum.ContainerSealed))
+                {
+                    _context.ContainerTrackings.Add(new ContainerTracking()
+                    {
+                        Code = ContainerStatusEnum.Closed.ToFormatString(),
+                        ContainerId = oldData.Id,
+                        Id = Guid.NewGuid(),
+                        CreatedAt = DateTime.UtcNow,
+                        CreatedBy = 0,// _commonService.GetLoggedInUserId()
+                        CreatedById = _commonService.GetLoggedInUserId()
+                    });
+
+                    if (await _context.SaveChangesAsync() > 0)
+                    {
+                        trans.Commit();
+                        return true;
+                    }
+                }
+            }
+            trans.Rollback();
+            return false;
         }
 
         public async Task<bool> DeleteContainer(Guid containerId, string deleteReason)
         {
             var oldData = await _context.Containers
-                .Include(x=>x.ContainerDetails)
+                .Include(x => x.ContainerDetails)
                 .Include(x => x.ContainerTrackings)
                 .Include(x => x.ContainerJourneys)
               .Where(x => !x.IsDeleted && x.Id == containerId)
@@ -223,7 +252,7 @@ namespace MKExpress.API.Repository
             });
 
 
-            var entity=_context.Containers.Update(oldData);
+            var entity = _context.Containers.Update(oldData);
             entity.State = EntityState.Modified;
             return await _context.SaveChangesAsync() > 0;
         }
@@ -255,7 +284,7 @@ namespace MKExpress.API.Repository
                 Data = await data
                .Skip(pagingRequest.PageSize * (pagingRequest.PageNo - 1))
                .Take(pagingRequest.PageSize)
-               .OrderByDescending(x=>x.ContainerNo)
+               .OrderByDescending(x => x.ContainerNo)
                .ToListAsync(),
                 TotalRecords = await data.CountAsync()
             };
@@ -348,8 +377,8 @@ namespace MKExpress.API.Repository
                .Include(x => x.ContainerType)
                .Include(x => x.ClosedByMember)
                .ThenInclude(x => x.Role)
-               .Where(x => !x.IsDeleted && 
-               x.CreatedAt.Date>=pagingRequest.FromDate.Date &&
+               .Where(x => !x.IsDeleted &&
+               x.CreatedAt.Date >= pagingRequest.FromDate.Date &&
                 x.CreatedAt.Date <= pagingRequest.ToDate.Date &&
                (searchTerm == "" ||
                x.ContainerNo.ToString().Contains(searchTerm) ||
@@ -417,5 +446,6 @@ namespace MKExpress.API.Repository
                 _ => throw new NotImplementedException()
             };
         }
+
     }
 }
