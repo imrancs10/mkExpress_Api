@@ -12,6 +12,6 @@ namespace MKExpress.API.Repository.IRepository
         Task<Shipment> GetShipment(Guid id);
         Task<List<Shipment>> ValidateShipment(List<string> shipmentNo);
         Task<List<Shipment>> GetShipment(List<Guid> ids);
-        Task<bool> UpdateShipmentStatus(List<Guid> shipmentIds,ShipmentStatusEnum newStatus);
+        Task<bool> UpdateShipmentStatus(List<Guid> shipmentIds,ShipmentStatusEnum newStatus,string comment = "");
     }
 }
