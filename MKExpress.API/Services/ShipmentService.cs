@@ -30,6 +30,13 @@ namespace MKExpress.API.Services
             _masterJourneyService = masterJourneyService;
             _commonService = commonService;
         }
+
+        public async Task<bool> AssignForPickup(List<AssignForPickupRequest> requests)
+        {
+            var req=_mapper.Map<List<AssignShipmentMember>>(requests);
+            return await _repo.AssignForPickup(req);
+        }
+
         public async Task<ShipmentResponse> CreateShipment(ShipmentRequest request)
         {
             var shipment = _mapper.Map<Shipment>(request);

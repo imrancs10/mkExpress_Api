@@ -89,6 +89,8 @@ namespace MKExpress.API.Config
             CreateMap<ShipmentTrackingRequest, ShipmentTracking>();
             CreateMap<ShipmentTracking, ShipmentTrackingResponse>();
             CreateMap<PagingResponse<ShipmentTracking>, PagingResponse<ShipmentTrackingResponse>>();
+
+            CreateMap<AssignForPickupRequest, AssignShipmentMember>();
             #endregion
 
             #region Master Journey

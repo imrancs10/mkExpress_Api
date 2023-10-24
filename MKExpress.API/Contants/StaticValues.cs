@@ -80,6 +80,7 @@
         public const string ShipmentTrackingByShipmentIdPath = APIPrefix + "get/tracking/{id}";
         public const string ShipmentByIdsPath = APIPrefix + "get/by-ids/{id}";
         public const string ShipmentValidatePath = APIPrefix + "validate/{id}";
+        public const string ShipmentAssignPickupPath = APIPrefix + "assign/pickup";
         public const string ShipmentValidateThirdPartyPath = APIPrefix + "validate/thirdparty";
         #endregion
 
@@ -134,6 +135,7 @@
         public const string Error_CantCheckinAtSourceStation = "CantCheckedInAtDestinationStation!";
         public const string Error_CantCheckOutAtDestinationStation = "CantCheckOutAtDestinationStation!";
         public const string Error_ShipmentNoNotFound = "ShipmentNoNotFound!";
+        public const string Error_SomeShipmentNoNotFound = "SomeShipmentNoNotFound!";
         public const string Error_InvalidShipmentNo = "InvalidShipmentNo!";
         public const string Error_InvalidShipmentStatus = "InvalidShipmentStatus!";
         public const string Error_InvalidShipmentStatusForThirdParty = "InvalidShipmentStatusForThirdParty!";
@@ -189,6 +191,7 @@
         public const string Message_ContainerIsNotClosed = "Container is open, Please close the container!";
         public const string Message_ContainerAlreadyClosed = "Container is already closed!";
         public const string Message_UnableToSaveData = "Unable to save data!";
+        public const string Message_SomeShipmentNoNotFound = "Some shipment number not found!";
         public const string Message_ShipmentNoNotFound = "Shipment number not found!";
         public const string Message_ContainerClosedCantDelete = "Container is closed, We cant delete container!";
         public const string Message_InvalidShipmentNo = "Invalid shipment Number!";

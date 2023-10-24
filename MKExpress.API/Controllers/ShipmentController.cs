@@ -87,5 +87,15 @@ namespace MKExpress.API.Controllers
         {
             return await _shipmentService.ValidateThirdPartyShipment(shipmentNo);
         }
+
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpPost(StaticValues.ShipmentAssignPickupPath)]
+        public async Task<bool> AssignForPickup([FromBody] List<AssignForPickupRequest> request)
+        {
+            return await _shipmentService.AssignForPickup(request);
+        }
     }
 }

@@ -7,5 +7,6 @@ namespace MKExpress.API.Services.IServices
         Guid GetLoggedInUserId();
         bool ValidateThirdPartyShipmentStatus(ShipmentStatusEnum shipmentStatus);
         string ValidateShipmentStatus(ShipmentStatusEnum currentStatus,ShipmentStatusEnum newStatus);
+        string ValidateShipmentStatus(string currentStatus, ShipmentStatusEnum newStatus);
     }
 }

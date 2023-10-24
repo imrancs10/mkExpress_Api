@@ -13,5 +13,6 @@ namespace MKExpress.API.Services.IServices
         Task<List<ShipmentResponse>> GetShipment(string ids);
         Task<ShipmentValidateResponse> ValidateContainerShipment(List<string> shipmentNo,Guid containerJourneyId);
         Task<ShipmentResponse> ValidateThirdPartyShipment(string shipmentNo);
+        Task<bool> AssignForPickup(List<AssignForPickupRequest> requests);
     }
 }

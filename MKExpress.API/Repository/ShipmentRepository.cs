@@ -23,6 +23,58 @@ namespace MKExpress.API.Repository
             _commonService = commonService;
         }
 
+        public async Task<bool> AssignForPickup(List<AssignShipmentMember> requests)
+        {
+            if (!requests.Any())
+                throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidParameters, StaticValues.Error_InvalidParameters);
+
+            var shipmentIds = requests.Select(x => x.ShipmentId).ToList();
+            var shipments = await _context.Shipments.Where(x => !x.IsDeleted && shipmentIds.Contains(x.Id)).ToDictionaryAsync(x => x.Id, y => y);
+            if (!shipments.Any())
+                throw new BusinessRuleViolationException(StaticValues.Error_ShipmentNoNotFound, StaticValues.Message_ShipmentNoNotFound);
+            if (shipments.Count != requests.Count)
+                throw new BusinessRuleViolationException(StaticValues.Error_SomeShipmentNoNotFound, StaticValues.Message_SomeShipmentNoNotFound);
+            var memberId = requests.First().MemberId;
+            var oldMemberData = await _context.AssignShipmentMembers.Where(x => !x.IsDeleted && x.MemberId == memberId && x.IsCurrent).ToListAsync();
+
+            var trans = _context.Database.BeginTransaction();
+            var userId = _commonService.GetLoggedInUserId();
+            if (oldMemberData.Any())
+            {
+                oldMemberData.ForEach(res => res.IsCurrent = false);
+                _context.AssignShipmentMembers.AttachRange(oldMemberData);
+                if (await _context.SaveChangesAsync() > 0)
+                {
+                    var shipmentMember = new List<AssignShipmentMember>();
+                    requests.ForEach(res =>
+                    {
+                        shipmentMember.Add(new AssignShipmentMember()
+                        {
+                            AssignAt = DateTime.UtcNow,
+                            ShipmentId = res.ShipmentId,
+                            Id = Guid.NewGuid(),
+                            AssignById = userId,
+                            IsCurrent = true,
+                            MemberId = res.MemberId,
+                            OldStatus = shipments[res.ShipmentId].Status,
+                            NewStatus = _commonService.ValidateShipmentStatus(shipments[res.ShipmentId].Status, ShipmentStatusEnum.AssignedForPickup),
+                        });
+                    });
+                    _context.AssignShipmentMembers.AddRange(oldMemberData);
+                    if (await _context.SaveChangesAsync() > 0)
+                    {
+                        if (await UpdateShipmentStatus(shipmentIds, ShipmentStatusEnum.AssignedForPickup))
+                        {
+                            trans.Commit();
+                            return true;
+                        }
+                    }
+                }
+            }
+            trans.Rollback();
+            return false;
+        }
+
         public async Task<Shipment> CreateShipment(Shipment shipment)
         {
             shipment.Status = ShipmentStatusEnum.Created.ToString();
