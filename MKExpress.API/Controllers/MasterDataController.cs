@@ -3,12 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using MKExpress.API.Contants;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
+using MKExpress.API.Middleware;
 using MKExpress.API.Services.Interfaces;
 using MKExpress.API.Services.IServices;
 
 namespace MKExpress.Web.API.Controllers
 {
-    //[Route(StaticValues.APIPrefix)]
+    
     [ApiController]
     public class MasterDataController : ControllerBase
     {
@@ -22,6 +23,7 @@ namespace MKExpress.Web.API.Controllers
             _masterJourneyService = masterJourneyService;
         }
 
+        [Authorize("Admin")]
         [ProducesResponseType(typeof(MasterDataResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -32,6 +34,7 @@ namespace MKExpress.Web.API.Controllers
             return await _masterDataService.Add(masterDataRequest);
         }
 
+        [Authorize("Admin")]
         [ProducesResponseType(typeof(MasterDataResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -42,6 +45,7 @@ namespace MKExpress.Web.API.Controllers
             return await _masterDataService.Update(masterDataRequest);
         }
 
+        [Authorize("Admin")]
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -106,6 +110,7 @@ namespace MKExpress.Web.API.Controllers
             return await _masterDataService.GetByMasterDataTypes(masterDataTypes);
         }
 
+        [Authorize("Admin")]
         [ProducesResponseType(typeof(MasterDataTypeResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -116,6 +121,7 @@ namespace MKExpress.Web.API.Controllers
             return await _masterDataTypeService.Add(masterDataTypeRequest);
         }
 
+        [Authorize("Admin")]
         [ProducesResponseType(typeof(MasterDataTypeResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -126,6 +132,7 @@ namespace MKExpress.Web.API.Controllers
             return await _masterDataTypeService.Update(masterDataTypeRequest);
         }
 
+        [Authorize("Admin")]
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -168,6 +175,7 @@ namespace MKExpress.Web.API.Controllers
             return await _masterDataTypeService.Search(searchPagingRequest);
         }
 
+        [Authorize("Admin")]
         [ProducesResponseType(typeof(MasterJourneyResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -178,6 +186,7 @@ namespace MKExpress.Web.API.Controllers
             return await _masterJourneyService.Add(request);
         }
 
+        [Authorize("Admin")]
         [ProducesResponseType(typeof(MasterJourneyResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -188,6 +197,7 @@ namespace MKExpress.Web.API.Controllers
             return await _masterJourneyService.Update(request);
         }
 
+        [Authorize("Admin")]
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]

@@ -11,6 +11,7 @@ using System.Text;
 using MKExpress.API.Dto;
 using Microsoft.Extensions.Configuration;
 using NLog;
+using Microsoft.IdentityModel.Logging;
 
 var _policyName = "CorsPolicy";
 var builder = WebApplication.CreateBuilder(args);
@@ -49,7 +50,7 @@ builder.Services.AddSwaggerGen(options =>
             new OpenApiSecurityScheme {
                 Reference = new OpenApiReference {
                     Id = "Bearer",
-                        Type = ReferenceType.SecurityScheme
+                    Type = ReferenceType.SecurityScheme
                 }
             },
             new List < string > ()
@@ -92,7 +93,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-
+    IdentityModelEventSource.ShowPII = true;
 }
 app.UseStaticFiles();
 app.UseSwagger();
@@ -105,6 +106,7 @@ app.UseSwaggerUI(options =>
     options.DocExpansion(DocExpansion.None);
 });
 
+app.UseMiddleware<JWTMiddleware>();
 app.UseCustomExceptionHandler();
 app.UseHttpsRedirection();
 
