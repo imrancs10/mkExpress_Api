@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MKExpress.API.Contants;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
+using MKExpress.API.Enums;
 using MKExpress.API.Models;
 using MKExpress.API.Services.IServices;
 
@@ -14,7 +15,7 @@ namespace MKExpress.API.Controllers
         private readonly IShipmentService _shipmentService;
         public ShipmentController(IShipmentService shipmentService)
         {
-            _shipmentService= shipmentService;
+            _shipmentService = shipmentService;
         }
 
         [ProducesResponseType(typeof(ShipmentResponse), StatusCodes.Status201Created)]
@@ -67,7 +68,7 @@ namespace MKExpress.API.Controllers
         {
             return await _shipmentService.GetShipment(id);
         }
-        
+
         [ProducesResponseType(typeof(ShipmentValidateResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -75,7 +76,7 @@ namespace MKExpress.API.Controllers
         [HttpPost(StaticValues.ShipmentValidatePath)]
         public async Task<ShipmentValidateResponse> ValidateContainerShipment([FromBody] List<string> shipmentNo, [FromRoute] Guid id)
         {
-            return await _shipmentService.ValidateContainerShipment(shipmentNo,id);
+            return await _shipmentService.ValidateContainerShipment(shipmentNo, id);
         }
 
         [ProducesResponseType(typeof(ShipmentResponse), StatusCodes.Status200OK)]
@@ -96,6 +97,16 @@ namespace MKExpress.API.Controllers
         public async Task<bool> AssignForPickup([FromBody] List<AssignForPickupRequest> request)
         {
             return await _shipmentService.AssignForPickup(request);
+        }
+
+        [ProducesResponseType(typeof(List<ShipmentResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpGet(StaticValues.ShipmentByUserNamePath)]
+        public async Task<List<ShipmentResponse>> GetShipments([FromQuery] string userId, [FromQuery] ShipmentEnum shipment, [FromQuery] ShipmentStatusEnum shipmentStatus)
+        {
+            return await _shipmentService.GetShipments(userId, shipment, shipmentStatus);
         }
     }
 }

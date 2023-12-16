@@ -82,6 +82,7 @@
         public const string ShipmentValidatePath = APIPrefix + "validate/{id}";
         public const string ShipmentAssignPickupPath = APIPrefix + "assign/pickup";
         public const string ShipmentValidateThirdPartyPath = APIPrefix + "validate/thirdparty";
+        public const string ShipmentByUserNamePath = APIPrefix + "get/{username}/{shipment}/{shipmentStatus}";
         #endregion
 
         #region Member
