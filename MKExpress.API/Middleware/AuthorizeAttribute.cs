@@ -18,7 +18,7 @@ namespace MKExpress.API.Middleware
         public void OnAuthorization(AuthorizationFilterContext context)
         {
             var inputRole = context.HttpContext.Items["role"].ToString();
-            if (string.IsNullOrEmpty(inputRole) || !_roles.Any(x => x.ToLower() == inputRole.ToLower()))
+            if (string.IsNullOrEmpty(inputRole) || (_roles.Count>0 && !_roles.Any(x => x.ToLower() == inputRole.ToLower())))
             {
                 // not logged in
                 context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };

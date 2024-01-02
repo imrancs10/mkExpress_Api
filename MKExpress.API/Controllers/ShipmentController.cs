@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using MKExpress.API.Contants;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
+using MKExpress.API.Middleware;
 using MKExpress.API.Models;
 using MKExpress.API.Services.IServices;
 
 namespace MKExpress.API.Controllers
 {
+    [Authorize]
     [ApiController]
     public class ShipmentController : ControllerBase
     {

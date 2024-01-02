@@ -2,6 +2,7 @@
 using MKExpress.API.Contants;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
+using MKExpress.API.Middleware;
 using MKExpress.API.Services.Interfaces;
 
 namespace SalehGarib.API.Controllers
@@ -15,6 +16,7 @@ namespace SalehGarib.API.Controllers
             _customerService = customerService;
         }
 
+        [Authorize("Admin")]
         [ProducesResponseType(typeof(CustomerResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -35,6 +37,7 @@ namespace SalehGarib.API.Controllers
             return await _customerService.GetCustomers(contactNo);
         }
 
+        [Authorize("Admin")]
         [ProducesResponseType(typeof(CustomerResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -45,6 +48,7 @@ namespace SalehGarib.API.Controllers
             return await _customerService.Update(customerRequest);
         }
 
+        [Authorize("Admin")]
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]

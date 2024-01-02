@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MKExpress.API.Contants;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
+using MKExpress.API.Middleware;
 using MKExpress.API.Services.IServices;
 
 namespace MKExpress.API.Controllers
@@ -16,6 +17,7 @@ namespace MKExpress.API.Controllers
             _serivce = serivce;
         }
 
+        [Authorize("Admin")]
         [ProducesResponseType(typeof(LogisticRegionResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -26,6 +28,7 @@ namespace MKExpress.API.Controllers
             return await _serivce.Add(request);
         }
 
+        [Authorize("Admin")]
         [ProducesResponseType(typeof(LogisticRegionResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -66,6 +69,7 @@ namespace MKExpress.API.Controllers
            return await _serivce.Search(searchPagingRequest);
         }
 
+        [Authorize("Admin")]
         [ProducesResponseType(typeof(LogisticRegionResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
