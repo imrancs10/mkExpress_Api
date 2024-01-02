@@ -3,6 +3,7 @@ using MKExpress.API.Contants;
 using MKExpress.API.Data;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
+using MKExpress.API.Enums;
 using MKExpress.API.Exceptions;
 using MKExpress.API.Extension;
 using MKExpress.API.Models;
@@ -153,6 +154,20 @@ namespace MKExpress.API.Repository
                .Include(x => x.ShipmentDetail)
             .ThenInclude(x => x.ConsigneeCity)
                  .Where(x => !x.IsDeleted && ids.Contains(x.Id)).ToListAsync();
+        }
+
+        public async Task<List<Shipment>> GetShipmentByUser(string userName, ShipmentEnum shipment, ShipmentStatusEnum shipmentStatus)
+        {
+            return await _context.Shipments
+                 .Include(x => x.ShipmentDetail)
+               .ThenInclude(x => x.FromStore)
+               .Include(x => x.ShipmentDetail)
+               .ThenInclude(x => x.ToStore)
+               .Include(x => x.ShipmentDetail)
+               .ThenInclude(x => x.ShipperCity)
+               .Include(x => x.ShipmentDetail)
+            .ThenInclude(x => x.ConsigneeCity)
+                 .Where(x => !x.IsDeleted).ToListAsync();
         }
 
         public async Task<bool> UpdateShipmentStatus(List<Guid> shipmentIds, ShipmentStatusEnum newStatus, string comment = "")

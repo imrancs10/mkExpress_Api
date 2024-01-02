@@ -3,6 +3,7 @@ using DocumentFormat.OpenXml.Office2010.Excel;
 using MKExpress.API.Contants;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
+using MKExpress.API.Enums;
 using MKExpress.API.Exceptions;
 using MKExpress.API.Models;
 using MKExpress.API.Repository.IRepository;
@@ -33,7 +34,7 @@ namespace MKExpress.API.Services
 
         public async Task<bool> AssignForPickup(List<AssignForPickupRequest> requests)
         {
-            var req=_mapper.Map<List<AssignShipmentMember>>(requests);
+            var req = _mapper.Map<List<AssignShipmentMember>>(requests);
             return await _repo.AssignForPickup(req);
         }
 
@@ -146,13 +147,33 @@ namespace MKExpress.API.Services
             var shipment = shipments.FirstOrDefault();
             bool isValidStatus = Enum.TryParse(shipment?.Status, out ShipmentStatusEnum currentStatus);
 
-            if(!isValidStatus)
+            if (!isValidStatus)
                 throw new BusinessRuleViolationException(StaticValues.Error_InvalidShipmentStatus, StaticValues.Message_InvalidShipmentStatus);
 
             if (!_commonService.ValidateThirdPartyShipmentStatus(currentStatus))
                 throw new BusinessRuleViolationException(StaticValues.Error_InvalidShipmentStatusForThirdParty, StaticValues.Message_InvalidShipmentStatusForThirdParty);
 
-           return _mapper.Map<ShipmentResponse>(shipment);
+            return _mapper.Map<ShipmentResponse>(shipment);
+        }
+
+        //Mobile API
+
+        //Deliver API
+        //Get Assigned Shipment
+        public async Task<List<ShipmentResponse>> GetShipments(string userId, ShipmentEnum shipment, ShipmentStatusEnum shipmentStatus)
+        {
+            try
+            {
+                return _mapper.Map<List<ShipmentResponse>>(await _repo.GetShipmentByUser(userId, shipment, shipmentStatus));
+            }
+            catch (ArgumentNullException ane)
+            {
+                throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidParameters, StaticValues.Error_InvalidParameters, ane);
+            }
+            catch (FormatException fe)
+            {
+                throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidGUID, StaticValues.Error_InvalidGUID, fe);
+            }
         }
     }
 }
