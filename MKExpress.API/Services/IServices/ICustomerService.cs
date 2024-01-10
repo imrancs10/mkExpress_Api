@@ -8,5 +8,6 @@ namespace MKExpress.API.Services.Interfaces
     public interface ICustomerService : ICrudService<CustomerRequest, CustomerResponse>
     {
         Task<List<CustomerResponse>> GetCustomers(string contactNo);
+        Task<List<DropdownResponse>> GetCustomersDropdown();
     }
 }

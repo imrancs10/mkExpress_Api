@@ -87,7 +87,8 @@ namespace MKExpress.API.Config
 
 
             CreateMap<ShipmentTrackingRequest, ShipmentTracking>();
-            CreateMap<ShipmentTracking, ShipmentTrackingResponse>();
+            CreateMap<ShipmentTracking, ShipmentTrackingResponse>()
+                   .ForMember(des => des.CommentByName, src => src.MapFrom(x =>$"{x.CommentByMember.FirstName} {x.CommentByMember.LastName}"));
             CreateMap<PagingResponse<ShipmentTracking>, PagingResponse<ShipmentTrackingResponse>>();
 
             CreateMap<AssignForPickupRequest, AssignShipmentMember>();

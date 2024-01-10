@@ -36,7 +36,7 @@ namespace MKExpress.API.Repository
             if (shipments.Count != requests.Count)
                 throw new BusinessRuleViolationException(StaticValues.Error_SomeShipmentNoNotFound, StaticValues.Message_SomeShipmentNoNotFound);
             var memberId = requests.First().MemberId;
-            var oldMemberData = await _context.AssignShipmentMembers.Where(x => !x.IsDeleted && x.MemberId == memberId && x.IsCurrent).ToListAsync();
+            var oldMemberData = await _context.AssignShipmentMembers.Where(x => !x.IsDeleted && x.MemberId == memberId && shipmentIds.Contains(x.ShipmentId) && x.IsCurrent).ToListAsync();
 
             var trans = _context.Database.BeginTransaction();
             var userId = _commonService.GetLoggedInUserId();
@@ -44,7 +44,9 @@ namespace MKExpress.API.Repository
             {
                 oldMemberData.ForEach(res => res.IsCurrent = false);
                 _context.AssignShipmentMembers.AttachRange(oldMemberData);
-                if (await _context.SaveChangesAsync() > 0)
+
+            }
+            if ((oldMemberData.Any() && await _context.SaveChangesAsync() > 0) || !oldMemberData.Any())
                 {
                     var shipmentMember = new List<AssignShipmentMember>();
                     requests.ForEach(res =>
@@ -61,7 +63,7 @@ namespace MKExpress.API.Repository
                             NewStatus = _commonService.ValidateShipmentStatus(shipments[res.ShipmentId].Status, ShipmentStatusEnum.AssignedForPickup),
                         });
                     });
-                    _context.AssignShipmentMembers.AddRange(oldMemberData);
+                    _context.AssignShipmentMembers.AddRange(shipmentMember);
                     if (await _context.SaveChangesAsync() > 0)
                     {
                         if (await UpdateShipmentStatus(shipmentIds, ShipmentStatusEnum.AssignedForPickup))
@@ -71,7 +73,6 @@ namespace MKExpress.API.Repository
                         }
                     }
                 }
-            }
             trans.Rollback();
             return false;
         }

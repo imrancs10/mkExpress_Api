@@ -70,7 +70,7 @@ namespace SalehGarib.API.Controllers
             return await _customerService.Get(id);
         }
 
-        [ProducesResponseType(typeof(CustomerResponse), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(PagingResponse<CustomerResponse>), StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(PagingResponse<CustomerResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -81,7 +81,7 @@ namespace SalehGarib.API.Controllers
             return await _customerService.GetAll(pagingRequest);
         }
 
-        [ProducesResponseType(typeof(CustomerResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PagingResponse<CustomerResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
@@ -89,6 +89,16 @@ namespace SalehGarib.API.Controllers
         public async Task<PagingResponse<CustomerResponse>> SearchCustomer([FromQuery] SearchPagingRequest searchPagingRequest)
         {
             return await _customerService.Search(searchPagingRequest);
+        }
+
+        [ProducesResponseType(typeof(List<DropdownResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpGet(StaticValues.CustomerGetDropdownPath)]
+        public async Task<List<DropdownResponse>> GetCustomersDropdown()
+        {
+            return await _customerService.GetCustomersDropdown();
         }
 
     }

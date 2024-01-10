@@ -122,5 +122,14 @@ namespace MKExpress.API.Repositories
                .OrderBy(x => x.Name)
                .ToListAsync();
         }
+
+        public async Task<List<DropdownResponse>> GetCustomersDropdown()
+        {
+            return await _context.Customers
+                .Where(x=>!x.IsDeleted)
+                .OrderBy(x =>x.Name)
+                .Select(x=>new DropdownResponse() { Id=x.Id,Value=$"{x.Name}"})
+                .ToListAsync();
+        }
     }
 }

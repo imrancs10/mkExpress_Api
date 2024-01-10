@@ -7,11 +7,12 @@ namespace MKExpress.API.Exceptions
             base(message)
         {
             ErrorResponseType = errorResponseType;
-            message = message;
+            Message = message;
             Errors = errors;
         }
 
         public string ErrorResponseType { get; }
+        public override string Message { get; }
 
         public object? Errors { get; }
     }

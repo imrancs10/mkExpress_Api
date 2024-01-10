@@ -42,6 +42,7 @@
         public const string CustomerByIdPath = APIPrefix + "get/{id}";
         public const string CustomerByContactNoPath = APIPrefix + "get/by-contact";
         public const string CustomerSearchPath = APIPrefix + "search";
+        public const string CustomerGetDropdownPath = APIPrefix + "get/dropdown";
         public const string CustomerPath = APIPrefix;
         #endregion
 
@@ -175,6 +176,7 @@
         public const string Error_CustomerNotFoundError = "Customer not found!";
         public const string Error_InvalidParameters= "Invalid parameters!";
         public const string Error_InvalidGUID = "Invalid GUID!";
+        public const string Error_InvalidModuleName = "Invalid module name";
         public const string Error_ShipmentStatusShouldBeStored = "Shipment status should be stored!";
         public const string Message_UserIdNotPresentInHeader = "User id is not present in header!";
         public const string Error_UnableToSaveData = "UnableToSaveData!";

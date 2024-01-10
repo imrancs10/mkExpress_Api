@@ -55,6 +55,11 @@ namespace MKExpress.API.Services
             return _mapper.Map<List<CustomerResponse>>(await _customerRepository.GetCustomers(contactNo));
         }
 
+        public async Task<List<DropdownResponse>> GetCustomersDropdown()
+        {
+            return await _customerRepository.GetCustomersDropdown();
+        }
+
         public async Task<PagingResponse<CustomerResponse>> Search(SearchPagingRequest searchPagingRequest)
         {
             return _mapper.Map<PagingResponse<CustomerResponse>>(await _customerRepository.Search(searchPagingRequest));

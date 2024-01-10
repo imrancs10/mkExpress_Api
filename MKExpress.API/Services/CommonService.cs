@@ -47,7 +47,9 @@ namespace MKExpress.API.Services
                 ShipmentStatusEnum.Created => newStatus switch
                 {
                     ShipmentStatusEnum.ReadyForPickup => ShipmentStatusEnum.ReadyForPickup.ToFormatString(),
+                    ShipmentStatusEnum.AssignedForPickup => ShipmentStatusEnum.AssignedForPickup.ToFormatString(),
                     ShipmentStatusEnum.ChangedManually => ShipmentStatusEnum.ChangedManually.ToFormatString(),
+                    ShipmentStatusEnum.Canceled => ShipmentStatusEnum.Canceled.ToFormatString(),
                     _ => ThrowException()
                 },
                 ShipmentStatusEnum.ReadyForPickup => newStatus switch

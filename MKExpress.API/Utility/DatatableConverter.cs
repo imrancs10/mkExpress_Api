@@ -40,7 +40,9 @@ namespace MKExpress.API.Utility
                             }
 
                         }
-                        catch (Exception ex) { }
+                        catch (Exception ex) {
+                            throw;
+                        }
                     }
                 }
                 return objT;

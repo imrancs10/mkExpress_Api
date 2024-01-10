@@ -47,10 +47,9 @@ namespace MKExpress.API.Services
 
         public async Task<List<ImageStoreResponse>> GetByModuleName(string moduleName)
         {
-            ModuleNameEnum modName = Enum.Parse<ModuleNameEnum>(moduleName, true);
-            if (modName == null)
+            if(!Enum.TryParse<ModuleNameEnum>(moduleName,out ModuleNameEnum modName))
             {
-               // throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidModuleName, StaticValues.Error_InvalidModuleName);
+               throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidModuleName, StaticValues.Error_InvalidModuleName);
             }
             return _mapper.Map<List<ImageStoreResponse>>(await _fileStorageRepository.GetByModuleName(modName));
         }
