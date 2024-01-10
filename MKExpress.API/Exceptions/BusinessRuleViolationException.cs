@@ -1,5 +1,4 @@
-﻿using System;
-namespace MKExpress.API.Exceptions
+﻿namespace MKExpress.API.Exceptions
 {
     public class BusinessRuleViolationException : Exception
     {

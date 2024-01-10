@@ -5,7 +5,7 @@ using MKExpress.API.DTO.Response;
 using MKExpress.API.Middleware;
 using MKExpress.API.Services.Interfaces;
 
-namespace SalehGarib.API.Controllers
+namespace MKExpress.API.Controllers
 {
     [ApiController]
     public class CustomerController : ControllerBase

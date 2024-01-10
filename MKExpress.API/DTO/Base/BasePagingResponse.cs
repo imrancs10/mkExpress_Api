@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SalehGarib.API.Dto.BaseDto
+﻿namespace MKExpress.API.Dto.BaseDto
 {
     public class BasePagingResponse<T> where T : class
     {

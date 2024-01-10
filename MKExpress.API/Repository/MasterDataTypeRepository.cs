@@ -11,7 +11,7 @@ using MKExpress.API.Utility;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SalehGarib.API.Repositories
+namespace MKExpress.API.Repositories
 {
     public class MasterDataTypeRepository : IMasterDataTypeRepository
     {

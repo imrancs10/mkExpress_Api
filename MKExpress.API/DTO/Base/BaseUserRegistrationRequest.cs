@@ -1,9 +1,8 @@
 using MKExpress.API.Contants;
 using System.ComponentModel.DataAnnotations;
 
-namespace SalehGarib.API.Dto.BaseDto
+namespace MKExpress.API.Dto.BaseDto
 {
-
     public class BaseUserRegistrationRequest
     {
         [Required]
