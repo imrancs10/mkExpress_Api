@@ -37,7 +37,9 @@ namespace MKExpress.API.Middleware
                 .AddScoped<IMasterJourneyService, MasterJourneyService>()
                 .AddScoped<IContainerRepository, ContainerRepository>()
                 .AddScoped<IContainerService, ContainerService>()
-                 .AddScoped<IThirdPartyCourierRepository, ThirdPartyCourierRepository>()
+                .AddScoped<IAppSettingRepository, AppSettingRepository>()
+                .AddScoped<IAppSettingService, AppSettingService>()
+                .AddScoped<IThirdPartyCourierRepository, ThirdPartyCourierRepository>()
                 .AddScoped<IThirdPartyCourierService, ThirdPartyCourierService>()
                 .AddScoped<IShipmentTrackingRepository, ShipmentTrackingRepository>()
                 .AddScoped<ICommonService, CommonService>()
@@ -45,7 +47,6 @@ namespace MKExpress.API.Middleware
                 .AddScoped<IExcelReader, ExcelReader>()
                 .AddSingleton<ILoggerManager, LoggerManager>()
                 .AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
             return services;
         }
 

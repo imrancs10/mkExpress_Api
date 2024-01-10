@@ -70,6 +70,7 @@ namespace MKExpress.API.Data
         public DbSet<ContainerTracking> ContainerTrackings { get; set; }
         public DbSet<ThirdPartyCourierCompany> ThirdPartyCourierCompanies { get; set; }
         public DbSet<ThirdPartyShipment> ThirdPartyShipments { get; set; }
+        public DbSet<AppSetting> AppSettings { get; set; }
         public DbSet<AssignShipmentMember> AssignShipmentMembers { get; set; }
         public override int SaveChanges()
         {

@@ -145,6 +145,12 @@ namespace MKExpress.API.Config
                 .ForMember(des => des.AssignBy, src => src.MapFrom(x => $"{x.AssignBy.FirstName} {x.AssignBy.LastName}"));
             #endregion
 
+            #region AppSetting
+            CreateMap<AppSettingRequest, AppSetting>();
+            CreateMap<AppSetting, AppSettingResponse>();
+            CreateMap<PagingResponse<AppSetting>, PagingResponse<AppSettingResponse>>();
+            #endregion
+
         }
 
         public static IMapper GetMapperConfig()
