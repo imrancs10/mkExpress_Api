@@ -45,14 +45,37 @@ namespace MKExpress.API.Repository
                  .FirstOrDefaultAsync()??new();
         }
 
-        public Task<PagingResponse<AppSetting>> GetAll(PagingRequest pagingRequest)
+        public async Task<PagingResponse<AppSetting>> GetAll(PagingRequest pagingRequest)
         {
-            throw new NotImplementedException();
+            var data = _context.AppSettings
+           .Where(x => !x.IsDeleted)
+              .OrderBy(x => x.Group)
+              .AsQueryable();
+            PagingResponse<AppSetting> pagingResponse = new()
+            {
+                PageNo = pagingRequest.PageNo,
+                PageSize = pagingRequest.PageSize,
+                Data = await data.Skip(pagingRequest.PageSize * (pagingRequest.PageNo - 1)).Take(pagingRequest.PageSize).ToListAsync(),
+                TotalRecords = await data.CountAsync()
+            };
+            return pagingResponse;
         }
 
-        public Task<PagingResponse<AppSetting>> Search(SearchPagingRequest searchPagingRequest)
+        public async Task<PagingResponse<AppSetting>> Search(SearchPagingRequest searchPagingRequest)
         {
-            throw new NotImplementedException();
+            var searchTerm = string.IsNullOrEmpty(searchPagingRequest.SearchTerm) ? string.Empty : searchPagingRequest.SearchTerm;
+            var data = _context.AppSettings
+          .Where(x => !x.IsDeleted && (x.Key.Contains(searchTerm) || x.Value.Contains(searchTerm)) || x.Group.ToString()==searchTerm)
+             .OrderBy(x => x.Group)
+             .AsQueryable();
+            PagingResponse<AppSetting> pagingResponse = new()
+            {
+                PageNo = searchPagingRequest.PageNo,
+                PageSize = searchPagingRequest.PageSize,
+                Data = await data.Skip(searchPagingRequest.PageSize * (searchPagingRequest.PageNo - 1)).Take(searchPagingRequest.PageSize).ToListAsync(),
+                TotalRecords = await data.CountAsync()
+            };
+            return pagingResponse;
         }
 
         public async Task<AppSetting> Update(AppSetting entity)

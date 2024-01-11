@@ -1,6 +1,11 @@
-﻿namespace MKExpress.API.DTO.Request
+﻿using MKExpress.API.DTO.Base;
+
+namespace MKExpress.API.DTO.Request
 {
-    public class AppSettingRequest
+    public class AppSettingRequest:BaseRequest
     {
+        public string Key { get; set; }
+        public string Value { get; set; }
+        public int Group { get; set; }
     }
 }

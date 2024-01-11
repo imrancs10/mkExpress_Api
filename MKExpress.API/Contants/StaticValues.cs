@@ -18,6 +18,13 @@
         public const string LoginUserVerifyEmailPath = "user/verify/email/{token}";
         #endregion
 
+        #region AppSetting API
+        public const string AppSettingPath = APIPrefix;
+        public const string AppSettingByIdPath = APIPrefix + "get/{id}";
+        public const string AppSettingSearchPath = APIPrefix + "search";
+        public const string AppSettingDeletePath = APIPrefix + "{id}";
+        #endregion
+
         #region Master Data API
         public const string MasterDataPath = APIPrefix+"master-data";
         public const string MasterDataDeletePath = APIPrefix + "master-data/{id}";
