@@ -115,6 +115,15 @@
         public const string FileDeleteImageByIdPath = "image/delete/id";
         #endregion
 
+        #region Mobile API Path
+        public const string MobileAPIGetShipmentByMemberPath = $"api/mobile/get/shiment/by-member";
+        public const string MobileAPIMarkPickupDonePath = $"api/mobile/update/pickup/done";
+        public const string MobileAPIMarkPickupFailedPath = $"api/mobile/update/pickup/failed"; 
+        public const string MobileAPIMarkPickupRescheduledPath = $"api/mobile/update/pickup/rescheduled";
+        public const string MobileAPIMarkReadyForPickupPath = $"api/mobile/update/pickup/ready";
+        public const string MobileAPIUploadPodImagePath = $"api/mobile/upload/pod/image";
+        #endregion
+
         #endregion
 
         #region Error Type Message
@@ -129,6 +138,8 @@
         public const string ErrorType_InvalidModuleName = "InvalidModuleName";
         public const string ErrorType_ImageNotSelected = "ImageNotSelected";
         public const string ErrorType_RecordNotFound = "RecordNotFound";
+        public const string ErrorType_DeleteNotAllowed = "DeleteNotAllowed";
+        public const string ErrorType_UpdateNotAllowed = "UpdateNotAllowed";
         public const string EmailAlreadyExist_Error = "EmailAlreadyExist!";
         public const string NewAndConfirmPasswordNotSame_Error = "NewAndConfirmPasswordNotSame!";
         public const string ErrorType_AlreadyDeleted = "AlreadyDeleted";
@@ -143,7 +154,8 @@
         public const string Error_UserIdInvalidPresentInHeader = "UserIdNotPresentInHeader!";
         public const string Error_CantCheckinAtSourceStation = "CantCheckedInAtDestinationStation!";
         public const string Error_CantCheckOutAtDestinationStation = "CantCheckOutAtDestinationStation!";
-        public const string Error_ShipmentNoNotFound = "ShipmentNoNotFound!";
+        public const string Error_ShipmentNumberNotFound = "ShipmentNumberNotFound!";
+        public const string Error_ShipmentNotFound = "ShipmentNotFound!";
         public const string Error_SomeShipmentNoNotFound = "SomeShipmentNoNotFound!";
         public const string Error_InvalidShipmentNo = "InvalidShipmentNo!";
         public const string Error_InvalidShipmentStatus = "InvalidShipmentStatus!";
@@ -151,9 +163,13 @@
         public const string Error_SomeShipmentsAlreadyAddedToThirdParty = "SomeShipmentsAlreadyAddedToThirdParty!";
         public const string Error_InvalidShipmentStatusAssign = "InvalidShipmentStatusAssign!";
         public const string Error_InvalidCurrentShipmentStatus = "InvalidCurrentShipmentStatus!";
+        public const string Error_ShipmentNotAssignedToYou = "ShipmentNotAssignedToYou!";
+        public const string Error_ShipmentNumberAlreadyExist = "ShipmentNumberAlreadyExist!";
         #endregion
 
         #region Error Message
+        public const string Message_ShipmentNumberAlreadyExist = "Shipment number ({0}) already exist!";
+        public const string Message_ShipmentNotAssignedToYou = "This shipment is not assigned to you!";
         public const string EmailAlreadyExist_Message = "Email already exist!";
         public const string NewAndConfirmPasswordNotSame_Message = "New & confirm password are not same!";
         public const string MasterDataTypeAlreadyExistError = "MasterDataTypeAlreadyExist!";
@@ -202,13 +218,17 @@
         public const string Message_ContainerAlreadyClosed = "Container is already closed!";
         public const string Message_UnableToSaveData = "Unable to save data!";
         public const string Message_SomeShipmentNoNotFound = "Some shipment number not found!";
-        public const string Message_ShipmentNoNotFound = "Shipment number not found!";
+        public const string Message_ShipmentNumberNotFound = "Shipment number not found!";
+        public const string Message_ShipmentNotFound = "Shipment not found!";
         public const string Message_ContainerClosedCantDelete = "Container is closed, We cant delete container!";
         public const string Message_InvalidShipmentNo = "Invalid shipment Number!";
         public const string Message_InvalidShipmentStatus = "Invalid shipment status!";
         public const string Message_InvalidShipmentStatusForThirdParty = "Invalid shipment status for third party!";
         public const string Message_InvalidShipmentStatusAssign = "You are assigning invalid shipment status!";
         public const string Message_InvalidCurrentShipmentStatus = "Invalid current shipment status for Shipment no. : ";
+        public const string Message_AppSettingKeyNotFound = "App setting key not found!";
+        public const string Message_DeleteNotAllowed = "Delete not allowed";
+        public const string Message_UpdateNotAllowed = "Update not allowed";
 
         public static string RecordAlreadyExistMessage(string recordType)
         {

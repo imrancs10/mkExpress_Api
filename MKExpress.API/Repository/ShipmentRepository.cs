@@ -17,11 +17,14 @@ namespace MKExpress.API.Repository
         private readonly MKExpressContext _context;
         private readonly IShipmentTrackingRepository _shipmentTrackingRepository;
         private readonly ICommonService _commonService;
-        public ShipmentRepository(MKExpressContext context, IShipmentTrackingRepository shipmentTrackingRepository, ICommonService commonService)
+        private readonly IAppSettingRepository _appSettingRepository;
+
+        public ShipmentRepository(MKExpressContext context, IShipmentTrackingRepository shipmentTrackingRepository, ICommonService commonService,IAppSettingRepository appSettingRepository)
         {
             _context = context;
             _shipmentTrackingRepository = shipmentTrackingRepository;
             _commonService = commonService;
+            _appSettingRepository = appSettingRepository;
         }
 
         public async Task<bool> AssignForPickup(List<AssignShipmentMember> requests)
@@ -32,7 +35,7 @@ namespace MKExpress.API.Repository
             var shipmentIds = requests.Select(x => x.ShipmentId).ToList();
             var shipments = await _context.Shipments.Where(x => !x.IsDeleted && shipmentIds.Contains(x.Id)).ToDictionaryAsync(x => x.Id, y => y);
             if (!shipments.Any())
-                throw new BusinessRuleViolationException(StaticValues.Error_ShipmentNoNotFound, StaticValues.Message_ShipmentNoNotFound);
+                throw new BusinessRuleViolationException(StaticValues.Error_ShipmentNumberNotFound, StaticValues.Message_ShipmentNumberNotFound);
             if (shipments.Count != requests.Count)
                 throw new BusinessRuleViolationException(StaticValues.Error_SomeShipmentNoNotFound, StaticValues.Message_SomeShipmentNoNotFound);
             var memberId = requests.First().MemberId;
@@ -82,8 +85,12 @@ namespace MKExpress.API.Repository
             shipment.Status = ShipmentStatusEnum.Created.ToString();
             shipment.StatusReason = string.Empty;
             var trans = _context.Database.BeginTransaction();
+
+            var scheduleShipmentAfterHour = await _appSettingRepository.GetAppSettingValueByKey<int>("autoScheduleShipmentInHour");
+            shipment.SchedulePickupDate=DateTime.Now.AddHours(scheduleShipmentAfterHour);
+
             var entity = _context.Shipments.Add(shipment);
-            entity.State = Microsoft.EntityFrameworkCore.EntityState.Added;
+            entity.State = EntityState.Added;
             if (await _context.SaveChangesAsync() > 0)
             {
                 var tracking = new ShipmentTracking()
@@ -115,7 +122,7 @@ namespace MKExpress.API.Repository
                 .Include(x => x.ShipmentDetail)
                 .ThenInclude(x => x.ConsigneeCity)
                 .Where(x => !x.IsDeleted)
-                .OrderByDescending(x => x.ShipmentNumber)
+                .OrderByDescending(x => x.CreatedAt)
                 .AsQueryable();
             PagingResponse<Shipment> response = new()
             {
@@ -169,6 +176,11 @@ namespace MKExpress.API.Repository
                .Include(x => x.ShipmentDetail)
             .ThenInclude(x => x.ConsigneeCity)
                  .Where(x => !x.IsDeleted).ToListAsync();
+        }
+
+        public async Task<bool> IsShipmentExists(string shipmentNo)
+        {
+            return await _context.Shipments.Where(x=>!x.IsDeleted && x.ShipmentNumber== shipmentNo).AnyAsync();
         }
 
         public async Task<bool> UpdateShipmentStatus(List<Guid> shipmentIds, ShipmentStatusEnum newStatus, string comment = "")

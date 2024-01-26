@@ -19,6 +19,7 @@ namespace MKExpress.API.Repository
         }
         public async Task<AppSetting> Add(AppSetting request)
         {
+            request.Key = request.Key?.Trim()?.ToLower();
             var entity = _context.Add(request);
             entity.State = EntityState.Added;
             await _context.SaveChangesAsync();
@@ -31,6 +32,9 @@ namespace MKExpress.API.Repository
                 .Where(x => !x.IsDeleted && x.Id == Id)
                 .FirstOrDefaultAsync()??
                 throw new BusinessRuleViolationException(StaticValues.ErrorType_RecordNotFound,StaticValues.Error_RecordNotFound);
+
+            if(!oldData.AllowDelete)
+                throw new BusinessRuleViolationException(StaticValues.ErrorType_DeleteNotAllowed, StaticValues.Message_DeleteNotAllowed);
 
             oldData.IsDeleted = true;
             _context.Attach(oldData);
@@ -61,6 +65,16 @@ namespace MKExpress.API.Repository
             return pagingResponse;
         }
 
+        public async Task<T> GetAppSettingValueByKey<T>(string key)
+        {
+            var data = await _context.AppSettings
+                .Where(x => !x.IsDeleted && x.Key == key.ToLower().Trim())
+                .FirstOrDefaultAsync()??throw new BusinessRuleViolationException(StaticValues.DataNotFoundError,StaticValues.Message_AppSettingKeyNotFound);
+
+           return (T)Convert.ChangeType(data.Value, typeof(T));
+
+        }
+
         public async Task<PagingResponse<AppSetting>> Search(SearchPagingRequest searchPagingRequest)
         {
             var searchTerm = string.IsNullOrEmpty(searchPagingRequest.SearchTerm) ? string.Empty : searchPagingRequest.SearchTerm;
@@ -85,9 +99,13 @@ namespace MKExpress.API.Repository
                  .FirstOrDefaultAsync() ??
                  throw new BusinessRuleViolationException(StaticValues.ErrorType_RecordNotFound, StaticValues.Error_RecordNotFound);
 
-           oldData.Key = entity.Key;
+            if (!oldData.AllowUpdate)
+                throw new BusinessRuleViolationException(StaticValues.ErrorType_UpdateNotAllowed, StaticValues.Message_UpdateNotAllowed);
+
+            oldData.DataType = entity.DataType;
             oldData.Value = entity.Value;
             oldData.Group= entity.Group;
+
            var res= _context.Attach(oldData);
            await _context.SaveChangesAsync();
             return res.Entity;

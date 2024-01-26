@@ -9,6 +9,7 @@ namespace MKExpress.API.Repository.IRepository
     public interface IShipmentRepository
     {
         Task<Shipment> CreateShipment(Shipment shipment);
+        Task<bool> IsShipmentExists(string shipmentNo);
         Task<PagingResponse<Shipment>> GetAllShipment(PagingRequest pagingRequest);
         Task<Shipment> GetShipment(Guid id);
         Task<List<Shipment>> ValidateShipment(List<string> shipmentNo);

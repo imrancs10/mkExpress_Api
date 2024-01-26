@@ -41,7 +41,11 @@ namespace MKExpress.API.Services
         public async Task<ShipmentResponse> CreateShipment(ShipmentRequest request)
         {
             var shipment = _mapper.Map<Shipment>(request);
-            return _mapper.Map<ShipmentResponse>(await _repo.CreateShipment(shipment));
+
+            if (await _repo.IsShipmentExists(shipment.ShipmentNumber))
+                throw new BusinessRuleViolationException(StaticValues.Error_ShipmentNumberAlreadyExist, string.Format(StaticValues.Message_ShipmentNumberAlreadyExist, shipment.ShipmentNumber));
+
+                return _mapper.Map<ShipmentResponse>(await _repo.CreateShipment(shipment));
         }
 
         public async Task<PagingResponse<ShipmentResponse>> GetAllShipment(PagingRequest pagingRequest)
@@ -90,7 +94,7 @@ namespace MKExpress.API.Services
                 {
                     ShipmentNo = shipmentNo.FirstOrDefault() ?? "",
                     IsValid = false,
-                    Error = StaticValues.Message_ShipmentNoNotFound
+                    Error = StaticValues.Message_ShipmentNumberNotFound
                 });
 
             // var containerJourney = await _masterJourneyService.Get(containerJourneyId);
@@ -142,7 +146,7 @@ namespace MKExpress.API.Services
             var shipments = await _repo.ValidateShipment(new List<string>() { shipmentNo });
 
             if (shipments == null || shipments.Count == 0)
-                throw new BusinessRuleViolationException(StaticValues.Error_ShipmentNoNotFound, StaticValues.Message_ShipmentNoNotFound);
+                throw new BusinessRuleViolationException(StaticValues.Error_ShipmentNumberNotFound, StaticValues.Message_ShipmentNumberNotFound);
 
             var shipment = shipments.FirstOrDefault();
             bool isValidStatus = Enum.TryParse(shipment?.Status, out ShipmentStatusEnum currentStatus);

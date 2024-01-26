@@ -10,6 +10,6 @@
         public int FailedDelivery { get; set; }
         public decimal? CODAmount { get; set; }
         public string? Location { get; set; }
-        public List<ShipmentDetailRequest> ShipmentDetails { get; set; }
+        public ShipmentDetailRequest ShipmentDetail { get; set; }
     }
 }
