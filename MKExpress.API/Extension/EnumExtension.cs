@@ -12,7 +12,15 @@ namespace MKExpress.API.Extension
             return string.Join(" ", splitedStr);
         }
 
+        public static string ToShipmentStatusEnumString(this string input)
+        {
+            return AllWhiteSpace().Replace(input, string.Empty);
+        }
+
         [GeneratedRegex("(?<!^)(?=[A-Z])")]
         private static partial Regex SplitByUpperCase();
+
+        [GeneratedRegex("\\s")]
+        private static partial Regex AllWhiteSpace();
     }
 }

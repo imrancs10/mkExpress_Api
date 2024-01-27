@@ -4,6 +4,7 @@ using MKExpress.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MKExpress.API.Migrations
 {
     [DbContext(typeof(MKExpressContext))]
-    partial class MKExpressContextModelSnapshot : ModelSnapshot
+    [Migration("20240127090353_Update_ShimpentImages_FK")]
+    partial class Update_ShimpentImages_FK
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -105,17 +108,23 @@ namespace MKExpress.API.Migrations
                     b.Property<int?>("DeletedBy")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsCurrent")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<Guid>("MemberId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("NewStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OldStatus")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("ShipmentId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -1585,7 +1594,7 @@ namespace MKExpress.API.Migrations
                         .IsRequired();
 
                     b.HasOne("MKExpress.API.Models.ShipmentTracking", "ShipmentTracking")
-                        .WithMany("ShipmentImages")
+                        .WithMany()
                         .HasForeignKey("TrackingId");
 
                     b.Navigation("Shipment");
@@ -1655,11 +1664,6 @@ namespace MKExpress.API.Migrations
                 {
                     b.Navigation("ShipmentDetail")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("MKExpress.API.Models.ShipmentTracking", b =>
-                {
-                    b.Navigation("ShipmentImages");
                 });
 #pragma warning restore 612, 618
         }

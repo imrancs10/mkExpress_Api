@@ -6,11 +6,9 @@ namespace MKExpress.API.Models
     {
         public Guid MemberId { get; set; }
         public Guid ShipmentId { get; set; }
-        public string? OldStatus { get; set; }
-        public string? NewStatus { get; set; }
+        public string? Status { get; set; }
         public Guid AssignById { get; set; }
         public DateTime AssignAt { get; set; }
-        public bool IsCurrent { get; set; } = true;
 
         [ForeignKey("MemberId")]
         public Member Member { get; set; }

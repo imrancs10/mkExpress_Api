@@ -55,16 +55,16 @@ namespace MKExpress.API.Services
                 ShipmentStatusEnum.ReadyForPickup => newStatus switch
                 {
                     ShipmentStatusEnum.Canceled => ShipmentStatusEnum.Canceled.ToFormatString(),
+                    ShipmentStatusEnum.PickedUp => ShipmentStatusEnum.PickedUp.ToFormatString(),
+                    ShipmentStatusEnum.PickupRescheduled => ShipmentStatusEnum.PickupRescheduled.ToFormatString(),
+                    ShipmentStatusEnum.PickupFailed => ShipmentStatusEnum.PickupFailed.ToFormatString(),
                     ShipmentStatusEnum.ChangedManually => ShipmentStatusEnum.ChangedManually.ToFormatString(),
                     _ => ThrowException()
                 },
                 ShipmentStatusEnum.AssignedForPickup => newStatus switch
                 {
-                    ShipmentStatusEnum.Received => ShipmentStatusEnum.Received.ToFormatString(),
-                    ShipmentStatusEnum.PickupRescheduled => ShipmentStatusEnum.PickupRescheduled.ToFormatString(),
-                    ShipmentStatusEnum.PickedUp => ShipmentStatusEnum.PickedUp.ToFormatString(),
+                    ShipmentStatusEnum.ReadyForPickup => ShipmentStatusEnum.ReadyForPickup.ToFormatString(),
                     ShipmentStatusEnum.Canceled => ShipmentStatusEnum.Canceled.ToFormatString(),
-                    ShipmentStatusEnum.PickupFailed => ShipmentStatusEnum.PickupFailed.ToFormatString(),
                     ShipmentStatusEnum.ChangedManually => ShipmentStatusEnum.ChangedManually.ToFormatString(),
                     _ => ThrowException()
                 },

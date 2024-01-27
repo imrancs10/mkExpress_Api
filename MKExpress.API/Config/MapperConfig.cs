@@ -23,11 +23,10 @@ namespace MKExpress.API.Config
             #endregion
 
             #region Image
-            CreateMap<ImageStore, ImageStoreResponse>();
             CreateMap<ImageStore, ImageStoreWithName>();
-            CreateMap<ImageStoreWithName, ImageStoreWithNameResponse>();
             CreateMap<ImageStoreRequest, ImageStore>();
             CreateMap<FileUploadQueryRequest, FileUploadRequest>();
+            CreateMap<ShipmentImage, ShipmentImageResponse>();
             #endregion
 
             #region Master Data

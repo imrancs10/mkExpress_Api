@@ -1,4 +1,5 @@
 ﻿using MKExpress.API.DTO.Base;
+using MKExpress.API.DTO.Response.Image;
 
 namespace MKExpress.API.DTO.Response
 {
@@ -13,6 +14,7 @@ namespace MKExpress.API.DTO.Response
         public string? CommentByName { get; set; }
         public DateTime CreatedAt { get; set; }
         public ShipmentResponse? Shipment { get; set; }
+        public List<ShipmentImageResponse> ShipmentImages { get; set; }
 
     }
 }

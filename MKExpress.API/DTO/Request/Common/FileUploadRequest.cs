@@ -6,12 +6,11 @@ namespace MKExpress.API.DTO.Request
 {
     public class FileUploadQueryRequest
     {
-        public Guid ModuleId { get; set; }
         public ModuleNameEnum ModuleName { get; set; }
         public bool CreateThumbnail { get; set; } = true;
         public string Remark { get; set; }
         public int SequenceNo { get; set; }
-        public string ImageType { get; set; } = "Image";
+        public string FileType { get; set; } = FileTypeEnum.Image.ToString();
     }
     public class FileUploadRequest: FileUploadQueryRequest
     {
@@ -19,5 +18,7 @@ namespace MKExpress.API.DTO.Request
         //[MaxFileSize(StaticValues.MaxAllowedFileSize)]
         [JsonIgnore]
         public IFormFile File { get; set; }
+        public  Guid ShipmentId { get; set; } 
+        public  Guid? TrackingId { get; set; }
     }
 }

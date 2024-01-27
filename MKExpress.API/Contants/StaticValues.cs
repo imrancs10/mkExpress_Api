@@ -137,6 +137,7 @@
         public const string ErrorType_UserNotFound = "UserNotFound";
         public const string ErrorType_InvalidModuleName = "InvalidModuleName";
         public const string ErrorType_ImageNotSelected = "ImageNotSelected";
+        public const string Message_ImageNotSelected = "Image not selected!";
         public const string ErrorType_RecordNotFound = "RecordNotFound";
         public const string ErrorType_DeleteNotAllowed = "DeleteNotAllowed";
         public const string ErrorType_UpdateNotAllowed = "UpdateNotAllowed";

@@ -18,7 +18,7 @@ namespace MKExpress.API.Repository
             _commonService = commonService;
         }
 
-        public async Task<bool> AddTracking(ShipmentTracking shipmentTracking)
+        public async Task<ShipmentTracking> AddTracking(ShipmentTracking shipmentTracking)
         {
             if (shipmentTracking == null)
             {
@@ -26,13 +26,17 @@ namespace MKExpress.API.Repository
             }
             shipmentTracking.CommentBy = _commonService.GetLoggedInUserId();
             var entity = _context.ShipmentTrackings.Add(shipmentTracking);
-            entity.State = Microsoft.EntityFrameworkCore.EntityState.Added;
-            return await _context.SaveChangesAsync() > 0;
+            entity.State = EntityState.Added;
+            if(await _context.SaveChangesAsync()<1)
+                return default;
+            return entity.Entity;
+
         }
 
         public async Task<List<ShipmentTracking>> GetTrackingByShipmentId(Guid shipmentId)
         {
             var data= await _context.ShipmentTrackings
+                .Include(x=>x.ShipmentImages)
                 .Include(x=>x.Shipment)
                 .ThenInclude(x=>x.Customer)
                 .Include(x => x.Shipment)
@@ -49,6 +53,7 @@ namespace MKExpress.API.Repository
                 .ThenInclude(x => x.ConsigneeCity)
                 .Include(x=>x.CommentByMember)
                 .Where(x=>!x.IsDeleted && x.ShipmentId==shipmentId)
+                .OrderByDescending(x=>x.CreatedAt)
                 .ToListAsync();
             return data;
         }

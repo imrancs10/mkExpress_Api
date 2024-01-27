@@ -39,16 +39,12 @@ namespace MKExpress.API.Repository
             if (shipments.Count != requests.Count)
                 throw new BusinessRuleViolationException(StaticValues.Error_SomeShipmentNoNotFound, StaticValues.Message_SomeShipmentNoNotFound);
             var memberId = requests.First().MemberId;
-            var oldMemberData = await _context.AssignShipmentMembers.Where(x => !x.IsDeleted && x.MemberId == memberId && shipmentIds.Contains(x.ShipmentId) && x.IsCurrent).ToListAsync();
+            var oldMemberData = await _context.AssignShipmentMembers
+                .Where(x => !x.IsDeleted && x.MemberId == memberId && shipmentIds.Contains(x.ShipmentId))
+                .ToListAsync();
 
             var trans = _context.Database.BeginTransaction();
             var userId = _commonService.GetLoggedInUserId();
-            if (oldMemberData.Any())
-            {
-                oldMemberData.ForEach(res => res.IsCurrent = false);
-                _context.AssignShipmentMembers.AttachRange(oldMemberData);
-
-            }
             if ((oldMemberData.Any() && await _context.SaveChangesAsync() > 0) || !oldMemberData.Any())
                 {
                     var shipmentMember = new List<AssignShipmentMember>();
@@ -60,10 +56,8 @@ namespace MKExpress.API.Repository
                             ShipmentId = res.ShipmentId,
                             Id = Guid.NewGuid(),
                             AssignById = userId,
-                            IsCurrent = true,
                             MemberId = res.MemberId,
-                            OldStatus = shipments[res.ShipmentId].Status,
-                            NewStatus = _commonService.ValidateShipmentStatus(shipments[res.ShipmentId].Status, ShipmentStatusEnum.AssignedForPickup),
+                            Status = _commonService.ValidateShipmentStatus(shipments[res.ShipmentId].Status, ShipmentStatusEnum.AssignedForPickup),
                         });
                     });
                     _context.AssignShipmentMembers.AddRange(shipmentMember);
@@ -99,7 +93,7 @@ namespace MKExpress.API.Repository
                     Activity = ShipmentStatusEnum.Created.ToString(),
                     ShipmentId = shipment.Id
                 };
-                if (await _shipmentTrackingRepository.AddTracking(tracking))
+                if (await _shipmentTrackingRepository.AddTracking(tracking)!=null)
                 {
                     trans.Commit();
                     return entity.Entity;
