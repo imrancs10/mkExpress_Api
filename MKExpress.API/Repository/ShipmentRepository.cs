@@ -77,6 +77,7 @@ namespace MKExpress.API.Repository
         public async Task<Shipment> CreateShipment(Shipment shipment)
         {
             shipment.Status = ShipmentStatusEnum.Created.ToString();
+            shipment.LastStatusUpdate = DateTime.Now;
             shipment.StatusReason = string.Empty;
             var trans = _context.Database.BeginTransaction();
 
@@ -193,6 +194,7 @@ namespace MKExpress.API.Repository
                 if (!isValidCurrentStatus)
                     throw new BusinessRuleViolationException(StaticValues.Error_InvalidCurrentShipmentStatus, $"{StaticValues.Message_InvalidCurrentShipmentStatus} {res.ShipmentNumber}");
                 res.Status = _commonService.ValidateShipmentStatus(currentStatus, newStatus);
+                res.LastStatusUpdate = DateTime.Now;
                 res.UpdatedBy = 0;// _commonService.GetLoggedInUserId();
             });
 

@@ -17,7 +17,7 @@ namespace MKExpress.API.Middleware
         }
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            var inputRole = context.HttpContext.Items["role"].ToString();
+            var inputRole = context.HttpContext.Items["role"]?.ToString();
             if (string.IsNullOrEmpty(inputRole) || (_roles.Count>0 && !_roles.Any(x => x.ToLower() == inputRole.ToLower())))
             {
                 // not logged in

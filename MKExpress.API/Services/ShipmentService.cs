@@ -50,7 +50,8 @@ namespace MKExpress.API.Services
 
         public async Task<PagingResponse<ShipmentResponse>> GetAllShipment(PagingRequest pagingRequest)
         {
-            return _mapper.Map<PagingResponse<ShipmentResponse>>(await _repo.GetAllShipment(pagingRequest));
+            var data= _mapper.Map<PagingResponse<ShipmentResponse>>(await _repo.GetAllShipment(pagingRequest));
+            return data;
         }
 
         public async Task<ShipmentResponse> GetShipment(Guid id)

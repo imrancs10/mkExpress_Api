@@ -51,6 +51,8 @@ namespace MKExpress.API.Repository
                 .FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.Error_ShipmentNotFound, StaticValues.Message_ShipmentNotFound);
 
             shipment.Status = _commonService.ValidateShipmentStatus(shipment.Status, ShipmentStatusEnum.PickedUp);
+            shipment.LastStatusUpdate = DateTime.Now;
+            shipment.PickupDate = DateTime.Now;
             shipment.UpdatedBy = 0;
             _context.Update(shipment);
 
@@ -135,7 +137,9 @@ namespace MKExpress.API.Repository
                 }
 
                 shipment.Status = ShipmentStatusEnum.PickupFailed.ToFormatString();
+                shipment.LastStatusUpdate = DateTime.Now;
                 shipment.UpdatedBy = 0;
+                shipment.FailedDelivery++;
                 _context.Update(shipment);
 
                 if (await _context.SaveChangesAsync() < 1)
@@ -282,6 +286,7 @@ namespace MKExpress.API.Repository
                 .FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.Error_ShipmentNotFound, StaticValues.Message_ShipmentNotFound);
 
             shipment.Status = _commonService.ValidateShipmentStatus(shipment.Status.ToShipmentStatusEnumString(), ShipmentStatusEnum.ReadyForPickup);
+            shipment.LastStatusUpdate = DateTime.Now;
             shipment.UpdatedBy = 0;
             _context.Update(shipment);
 

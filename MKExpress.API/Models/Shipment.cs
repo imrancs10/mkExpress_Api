@@ -17,6 +17,7 @@ namespace MKExpress.API.Models
         public DateTime? PickupDate { get; set; }
         public DateTime? DeliveryDate { get; set; }
         public DateTime? ScheduleDeliveryDate { get; set; }
+        public DateTime? LastStatusUpdate { get; set; }
 
         [ForeignKey("CustomerId")]
         public Customer Customer { get; set; }
