@@ -53,6 +53,10 @@
         public const string CustomerPath = APIPrefix;
         #endregion
 
+        #region Assign Member
+        public const string GetCourierRunsheetPath = APIPrefix + "get/courier/runsheet";
+        #endregion
+
         #region Third Party API Path
         public const string ThirdPartyDeletePath = APIPrefix + "{id}";
         public const string ThirdPartyByIdPath = APIPrefix + "get/{id}";
@@ -91,6 +95,7 @@
         public const string ShipmentAssignPickupPath = APIPrefix + "assign/pickup";
         public const string ShipmentValidateThirdPartyPath = APIPrefix + "validate/thirdparty";
         public const string ShipmentByUserNamePath = APIPrefix + "get/{username}/{shipment}/{shipmentStatus}";
+        public const string ShipmentValidateStatusPath = APIPrefix + "validate/status";
         #endregion
 
         #region Member

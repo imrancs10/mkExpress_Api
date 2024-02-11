@@ -264,7 +264,7 @@ namespace MKExpress.API.Services
 
         public string ValidateShipmentStatus(string currentStatus, ShipmentStatusEnum newStatus)
         {
-            var isValid = Enum.TryParse(currentStatus, out ShipmentStatusEnum result);
+            var isValid = Enum.TryParse(currentStatus.Replace(" ",""), out ShipmentStatusEnum result);
             if (!isValid)
                 throw new BusinessRuleViolationException(StaticValues.Error_InvalidCurrentShipmentStatus, StaticValues.Message_InvalidCurrentShipmentStatus);
             return ValidateShipmentStatus(result, newStatus);

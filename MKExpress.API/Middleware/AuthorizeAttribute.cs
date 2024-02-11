@@ -21,7 +21,7 @@ namespace MKExpress.API.Middleware
             if (string.IsNullOrEmpty(inputRole) || (_roles.Count>0 && !_roles.Any(x => x.ToLower() == inputRole.ToLower())))
             {
                 // not logged in
-                context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
+           //     context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
             }
         }
     }

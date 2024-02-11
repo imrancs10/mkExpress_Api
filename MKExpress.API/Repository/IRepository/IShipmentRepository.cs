@@ -13,6 +13,7 @@ namespace MKExpress.API.Repository.IRepository
         Task<PagingResponse<Shipment>> GetAllShipment(PagingRequest pagingRequest);
         Task<Shipment> GetShipment(Guid id);
         Task<List<Shipment>> ValidateShipment(List<string> shipmentNo);
+        Task<Shipment?> ValidateShipmentStatus(string shipmentNo, ShipmentStatusEnum status);
         Task<List<Shipment>> GetShipment(List<Guid> ids);
         Task<bool> AssignForPickup(List<AssignShipmentMember> requests);
         Task<bool> UpdateShipmentStatus(List<Guid> shipmentIds,ShipmentStatusEnum newStatus,string comment = "");

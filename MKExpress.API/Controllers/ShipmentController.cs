@@ -110,5 +110,15 @@ namespace MKExpress.API.Controllers
         {
             return await _shipmentService.GetShipments(userId, shipment, shipmentStatus);
         }
+
+        [ProducesResponseType(typeof(ShipmentResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpGet(StaticValues.ShipmentValidateStatusPath)]
+        public async Task<ShipmentResponse?> GetShipments([FromQuery] string shipmentNo, [FromQuery] string status)
+        {
+            return await _shipmentService.ValidateShipmentStatus(shipmentNo, status);
+        }
     }
 }

@@ -84,7 +84,7 @@ namespace MKExpress.API.Repository
                 .Where(x => !x.IsDeleted && x.Id == containerJourneyId && x.ContainerId == containerId)
                 .FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.DataNotFoundMessage);
 
-            if (!oldData.Container.IsClosed)
+            if (!oldData.Container?.IsClosed??false)
                 throw new BusinessRuleViolationException(StaticValues.Error_ContainerIsNotClosed, StaticValues.Message_ContainerIsNotClosed);
 
             if (oldData.ArrivalAt != null && oldData.ArrivalAt != DateTime.MinValue)

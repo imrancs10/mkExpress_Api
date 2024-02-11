@@ -17,5 +17,6 @@ namespace MKExpress.API.Services.IServices
         Task<ShipmentResponse> ValidateThirdPartyShipment(string shipmentNo);
         Task<bool> AssignForPickup(List<AssignForPickupRequest> requests);
         Task<List<ShipmentResponse>> GetShipments(string userId, ShipmentEnum shipment, ShipmentStatusEnum shipmentStatus);
+        Task<ShipmentResponse?> ValidateShipmentStatus(string shipmentNo, string status);
     }
 }

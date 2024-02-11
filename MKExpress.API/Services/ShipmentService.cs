@@ -5,6 +5,7 @@ using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
 using MKExpress.API.Enums;
 using MKExpress.API.Exceptions;
+using MKExpress.API.Extension;
 using MKExpress.API.Models;
 using MKExpress.API.Repository.IRepository;
 using MKExpress.API.Services.IServices;
@@ -45,12 +46,12 @@ namespace MKExpress.API.Services
             if (await _repo.IsShipmentExists(shipment.ShipmentNumber))
                 throw new BusinessRuleViolationException(StaticValues.Error_ShipmentNumberAlreadyExist, string.Format(StaticValues.Message_ShipmentNumberAlreadyExist, shipment.ShipmentNumber));
 
-                return _mapper.Map<ShipmentResponse>(await _repo.CreateShipment(shipment));
+            return _mapper.Map<ShipmentResponse>(await _repo.CreateShipment(shipment));
         }
 
         public async Task<PagingResponse<ShipmentResponse>> GetAllShipment(PagingRequest pagingRequest)
         {
-            var data= _mapper.Map<PagingResponse<ShipmentResponse>>(await _repo.GetAllShipment(pagingRequest));
+            var data = _mapper.Map<PagingResponse<ShipmentResponse>>(await _repo.GetAllShipment(pagingRequest));
             return data;
         }
 
@@ -179,6 +180,18 @@ namespace MKExpress.API.Services
             {
                 throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidGUID, StaticValues.Error_InvalidGUID, fe);
             }
+        }
+
+        public async Task<ShipmentResponse?> ValidateShipmentStatus(string shipmentNo, string status)
+        {
+            if (!Enum.TryParse(status.Replace(" ", ""), true, out ShipmentStatusEnum result))
+                return null;
+            var res = await _repo.ValidateShipmentStatus(shipmentNo, result) ?? throw new BusinessRuleViolationException(StaticValues.ErrorType_RecordNotFound, StaticValues.Error_RecordNotFound);
+
+            if (res.Status == result.ToFormatString())
+                return _mapper.Map<ShipmentResponse?>(res);
+            else
+                throw new BusinessRuleViolationException(StaticValues.Error_InvalidShipmentStatus, StaticValues.Message_InvalidShipmentStatus);
         }
     }
 }

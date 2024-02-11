@@ -235,5 +235,19 @@ namespace MKExpress.API.Repository
                 .Where(x => !x.IsDeleted && shipmentNo.Contains(x.ShipmentNumber))
                 .ToListAsync();
         }
+
+        public async Task<Shipment?> ValidateShipmentStatus(string shipmentNo, ShipmentStatusEnum status)
+        {
+            return await _context.Shipments
+                .Include (x => x.Customer)
+                .Include(x => x.ShipmentDetail)
+                .ThenInclude(x=>x.ConsigneeCity)
+
+                .Include(x => x.ShipmentDetail)
+                .ThenInclude(x => x.ShipperCity)
+
+                .Where(x => !x.IsDeleted && x.ShipmentNumber == shipmentNo)
+                .FirstOrDefaultAsync();
+        }
     }
 }

@@ -150,6 +150,30 @@ namespace MKExpress.API.Config
             CreateMap<PagingResponse<AppSetting>, PagingResponse<AppSettingResponse>>();
             #endregion
 
+            #region Assign Member
+            CreateMap<AssignShipmentMember, AssignShipmentMemberResponse>()
+                .ForMember(des => des.ShipmentId, src => src.MapFrom(x => x.Shipment.Id))
+                .ForMember(des => des.CodAmount, src => src.MapFrom(x => x.Shipment.CODAmount))
+                 .ForMember(des => des.Customer, src => src.MapFrom(x => x.Shipment.Customer.Name))
+                  .ForMember(des => des.NoOfPiece, src => src.MapFrom(x => x.Shipment.ShipmentDetail.TotalPieces))
+                .ForMember(des => des.Weight, src => src.MapFrom(x => x.Shipment.ShipmentDetail == null ? 0 : x.Shipment.ShipmentDetail.Weight))
+                .ForMember(des => des.Status, src => src.MapFrom(x => x.Shipment.Status))
+                .ForMember(des => des.Dimension, src => src.MapFrom(x => x.Shipment.ShipmentDetail.Dimension ?? string.Empty))
+                .ForMember(des => des.ShipperCity, src => src.MapFrom(x => x.Shipment.ShipmentDetail == null ? string.Empty : x.Shipment.ShipmentDetail.ShipperCity.Value))
+                .ForMember(des => des.ConsigneeCity, src => src.MapFrom(x => x.Shipment.ShipmentDetail == null ? string.Empty : x.Shipment.ShipmentDetail.ConsigneeCity.Value))
+                .ForMember(des => des.ConsigneeAddress1, src => src.MapFrom(x => x.Shipment.ShipmentDetail == null ? string.Empty : x.Shipment.ShipmentDetail.ConsigneeAddress1))
+                .ForMember(des => des.ConsigneeAddress2, src => src.MapFrom(x => x.Shipment.ShipmentDetail == null ? string.Empty : x.Shipment.ShipmentDetail.ConsigneeAddress2))
+                .ForMember(des => des.ConsigneeAddress3, src => src.MapFrom(x => x.Shipment.ShipmentDetail == null ? string.Empty : x.Shipment.ShipmentDetail.ConsigneeAddress3))
+                .ForMember(des => des.ShipperAddress1, src => src.MapFrom(x => x.Shipment.ShipmentDetail == null ? string.Empty : x.Shipment.ShipmentDetail.ShipperAddress1))
+                .ForMember(des => des.ShipperAddress2, src => src.MapFrom(x => x.Shipment.ShipmentDetail == null ? string.Empty : x.Shipment.ShipmentDetail.ShipperAddress2))
+                .ForMember(des => des.ShipperAddress3, src => src.MapFrom(x => x.Shipment.ShipmentDetail == null ? string.Empty : x.Shipment.ShipmentDetail.ShipperAddress3))
+                .ForMember(des => des.ShipmentNumber, src => src.MapFrom(x => x.Shipment.ShipmentNumber))
+                .ForMember(des => des.ShipperName, src => src.MapFrom(x => x.Shipment.ShipmentDetail.ShipperName))
+                 .ForMember(des => des.ConsigneeName, src => src.MapFrom(x => x.Shipment.ShipmentDetail.ConsigneeName))
+                .ForMember(des => des.UniqueRefNo, src => src.MapFrom(x => x.Shipment.UniqueRefNo));
+
+            CreateMap<PagingResponse<AssignShipmentMember>, PagingResponse<AssignShipmentMemberResponse>>();
+            #endregion
         }
 
         public static IMapper GetMapperConfig()
