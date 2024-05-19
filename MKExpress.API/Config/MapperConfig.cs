@@ -148,7 +148,8 @@ namespace MKExpress.API.Config
             CreateMap<AppSettingRequest, AppSetting>();
             CreateMap<AppSettingGroup, AppSettingGroupResponse>()
                 .ForMember(des => des.Value, src => src.MapFrom(x => x.Name));
-            CreateMap<AppSetting, AppSettingResponse>();
+            CreateMap<AppSetting, AppSettingResponse>()
+                .ForMember(des => des.GroupName, src => src.MapFrom(x => x.AppSettingGroup.Name));
             CreateMap<PagingResponse<AppSetting>, PagingResponse<AppSettingResponse>>();
             #endregion
 

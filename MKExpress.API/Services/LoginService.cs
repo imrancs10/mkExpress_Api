@@ -52,15 +52,15 @@ namespace MKExpress.API.Services
         {
             if (request == null)
             {
-                // throw new BusinessRuleViolationException(StaticValues.ErrorType_NoDataSupplied, StaticValues.Error_NoDataSupplied);
+                throw new BusinessRuleViolationException(StaticValues.ErrorType_NoDataSupplied, StaticValues.ErrorType_NoDataSupplied);
             }
 
             if (string.IsNullOrEmpty(request.UserName) || string.IsNullOrEmpty(request.Password))
             {
-                //throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidDataSupplied, StaticValues.Error_InvalidDataSupplied);
+                throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidDataSupplied, StaticValues.ErrorType_InvalidDataSupplied);
             }
-            //request.Password = request.Password.DecodeBase64();
-            //request.Password = PasswordHasher.GenerateHash(request.Password);
+            request.Password = request.Password.DecodeBase64();
+            request.Password = PasswordHasher.GenerateHash(request.Password);
 
             LoginResponse response = new()
             {

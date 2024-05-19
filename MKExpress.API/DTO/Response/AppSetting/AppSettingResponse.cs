@@ -7,6 +7,7 @@ namespace MKExpress.API.DTO.Response
         public string? Key { get; set; }
         public string? Value { get; set; }
         public string? DataType { get; set; }
-        public int Group { get; set; }
+        public int GroupId { get; set; }
+        public string GroupName { get; set; }
     }
 }

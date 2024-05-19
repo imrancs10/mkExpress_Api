@@ -52,8 +52,9 @@ namespace MKExpress.API.Repository
         public async Task<PagingResponse<AppSetting>> GetAll(PagingRequest pagingRequest)
         {
             var data = _context.AppSettings
+                .Include(x=>x.AppSettingGroup)
            .Where(x => !x.IsDeleted)
-              .OrderBy(x => x.Group)
+              .OrderBy(x => x.AppSettingGroup.Name)
               .AsQueryable();
             PagingResponse<AppSetting> pagingResponse = new()
             {
@@ -85,8 +86,8 @@ namespace MKExpress.API.Repository
         {
             var searchTerm = string.IsNullOrEmpty(searchPagingRequest.SearchTerm) ? string.Empty : searchPagingRequest.SearchTerm;
             var data = _context.AppSettings
-          .Where(x => !x.IsDeleted && (x.Key.Contains(searchTerm) || x.Value.Contains(searchTerm)) || x.Group.ToString()==searchTerm)
-             .OrderBy(x => x.Group)
+          .Where(x => !x.IsDeleted && (x.Key.Contains(searchTerm) || x.Value.Contains(searchTerm)) || x.AppSettingGroup.Name==searchTerm)
+             .OrderBy(x => x.AppSettingGroup.Name)
              .AsQueryable();
             PagingResponse<AppSetting> pagingResponse = new()
             {
@@ -110,7 +111,7 @@ namespace MKExpress.API.Repository
 
             oldData.DataType = entity.DataType;
             oldData.Value = entity.Value;
-            oldData.Group= entity.Group;
+            oldData.GroupId= entity.GroupId;
 
            var res= _context.Attach(oldData);
            await _context.SaveChangesAsync();
