@@ -64,6 +64,12 @@ namespace MKExpress.API.Repository
             };
             return pagingResponse;
         }
+        public async Task<List<AppSettingGroup>> GetAllAppSettingGroup()
+        {
+            return await _context.AppSettingGroups
+           .Where(x => !x.IsDeleted)
+              .ToListAsync();
+        }
 
         public async Task<T> GetAppSettingValueByKey<T>(string key)
         {

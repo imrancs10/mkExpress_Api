@@ -72,6 +72,7 @@ namespace MKExpress.API.Data
         public DbSet<ThirdPartyShipment> ThirdPartyShipments { get; set; }
         public DbSet<AppSetting> AppSettings { get; set; }
         public DbSet<AssignShipmentMember> AssignShipmentMembers { get; set; }
+        public DbSet<AppSettingGroup> AppSettingGroups { get; set; }
         public override int SaveChanges()
         {
             AddDateTimeStamp();

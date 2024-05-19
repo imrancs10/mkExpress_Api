@@ -242,10 +242,8 @@ namespace MKExpress.API.Repository
                 .Include (x => x.Customer)
                 .Include(x => x.ShipmentDetail)
                 .ThenInclude(x=>x.ConsigneeCity)
-
                 .Include(x => x.ShipmentDetail)
                 .ThenInclude(x => x.ShipperCity)
-
                 .Where(x => !x.IsDeleted && x.ShipmentNumber == shipmentNo)
                 .FirstOrDefaultAsync();
         }

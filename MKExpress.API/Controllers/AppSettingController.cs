@@ -29,6 +29,13 @@ namespace MKExpress.API.Controllers
         {
             return await _settingService.GetAll(request);
         }
+        
+        [ProducesResponseType(typeof(List<AppSettingGroupResponse>), StatusCodes.Status200OK)]
+        [HttpGet(StaticValues.AppSettingGroupPath)]
+        public async Task<List<AppSettingGroupResponse>> GetAllAppSettingGroup()
+        {
+            return await _settingService.GetAllAppSettingGroup();
+        }
 
         [ProducesResponseType(typeof(AppSettingResponse), StatusCodes.Status200OK)]
         [HttpPost(StaticValues.AppSettingPath)]

@@ -20,6 +20,7 @@
 
         #region AppSetting API
         public const string AppSettingPath = APIPrefix;
+        public const string AppSettingGroupPath = APIPrefix+"groups";
         public const string AppSettingByIdPath = APIPrefix + "get/{id}";
         public const string AppSettingSearchPath = APIPrefix + "search";
         public const string AppSettingDeletePath = APIPrefix + "{id}";

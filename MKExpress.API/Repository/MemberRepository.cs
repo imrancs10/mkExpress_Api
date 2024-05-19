@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.EntityFrameworkCore;
+using MKExpress.API.Common;
 using MKExpress.API.Contants;
 using MKExpress.API.Data;
 using MKExpress.API.DTO.Request;
@@ -62,7 +63,7 @@ namespace MKExpress.API.Repository
                     return default(Member);
                 }
                 var user = _mapper.Map<User>(request);
-                user.Password=password;
+                user.Password=PasswordHasher.GenerateHash(password);
                 user.Role = role.Value;
                 var res = await _userRepository.Add(user);
                 if (res?.Id is Guid)

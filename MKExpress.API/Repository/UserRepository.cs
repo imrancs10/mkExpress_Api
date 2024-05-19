@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MKExpress.API.Common;
 using MKExpress.API.Contants;
 using MKExpress.API.Data;
 using MKExpress.API.Dto.Request;
@@ -48,10 +49,12 @@ namespace MKExpress.API.Repository
             if (changeRequest.NewPassword != changeRequest.ConfirmNewPassword)
                 throw new BusinessRuleViolationException(StaticValues.NewAndConfirmPasswordNotSame_Error, StaticValues.NewAndConfirmPasswordNotSame_Message);
 
-            var oldData = await _context.Users.Where(x => !x.IsDeleted && x.Email == changeRequest.UserName && x.Password == changeRequest.OldPassword).FirstOrDefaultAsync()
+            var _oldPasswordHash= PasswordHasher.GenerateHash(changeRequest.OldPassword);
+
+            var oldData = await _context.Users.Where(x => !x.IsDeleted && x.Email == changeRequest.UserName && x.Password == _oldPasswordHash).FirstOrDefaultAsync()
                                ?? throw new BusinessRuleViolationException(StaticValues.ErrorType_RecordNotFound, StaticValues.ErrorType_RecordNotFound);
 
-            oldData.Password = changeRequest.NewPassword;
+            oldData.Password = PasswordHasher.GenerateHash(changeRequest.NewPassword); ;
             _context.Attach(oldData);
             return await _context.SaveChangesAsync() > 0;
         }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using MKExpress.API.Common;
 using MKExpress.API.Constants;
 using MKExpress.API.Contants;
 using MKExpress.API.Data;
@@ -8,6 +9,7 @@ using MKExpress.API.DTO.Response;
 using MKExpress.API.Exceptions;
 using MKExpress.API.Models;
 using MKExpress.API.Repositories.Interfaces;
+using MKExpress.API.Repository.IRepository;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -18,9 +20,13 @@ namespace MKExpress.API.Repositories
     public class CustomerRepository : ICustomerRepository
     {
         private readonly MKExpressContext _context;
-        public CustomerRepository(MKExpressContext context)
+        private readonly IUserRepository _userRepository;
+        private readonly IAppSettingRepository _appSettingRepository;
+        public CustomerRepository(MKExpressContext context,IUserRepository userRepository,IAppSettingRepository appSettingRepository)
         {
             _context = context;
+            _userRepository = userRepository;
+            _appSettingRepository = appSettingRepository;
         }
         public async Task<Customer> Add(Customer customer)
         {
@@ -29,10 +35,39 @@ namespace MKExpress.API.Repositories
             {
                 throw new BusinessRuleViolationException(StaticValues.ErrorType_CustomerAlreadyExist, StaticValues.Error_CustomerAlreadyExist);
             }
+            var trans=await _context.Database.BeginTransactionAsync();
             var entity = _context.Customers.Attach(customer);
             entity.State = EntityState.Added;
-            await _context.SaveChangesAsync();
-            return entity.Entity;
+            if(await _context.SaveChangesAsync() > 0)
+            {
+                var _defaultPassword = await _appSettingRepository.GetAppSettingValueByKey<string>("defaultPassword");
+                var user = new User()
+                {
+                    CreatedAt = DateTime.Now,
+                    Email = customer.Email,
+                    FirstName = customer.Name,
+                    LastName = string.Empty,
+                    Gender = Enums.GenderEnum.IPreferNotToSay,
+                    IsBlocked = false,
+                    IsCustomer = true,
+                    IsEmailVerified = true,
+                    IsLocked = false,
+                    IsDeleted = false,
+                    IsTcAccepted = true,
+                    Password = PasswordHasher.GenerateHash(_defaultPassword),
+                    UserName = customer.Email,
+                    Role="CustomerAdmin",
+                    Mobile=customer.ContactNo  
+                };
+               var savedUser=await _userRepository.Add(user);
+                if(Guid.TryParse(savedUser.Id.ToString(), out Guid Output))
+                {
+                   await trans.CommitAsync();
+                    return entity.Entity;
+                }
+            }
+            await trans.RollbackAsync();
+            return default;
         }
 
         public async Task<int> Delete(Guid customerId)

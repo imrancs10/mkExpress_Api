@@ -37,6 +37,11 @@ namespace MKExpress.API.Services
             return _mapper.Map<PagingResponse<AppSettingResponse>>(await _appSettingRepository.GetAll(pagingRequest));
         }
 
+        public async Task<List<AppSettingGroupResponse>> GetAllAppSettingGroup()
+        {
+            return _mapper.Map<List<AppSettingGroupResponse>>(await _appSettingRepository.GetAllAppSettingGroup());
+        }
+
         public async Task<PagingResponse<AppSettingResponse>> Search(SearchPagingRequest searchPagingRequest)
         {
             return _mapper.Map<PagingResponse<AppSettingResponse>>(await _appSettingRepository.Search(searchPagingRequest));
