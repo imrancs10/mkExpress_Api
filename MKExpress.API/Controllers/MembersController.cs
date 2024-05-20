@@ -17,8 +17,6 @@ namespace MKExpress.API.Controllers
             _memberService = memberService;
         }
 
-
-        [Authorize("Admin")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -29,7 +27,6 @@ namespace MKExpress.API.Controllers
            return await _memberService.ActiveDeactivate(memberId);
         }
 
-        [Authorize("Admin")]
         [ProducesResponseType(typeof(MemberResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -50,7 +47,6 @@ namespace MKExpress.API.Controllers
             return await _memberService.ChangePassword(changeRequest);
         }
 
-        [Authorize("Admin")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -61,7 +57,6 @@ namespace MKExpress.API.Controllers
             return await _memberService.ChangeStation(memberId, stationId);
         }
 
-        [Authorize("Admin")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -72,7 +67,6 @@ namespace MKExpress.API.Controllers
             return await _memberService.ChangeRole(userId, roleId);
         }
 
-        [Authorize("Admin")]
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -113,7 +107,6 @@ namespace MKExpress.API.Controllers
            return await _memberService.GetAll(pagingRequest);
         }
 
-        [Authorize("Admin")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -134,7 +127,6 @@ namespace MKExpress.API.Controllers
             return await _memberService.Search(searchPagingRequest);
         }
 
-        [Authorize("Admin")]
         [ProducesResponseType(typeof(MemberResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]

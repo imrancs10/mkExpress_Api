@@ -1,17 +1,16 @@
 using FluentValidation.AspNetCore;
-using MKExpress.API.Config;
-using MKExpress.API.Validations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MKExpress.API.Config;
+using MKExpress.API.Dto;
 using MKExpress.API.Middleware;
+using MKExpress.API.Validations;
+using NLog;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Reflection;
 using System.Text;
-using MKExpress.API.Dto;
-using Microsoft.Extensions.Configuration;
-using NLog;
-using Microsoft.IdentityModel.Logging;
 
 var _policyName = "CorsPolicy";
 var builder = WebApplication.CreateBuilder(args);
@@ -66,12 +65,12 @@ builder.Services.AddAuthentication(opt =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
+        //ValidateIssuer = true,
+        //ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = ConfigManager.AppSetting["JWT:ValidIssuer"],
-        ValidAudience = ConfigManager.AppSetting["JWT:ValidAudience"],
+        //ValidIssuer = ConfigManager.AppSetting["JWT:ValidIssuer"],
+        //ValidAudience = ConfigManager.AppSetting["JWT:ValidAudience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ConfigManager.AppSetting["JWT:Secret"]))
     };
 });
@@ -100,18 +99,18 @@ app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
     if (app.Environment.IsDevelopment())
-        options.SwaggerEndpoint("/swagger/V1/swagger.json", "IMK Express Web API");
+        options.SwaggerEndpoint("/swagger/V1/swagger.json", "IMK Express Web API Development");
     else
-        options.SwaggerEndpoint("/swagger/V1/swagger.json", "IMK Express Web API");
+        options.SwaggerEndpoint("/swagger/V1/swagger.json", "IMK Express Web API Production");
     options.DocExpansion(DocExpansion.None);
 });
-
-app.UseMiddleware<JWTMiddleware>();
 app.UseCustomExceptionHandler();
+app.UseCors(_policyName);
+app.UseRouting();
+app.UseMiddleware<JwtMiddleware>();
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.UseCors(_policyName);
 app.Run();

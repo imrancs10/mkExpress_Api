@@ -72,7 +72,7 @@ namespace MKExpress.API.Services
                 throw new UnauthorizedException();
             }
 
-            response.AccessToken = Utility.Utility.GenerateAccessToken(response.UserResponse.Role);
+            response.AccessToken = Utility.Utility.GenerateAccessToken(response);
             response.IsAuthenticated = true;
             return response;
         }
@@ -82,7 +82,7 @@ namespace MKExpress.API.Services
 
             if (await _loginRepository.IsUserExist(request.Email))
             {
-                //throw new BusinessRuleViolationException(StaticValues.ErrorType_AlreadyExist, StaticValues.Error_EmailAlreadyRegistered);
+                throw new BusinessRuleViolationException(StaticValues.ErrorType_AlreadyExist, StaticValues.Error_EmailAlreadyRegistered);
             }
             User user = _mapper.Map<User>(request);
             user.IsEmailVerified = _configuration.GetValue<int>("EnableEmailVerification", 0) == 0;
@@ -98,7 +98,7 @@ namespace MKExpress.API.Services
                 {
                     ToEmail = request.Email,
                     Body = emailBody,
-                    Subject = "Emai verification | Kashi Yatri"
+                    Subject = "Email verification | MK Express"
                 };
                 // _mailService.SendEmailAsync(mailRequest);
             }

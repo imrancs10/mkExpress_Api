@@ -5,6 +5,7 @@ using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using MKExpress.API.DTO.Response;
 
 namespace MKExpress.API.Utility
 {
@@ -51,7 +52,7 @@ namespace MKExpress.API.Utility
     }
     public static class Utility
     {
-        public static string GenerateAccessToken(string role)
+        public static string GenerateAccessToken(LoginResponse response)
         {
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ConfigManager.AppSetting["JWT:Secret"]));
             var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
@@ -59,7 +60,8 @@ namespace MKExpress.API.Utility
                                                     audience: ConfigManager.AppSetting["JWT:ValidAudience"],
                                                     claims: new List<Claim>()
                                                     {
-                                                        new Claim("role",role)
+                                                        new Claim("role",response.UserResponse.Role),
+                                                        new Claim("userId",response.UserResponse.Id.ToString())
                                                     },
                                                     expires: DateTime.Now.AddDays(7),
                                                     signingCredentials: signinCredentials);

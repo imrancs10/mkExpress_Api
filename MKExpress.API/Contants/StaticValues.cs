@@ -134,6 +134,7 @@
 
         #region Error Type Message
         public const string ErrorType_InvalidDataSupplied = "InvalidDataSupplied";
+        public const string ErrorType_UnauthorizedAccess = "UnauthorizedAccess";
         public const string ErrorType_NoDataSupplied = "NoDataSupplied";
         public const string ErrorType_InvalidCredentials = "InvalidCredentials";
         public const string ErrorType_UserAccountBlocked = "UserAccountBlocked";
@@ -172,6 +173,8 @@
         public const string Error_InvalidCurrentShipmentStatus = "InvalidCurrentShipmentStatus!";
         public const string Error_ShipmentNotAssignedToYou = "ShipmentNotAssignedToYou!";
         public const string Error_ShipmentNumberAlreadyExist = "ShipmentNumberAlreadyExist!";
+        public const string Error_EmailAlreadyRegistered = "Email is already registered";
+        public const string Error_UnauthorizedAccess = "Unauthorized Access";
         #endregion
 
         #region Error Message

@@ -8,7 +8,6 @@ using MKExpress.API.Services.IServices;
 
 namespace MKExpress.API.Controllers
 {
-    [Authorize]
     [ApiController]
     public class ContainersController : ControllerBase
     {

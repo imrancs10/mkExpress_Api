@@ -17,8 +17,6 @@ namespace MKExpress.API.Controllers
         {
             _thirdPartyCourierService = thirdPartyCourierService;
         }
-
-        [Authorize("Admin")]
         [ProducesResponseType(typeof(ThirdPartyCourierResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -29,7 +27,6 @@ namespace MKExpress.API.Controllers
            return await _thirdPartyCourierService.Add(request);
         }
 
-        [Authorize("Admin")]
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -80,7 +77,6 @@ namespace MKExpress.API.Controllers
             return await _thirdPartyCourierService.Search(searchPagingRequest);
         }
 
-        [Authorize("Admin")]
         [ProducesResponseType(typeof(ThirdPartyCourierResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]

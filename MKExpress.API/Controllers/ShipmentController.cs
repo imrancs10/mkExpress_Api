@@ -4,13 +4,13 @@ using MKExpress.API.Contants;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
 using MKExpress.API.Enums;
+using MKExpress.API.Exceptions;
 using MKExpress.API.Middleware;
 using MKExpress.API.Models;
 using MKExpress.API.Services.IServices;
 
 namespace MKExpress.API.Controllers
 {
-    [Authorize]
     [ApiController]
     public class ShipmentController : ControllerBase
     {
@@ -38,6 +38,12 @@ namespace MKExpress.API.Controllers
         [HttpGet(StaticValues.ShipmentPath)]
         public async Task<PagingResponse<ShipmentResponse>> GetAllShipment([FromQuery] PagingRequest request)
         {
+           var requestedUerId= JwtMiddleware.GetUserId();
+            if(string.IsNullOrEmpty(requestedUerId) || Guid.TryParse(requestedUerId, out var userId))
+            {
+                throw new BusinessRuleViolationException(StaticValues.ErrorType_UnauthorizedAccess, StaticValues.Error_UnauthorizedAccess);
+            }
+            request.UserId = userId;
             return await _shipmentService.GetAllShipment(request);
         }
 

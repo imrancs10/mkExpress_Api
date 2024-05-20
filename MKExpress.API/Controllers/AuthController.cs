@@ -17,6 +17,7 @@ namespace MKExpress.API.Controllers
             _loginService = loginService;
         }
 
+        [AllowAnonymous]
         [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
         [HttpPost(StaticValues.LoginPath)]
         public async Task<LoginResponse> Login([FromBody] LoginRequest loginRequest)
@@ -24,6 +25,7 @@ namespace MKExpress.API.Controllers
             return await _loginService.Login(loginRequest);
         }
 
+        [AllowAnonymous]
         [ProducesResponseType(typeof(UserResponse), StatusCodes.Status201Created)]
         [HttpPut(StaticValues.LoginUserRegisterPath)]
         public async Task<UserResponse> RegisterUser([FromBody] UserRequest request)
@@ -31,7 +33,7 @@ namespace MKExpress.API.Controllers
             return await _loginService.RegisterUser(request);
         }
 
-        [Authorize]
+        
         [ProducesResponseType(typeof(bool), StatusCodes.Status201Created)]
         [HttpPost(StaticValues.LoginUserChangePasswordPath)]
         public async Task<bool> ChangePassword([FromBody] PasswordChangeRequest request)
@@ -39,6 +41,7 @@ namespace MKExpress.API.Controllers
             return await _loginService.ChangePassword(request);
         }
 
+        [AllowAnonymous]
         [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
         [HttpGet(StaticValues.LoginUserVerifyEmailPath)]
         public async Task<string> VerifyEmail([FromRoute] string token)
@@ -46,6 +49,7 @@ namespace MKExpress.API.Controllers
             return await _loginService.VerifyEmail(token);
         }
 
+        [AllowAnonymous]
         [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
         [HttpGet(StaticValues.LoginUserResetPasswordPath)]
         public async Task<string> ResetPassword([FromHeader] string userName)
@@ -53,7 +57,7 @@ namespace MKExpress.API.Controllers
             return await _loginService.ResetPassword(userName);
         }
 
-        [Authorize]
+       
         [ProducesResponseType(typeof(bool), StatusCodes.Status201Created)]
         [HttpPost(StaticValues.LoginUserUpdateProfilePath)]
         public async Task<bool> UpdateProfile([FromBody] UserRequest request)
@@ -67,7 +71,7 @@ namespace MKExpress.API.Controllers
             return await _loginService.DeleteUser(email);
         }
 
-        [Authorize]
+        
         [ProducesResponseType(typeof(bool), StatusCodes.Status201Created)]
         [HttpPost(StaticValues.UserBlockPath)]
         public async Task<bool> BlockUser([FromRoute] string email)
@@ -75,7 +79,7 @@ namespace MKExpress.API.Controllers
             return await _loginService.BlockUser(email);
         }
 
-        [Authorize]
+        
         [ProducesResponseType(typeof(bool), StatusCodes.Status201Created)]
         [HttpPost(StaticValues.UserAssignRolePath)]
         public async Task<bool> AssignRole([FromRoute] string email, [FromRoute] string role)
@@ -83,6 +87,7 @@ namespace MKExpress.API.Controllers
             return await _loginService.AssignRole(email,role);
         }
 
+        [AllowAnonymous]
         [ProducesResponseType(typeof(bool), StatusCodes.Status201Created)]
         [HttpPost(StaticValues.UserResetEmailVerifyCodePath)]
         public async Task<bool> ResetEmailVerificationCode([FromRoute] string email)

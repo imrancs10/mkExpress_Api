@@ -16,7 +16,6 @@ namespace MKExpress.API.Controllers
             _customerService = customerService;
         }
 
-        [Authorize("Admin")]
         [ProducesResponseType(typeof(CustomerResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -37,7 +36,6 @@ namespace MKExpress.API.Controllers
             return await _customerService.GetCustomers(contactNo);
         }
 
-        [Authorize("Admin")]
         [ProducesResponseType(typeof(CustomerResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -48,7 +46,6 @@ namespace MKExpress.API.Controllers
             return await _customerService.Update(customerRequest);
         }
 
-        [Authorize("Admin")]
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]

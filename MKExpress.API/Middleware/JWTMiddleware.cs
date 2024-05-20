@@ -1,62 +1,75 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
+using MKExpress.API.Config;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 namespace MKExpress.API.Middleware
 {
-    public class JWTMiddleware
+    public class JwtMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly IConfiguration _configuration;
+        private static string _userId;
 
-        public JWTMiddleware(RequestDelegate next, IConfiguration configuration)
+        public JwtMiddleware(RequestDelegate next)
         {
             _next = next;
-            _configuration = configuration;
         }
 
         public async Task Invoke(HttpContext context)
         {
-            var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            var endpoint = context.GetEndpoint();
 
-            if (token != null)
-                attachAccountToContext(context, token);
-                
+            // Skip JWT validation if endpoint has [AllowAnonymous] attribute
+            if (endpoint?.Metadata?.GetMetadata<IAllowAnonymous>() != null)
+            {
+                await _next(context);
+                return;
+            }
+            var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            var path = context.Request.Path;
+        if (token == null || !ValidateToken(token))
+            {
+                context.Response.StatusCode = 401;
+                await context.Response.WriteAsync("Token invalid");
+                return;
+            }
+
             await _next(context);
         }
 
-        private void attachAccountToContext(HttpContext context, string token)
+        private static bool ValidateToken(string token)
         {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(ConfigManager.AppSetting["JWT:Secret"]);
             try
             {
-                token = token.Replace("\"", "");
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.ASCII.GetBytes(_configuration["JWT:Secret"]);
                 tokenHandler.ValidateToken(token, new TokenValidationParameters
                 {
-                    ValidAudiences= _configuration["JWT:ValidAudience"].Split(","),
-                    ValidIssuers = _configuration["JWT:ValidIssuer"].Split(","),
-                    ValidAudience = _configuration["JWT:ValidAudience"],
-                    ValidIssuer= _configuration["JWT:ValidIssuer"],
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
-                    //ValidateIssuer = true,
-                    //ValidateAudience = true,
-                    // set clockskew to zero so tokens expire exactly at token expiration time (instead of 5 minutes later)
-                    ClockSkew = TimeSpan.Zero
+              //      ValidateIssuer = true,
+               //     ValidateAudience = true,
+                ValidIssuer = ConfigManager.AppSetting["JWT:ValidIssuer"],
+                   ValidAudience = ConfigManager.AppSetting["JWT:ValidAudience"],
+                    ValidateLifetime = true
                 }, out SecurityToken validatedToken);
 
                 var jwtToken = (JwtSecurityToken)validatedToken;
-                var role = jwtToken.Claims.First(x => x.Type == "role").Value;
+                _userId = jwtToken.Claims.First(x => x.Type == "userId").Value;
 
-                // attach account to context on successful jwt validation
-                context.Items["role"] = role;
+                return true;
             }
-            catch
+            catch(Exception ex)
             {
-                // do nothing if jwt validation fails
-                // account is not attached to context so request won't have access to secure routes
+                return false;
             }
         }
+
+        public static string GetUserId()
+        {
+            return _userId;
+        }
     }
+
 }
