@@ -6,6 +6,7 @@ using MKExpress.API.DTO.Response.Image;
 using MKExpress.API.Enums;
 using MKExpress.API.Exceptions;
 using MKExpress.API.Extension;
+using MKExpress.API.Middleware;
 using MKExpress.API.Models;
 using MKExpress.API.Repository.IRepository;
 using MKExpress.API.Services;
@@ -53,7 +54,6 @@ namespace MKExpress.API.Repository
             shipment.Status = _commonService.ValidateShipmentStatus(shipment.Status, ShipmentStatusEnum.PickedUp);
             shipment.LastStatusUpdate = DateTime.Now;
             shipment.PickupDate = DateTime.Now;
-            shipment.UpdatedBy = 0;
             _context.Update(shipment);
 
             if (await _context.SaveChangesAsync() > 0)
@@ -138,7 +138,6 @@ namespace MKExpress.API.Repository
 
                 shipment.Status = ShipmentStatusEnum.PickupFailed.ToFormatString();
                 shipment.LastStatusUpdate = DateTime.Now;
-                shipment.UpdatedBy = 0;
                 shipment.FailedDelivery++;
                 _context.Update(shipment);
 
@@ -237,7 +236,6 @@ namespace MKExpress.API.Repository
                 var rescheduleShipmentAfterHour = await _appSettingRepository.GetAppSettingValueByKey<int>("recheduleShipmentInHour");
                 shipment.Status = ShipmentStatusEnum.PickupRescheduled.ToFormatString();
                 shipment.SchedulePickupDate = DateTime.Now.AddHours(rescheduleShipmentAfterHour);
-                shipment.UpdatedBy = 0;
                 _context.Update(shipment);
 
                 if (await _context.SaveChangesAsync() < 1)
@@ -287,7 +285,6 @@ namespace MKExpress.API.Repository
 
             shipment.Status = _commonService.ValidateShipmentStatus(shipment.Status.ToShipmentStatusEnumString(), ShipmentStatusEnum.ReadyForPickup);
             shipment.LastStatusUpdate = DateTime.Now;
-            shipment.UpdatedBy = 0;
             _context.Update(shipment);
 
             if (await _context.SaveChangesAsync() > 0)

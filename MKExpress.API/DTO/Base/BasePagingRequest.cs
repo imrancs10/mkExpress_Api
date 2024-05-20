@@ -5,7 +5,6 @@
         public int PageNo { get; set; } = 1;
         public int PageSize { get; set; } = 100;
         public bool FetchAll { get; set; } = true;
-        public Guid UserId { get; set; }
 
     }
 }

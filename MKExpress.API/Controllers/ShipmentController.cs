@@ -38,12 +38,6 @@ namespace MKExpress.API.Controllers
         [HttpGet(StaticValues.ShipmentPath)]
         public async Task<PagingResponse<ShipmentResponse>> GetAllShipment([FromQuery] PagingRequest request)
         {
-           var requestedUerId= JwtMiddleware.GetUserId();
-            if(string.IsNullOrEmpty(requestedUerId) || Guid.TryParse(requestedUerId, out var userId))
-            {
-                throw new BusinessRuleViolationException(StaticValues.ErrorType_UnauthorizedAccess, StaticValues.Error_UnauthorizedAccess);
-            }
-            request.UserId = userId;
             return await _shipmentService.GetAllShipment(request);
         }
 

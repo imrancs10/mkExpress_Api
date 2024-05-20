@@ -4,6 +4,7 @@ using MKExpress.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MKExpress.API.Migrations
 {
     [DbContext(typeof(MKExpressContext))]
-    partial class MKExpressContextModelSnapshot : ModelSnapshot
+    [Migration("20240520164330_Map_CreatedByWithUser")]
+    partial class Map_CreatedByWithUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,9 +40,6 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("DataType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -49,9 +49,6 @@ namespace MKExpress.API.Migrations
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
@@ -66,16 +63,11 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
 
                     b.HasIndex("GroupId");
 
@@ -134,17 +126,11 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("DeleteNote")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -161,14 +147,9 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AssignById");
-
-                    b.HasIndex("CreatedBy");
 
                     b.HasIndex("MemberId");
 
@@ -201,17 +182,11 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("DeleteNote")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsClosed")
                         .HasColumnType("bit");
@@ -225,16 +200,11 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ClosedBy");
 
                     b.HasIndex("ContainerTypeId");
-
-                    b.HasIndex("CreatedBy");
 
                     b.HasIndex("JourneyId");
 
@@ -253,17 +223,11 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("DeleteNote")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -274,14 +238,9 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ContainerId");
-
-                    b.HasIndex("CreatedBy");
 
                     b.HasIndex("ShipmentId");
 
@@ -303,17 +262,11 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("DeleteNote")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("DepartureOn")
                         .HasColumnType("datetime2");
@@ -336,14 +289,9 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ContainerId");
-
-                    b.HasIndex("CreatedBy");
 
                     b.HasIndex("StationId");
 
@@ -369,9 +317,6 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("CreatedById")
                         .HasColumnType("uniqueidentifier");
 
@@ -381,25 +326,17 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ContainerId");
 
                     b.HasIndex("ContainerJourneyId");
-
-                    b.HasIndex("CreatedBy");
 
                     b.HasIndex("CreatedById");
 
@@ -429,17 +366,11 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("DeleteNote")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -462,9 +393,6 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("ZipCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -472,8 +400,6 @@ namespace MKExpress.API.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CityId");
-
-                    b.HasIndex("CreatedBy");
 
                     b.ToTable("Customers");
                 });
@@ -493,17 +419,11 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("DeleteNote")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("DistrictId")
                         .IsRequired()
@@ -524,16 +444,11 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CityId");
 
                     b.HasIndex("CountryId");
-
-                    b.HasIndex("CreatedBy");
 
                     b.HasIndex("DistrictId");
 
@@ -559,17 +474,11 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("DeleteNote")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -585,16 +494,11 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
 
                     b.ToTable("MasterDatas");
                 });
@@ -612,17 +516,11 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("DeleteNote")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -630,16 +528,11 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
 
                     b.ToTable("MasterDataTypes");
                 });
@@ -653,17 +546,11 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("DeleteNote")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("FromStationId")
                         .HasColumnType("uniqueidentifier");
@@ -677,12 +564,7 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
 
                     b.HasIndex("FromStationId");
 
@@ -700,17 +582,11 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("DeleteNote")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -727,12 +603,7 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
 
                     b.HasIndex("MasterJourneyId");
 
@@ -750,17 +621,11 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("DeleteNote")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -803,12 +668,7 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
 
                     b.HasIndex("RoleId");
 
@@ -830,9 +690,6 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
@@ -841,9 +698,6 @@ namespace MKExpress.API.Migrations
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("DeliveryDate")
                         .HasColumnType("datetime2");
@@ -891,12 +745,7 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
 
                     b.HasIndex("CustomerId");
 
@@ -939,17 +788,11 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("DeleteNote")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -1004,9 +847,6 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<decimal>("Weight")
                         .HasPrecision(5)
                         .HasColumnType("decimal");
@@ -1014,8 +854,6 @@ namespace MKExpress.API.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ConsigneeCityId");
-
-                    b.HasIndex("CreatedBy");
 
                     b.HasIndex("FromStoreId");
 
@@ -1038,17 +876,11 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("DeleteNote")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FileType")
                         .HasColumnType("nvarchar(max)");
@@ -1077,15 +909,10 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Url")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
 
                     b.HasIndex("ShipmentId");
 
@@ -1119,17 +946,11 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("DeleteNote")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -1140,14 +961,9 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CommentBy");
-
-                    b.HasIndex("CreatedBy");
 
                     b.HasIndex("ShipmentId");
 
@@ -1166,17 +982,11 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("DeleteNote")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -1202,12 +1012,7 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
 
                     b.ToTable("ThirdPartyCourierCompanies");
                 });
@@ -1227,17 +1032,11 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("DeleteNote")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -1254,14 +1053,9 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AssignById");
-
-                    b.HasIndex("CreatedBy");
 
                     b.HasIndex("ShipmentId");
 
@@ -1279,17 +1073,11 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("DeleteNote")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -1353,26 +1141,17 @@ namespace MKExpress.API.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
-
                     b.ToTable("Users");
                 });
 
             modelBuilder.Entity("MKExpress.API.Models.AppSetting", b =>
                 {
-                    b.HasOne("MKExpress.API.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy");
-
                     b.HasOne("MKExpress.API.Models.AppSettingGroup", "AppSettingGroup")
                         .WithMany()
                         .HasForeignKey("GroupId")
@@ -1380,8 +1159,6 @@ namespace MKExpress.API.Migrations
                         .IsRequired();
 
                     b.Navigation("AppSettingGroup");
-
-                    b.Navigation("CreatedByUser");
                 });
 
             modelBuilder.Entity("MKExpress.API.Models.AssignShipmentMember", b =>
@@ -1389,10 +1166,6 @@ namespace MKExpress.API.Migrations
                     b.HasOne("MKExpress.API.Models.Member", "AssignBy")
                         .WithMany()
                         .HasForeignKey("AssignById");
-
-                    b.HasOne("MKExpress.API.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy");
 
                     b.HasOne("MKExpress.API.Models.Member", "Member")
                         .WithMany()
@@ -1405,8 +1178,6 @@ namespace MKExpress.API.Migrations
                         .IsRequired();
 
                     b.Navigation("AssignBy");
-
-                    b.Navigation("CreatedByUser");
 
                     b.Navigation("Member");
 
@@ -1425,10 +1196,6 @@ namespace MKExpress.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MKExpress.API.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy");
-
                     b.HasOne("MKExpress.API.Models.MasterJourney", "Journey")
                         .WithMany()
                         .HasForeignKey("JourneyId")
@@ -1438,8 +1205,6 @@ namespace MKExpress.API.Migrations
                     b.Navigation("ClosedByMember");
 
                     b.Navigation("ContainerType");
-
-                    b.Navigation("CreatedByUser");
 
                     b.Navigation("Journey");
                 });
@@ -1452,10 +1217,6 @@ namespace MKExpress.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MKExpress.API.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy");
-
                     b.HasOne("MKExpress.API.Models.Shipment", "Shipment")
                         .WithMany()
                         .HasForeignKey("ShipmentId")
@@ -1463,8 +1224,6 @@ namespace MKExpress.API.Migrations
                         .IsRequired();
 
                     b.Navigation("Container");
-
-                    b.Navigation("CreatedByUser");
 
                     b.Navigation("Shipment");
                 });
@@ -1477,10 +1236,6 @@ namespace MKExpress.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MKExpress.API.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy");
-
                     b.HasOne("MKExpress.API.Models.MasterData", "Station")
                         .WithMany()
                         .HasForeignKey("StationId")
@@ -1488,8 +1243,6 @@ namespace MKExpress.API.Migrations
                         .IsRequired();
 
                     b.Navigation("Container");
-
-                    b.Navigation("CreatedByUser");
 
                     b.Navigation("Station");
                 });
@@ -1508,10 +1261,6 @@ namespace MKExpress.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MKExpress.API.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy");
-
                     b.HasOne("MKExpress.API.Models.Member", "CreatedMember")
                         .WithMany()
                         .HasForeignKey("CreatedById")
@@ -1521,8 +1270,6 @@ namespace MKExpress.API.Migrations
                     b.Navigation("Container");
 
                     b.Navigation("ContainerJourney");
-
-                    b.Navigation("CreatedByUser");
 
                     b.Navigation("CreatedMember");
                 });
@@ -1535,13 +1282,7 @@ namespace MKExpress.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MKExpress.API.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy");
-
                     b.Navigation("City");
-
-                    b.Navigation("CreatedByUser");
                 });
 
             modelBuilder.Entity("MKExpress.API.Models.LogisticRegion", b =>
@@ -1557,10 +1298,6 @@ namespace MKExpress.API.Migrations
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("MKExpress.API.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy");
 
                     b.HasOne("MKExpress.API.Models.MasterData", "District")
                         .WithMany()
@@ -1590,8 +1327,6 @@ namespace MKExpress.API.Migrations
 
                     b.Navigation("Country");
 
-                    b.Navigation("CreatedByUser");
-
                     b.Navigation("District");
 
                     b.Navigation("ParentStation");
@@ -1601,30 +1336,8 @@ namespace MKExpress.API.Migrations
                     b.Navigation("Station");
                 });
 
-            modelBuilder.Entity("MKExpress.API.Models.MasterData", b =>
-                {
-                    b.HasOne("MKExpress.API.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy");
-
-                    b.Navigation("CreatedByUser");
-                });
-
-            modelBuilder.Entity("MKExpress.API.Models.MasterDataType", b =>
-                {
-                    b.HasOne("MKExpress.API.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy");
-
-                    b.Navigation("CreatedByUser");
-                });
-
             modelBuilder.Entity("MKExpress.API.Models.MasterJourney", b =>
                 {
-                    b.HasOne("MKExpress.API.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy");
-
                     b.HasOne("MKExpress.API.Models.MasterData", "FromStation")
                         .WithMany()
                         .HasForeignKey("FromStationId")
@@ -1637,8 +1350,6 @@ namespace MKExpress.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CreatedByUser");
-
                     b.Navigation("FromStation");
 
                     b.Navigation("ToStation");
@@ -1646,10 +1357,6 @@ namespace MKExpress.API.Migrations
 
             modelBuilder.Entity("MKExpress.API.Models.MasterJourneyDetail", b =>
                 {
-                    b.HasOne("MKExpress.API.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy");
-
                     b.HasOne("MKExpress.API.Models.MasterJourney", "MasterJouney")
                         .WithMany("MasterJourneyDetails")
                         .HasForeignKey("MasterJourneyId")
@@ -1662,8 +1369,6 @@ namespace MKExpress.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CreatedByUser");
-
                     b.Navigation("MasterJouney");
 
                     b.Navigation("SubStation");
@@ -1671,10 +1376,6 @@ namespace MKExpress.API.Migrations
 
             modelBuilder.Entity("MKExpress.API.Models.Member", b =>
                 {
-                    b.HasOne("MKExpress.API.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy");
-
                     b.HasOne("MKExpress.API.Models.MasterData", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
@@ -1687,8 +1388,6 @@ namespace MKExpress.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CreatedByUser");
-
                     b.Navigation("Role");
 
                     b.Navigation("Station");
@@ -1696,17 +1395,11 @@ namespace MKExpress.API.Migrations
 
             modelBuilder.Entity("MKExpress.API.Models.Shipment", b =>
                 {
-                    b.HasOne("MKExpress.API.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy");
-
                     b.HasOne("MKExpress.API.Models.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("CreatedByUser");
 
                     b.Navigation("Customer");
                 });
@@ -1718,10 +1411,6 @@ namespace MKExpress.API.Migrations
                         .HasForeignKey("ConsigneeCityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("MKExpress.API.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy");
 
                     b.HasOne("MKExpress.API.Models.MasterData", "FromStore")
                         .WithMany()
@@ -1749,8 +1438,6 @@ namespace MKExpress.API.Migrations
 
                     b.Navigation("ConsigneeCity");
 
-                    b.Navigation("CreatedByUser");
-
                     b.Navigation("FromStore");
 
                     b.Navigation("Shipment");
@@ -1762,10 +1449,6 @@ namespace MKExpress.API.Migrations
 
             modelBuilder.Entity("MKExpress.API.Models.ShipmentImage", b =>
                 {
-                    b.HasOne("MKExpress.API.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy");
-
                     b.HasOne("MKExpress.API.Models.Shipment", "Shipment")
                         .WithMany()
                         .HasForeignKey("ShipmentId")
@@ -1775,8 +1458,6 @@ namespace MKExpress.API.Migrations
                     b.HasOne("MKExpress.API.Models.ShipmentTracking", "ShipmentTracking")
                         .WithMany("ShipmentImages")
                         .HasForeignKey("TrackingId");
-
-                    b.Navigation("CreatedByUser");
 
                     b.Navigation("Shipment");
 
@@ -1789,10 +1470,6 @@ namespace MKExpress.API.Migrations
                         .WithMany()
                         .HasForeignKey("CommentBy");
 
-                    b.HasOne("MKExpress.API.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy");
-
                     b.HasOne("MKExpress.API.Models.Shipment", "Shipment")
                         .WithMany()
                         .HasForeignKey("ShipmentId")
@@ -1801,18 +1478,7 @@ namespace MKExpress.API.Migrations
 
                     b.Navigation("CommentByMember");
 
-                    b.Navigation("CreatedByUser");
-
                     b.Navigation("Shipment");
-                });
-
-            modelBuilder.Entity("MKExpress.API.Models.ThirdPartyCourierCompany", b =>
-                {
-                    b.HasOne("MKExpress.API.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy");
-
-                    b.Navigation("CreatedByUser");
                 });
 
             modelBuilder.Entity("MKExpress.API.Models.ThirdPartyShipment", b =>
@@ -1822,10 +1488,6 @@ namespace MKExpress.API.Migrations
                         .HasForeignKey("AssignById")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("MKExpress.API.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy");
 
                     b.HasOne("MKExpress.API.Models.Shipment", "Shipment")
                         .WithMany()
@@ -1841,20 +1503,9 @@ namespace MKExpress.API.Migrations
 
                     b.Navigation("AssignBy");
 
-                    b.Navigation("CreatedByUser");
-
                     b.Navigation("Shipment");
 
                     b.Navigation("ThirdPartyCourierCompany");
-                });
-
-            modelBuilder.Entity("MKExpress.API.Models.User", b =>
-                {
-                    b.HasOne("MKExpress.API.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy");
-
-                    b.Navigation("CreatedByUser");
                 });
 
             modelBuilder.Entity("MKExpress.API.Models.Container", b =>

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using MKExpress.API.Contants;
 using MKExpress.API.Services.IServices;
 using Microsoft.EntityFrameworkCore.Metadata;
+using MKExpress.API.Middleware;
 
 namespace MKExpress.API.Data
 {
@@ -13,12 +14,10 @@ namespace MKExpress.API.Data
     {
         protected readonly IConfiguration Configuration;
         private readonly string _defaultConnection;
-        private readonly ICommonService _commonService;
 
-        public MKExpressContext(IConfiguration configuration, ICommonService commonService)
+        public MKExpressContext(IConfiguration configuration)
         {
             Configuration = configuration;
-            _commonService=commonService;
             //_defaultConnection = "workstation id=mssql-88450-0.cloudclusters.net,12597;TrustServerCertificate=true;user id=LaBeachUser;pwd=Gr8@54321;data source=mssql-88450-0.cloudclusters.net,12597;persist security info=False;initial catalog=KaashiYatri";
             _defaultConnection = "workstation id=mssql-88450-0.cloudclusters.net,12597;TrustServerCertificate=true;user id=mkExpress_User;pwd=Gr8@12345;data source=mssql-88450-0.cloudclusters.net,12597;persist security info=False;initial catalog=mkExpress_Db_test";
         }
@@ -49,6 +48,9 @@ namespace MKExpress.API.Data
                .Property(x => x.Weight)
                .HasColumnType("decimal")
                .HasPrecision(5);
+            modelBuilder.Entity<ShipmentTracking>()
+                .Property(x => x.CommentBy)
+                .IsRequired(false);
 
         }
 
@@ -92,16 +94,16 @@ namespace MKExpress.API.Data
                 var hasChange = entityEntry.State == EntityState.Added || entityEntry.State == EntityState.Modified;
                 if (!hasChange) continue;
                 if (entityEntry.Entity is not BaseModel baseModel) continue;
-                Guid? userId = _commonService.GetLoggedInUserId();
+                Guid? userId = JwtMiddleware.GetUserId();
                
                 if (entityEntry.State is EntityState.Added)
                 {
-                    baseModel.CreatedBy = 0;
+                    baseModel.CreatedBy = userId;
                     baseModel.CreatedAt = DateTime.Now;
                 }
                 else
                 {
-                    baseModel.UpdatedBy = 0;
+                    baseModel.UpdatedBy = userId;
                     entityEntry.Property(StaticValues.ConstValue_CreatedAt).IsModified = false;
                     baseModel.UpdatedAt = DateTime.Now;
                 }

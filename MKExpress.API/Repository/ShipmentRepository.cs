@@ -6,6 +6,7 @@ using MKExpress.API.DTO.Response;
 using MKExpress.API.Enums;
 using MKExpress.API.Exceptions;
 using MKExpress.API.Extension;
+using MKExpress.API.Middleware;
 using MKExpress.API.Models;
 using MKExpress.API.Repository.IRepository;
 using MKExpress.API.Services.IServices;
@@ -44,7 +45,7 @@ namespace MKExpress.API.Repository
                 .ToListAsync();
 
             var trans = _context.Database.BeginTransaction();
-            var userId = _commonService.GetLoggedInUserId();
+            var userId = JwtMiddleware.GetUserId();
             if ((oldMemberData.Any() && await _context.SaveChangesAsync() > 0) || !oldMemberData.Any())
                 {
                     var shipmentMember = new List<AssignShipmentMember>();
@@ -92,7 +93,8 @@ namespace MKExpress.API.Repository
                 {
                     Id = Guid.NewGuid(),
                     Activity = ShipmentStatusEnum.Created.ToString(),
-                    ShipmentId = shipment.Id
+                    ShipmentId = shipment.Id,
+                    CommentBy=null
                 };
                 if (await _shipmentTrackingRepository.AddTracking(tracking)!=null)
                 {
@@ -106,6 +108,13 @@ namespace MKExpress.API.Repository
 
         public async Task<PagingResponse<Shipment>> GetAllShipment(PagingRequest pagingRequest)
         {
+            var _role = JwtMiddleware.GetUserRole();
+            var _userId = JwtMiddleware.GetUserId();
+            var _filterByCreatedBy = false;
+            if(_role=="CustomerAdmin")
+            {
+                _filterByCreatedBy=true;
+            }
             var data = _context.Shipments
                 .Include(x => x.Customer)
                 .Include(x => x.ShipmentDetail)
@@ -116,7 +125,7 @@ namespace MKExpress.API.Repository
                 .ThenInclude(x => x.ShipperCity)
                 .Include(x => x.ShipmentDetail)
                 .ThenInclude(x => x.ConsigneeCity)
-                .Where(x => !x.IsDeleted)
+                .Where(x => !x.IsDeleted && (!_filterByCreatedBy || x.CreatedBy==_userId))
                 .OrderByDescending(x => x.CreatedAt)
                 .AsQueryable();
             PagingResponse<Shipment> response = new()
@@ -148,29 +157,29 @@ namespace MKExpress.API.Repository
         public async Task<List<Shipment>> GetShipment(List<Guid> ids)
         {
             return await _context.Shipments
-                 .Include(x => x.ShipmentDetail)
+               .Include(x => x.ShipmentDetail)
                .ThenInclude(x => x.FromStore)
                .Include(x => x.ShipmentDetail)
                .ThenInclude(x => x.ToStore)
                .Include(x => x.ShipmentDetail)
                .ThenInclude(x => x.ShipperCity)
                .Include(x => x.ShipmentDetail)
-            .ThenInclude(x => x.ConsigneeCity)
+               .ThenInclude(x => x.ConsigneeCity)
                  .Where(x => !x.IsDeleted && ids.Contains(x.Id)).ToListAsync();
         }
 
         public async Task<List<Shipment>> GetShipmentByUser(string userName, ShipmentEnum shipment, ShipmentStatusEnum shipmentStatus)
         {
             return await _context.Shipments
-                 .Include(x => x.ShipmentDetail)
-               .ThenInclude(x => x.FromStore)
-               .Include(x => x.ShipmentDetail)
-               .ThenInclude(x => x.ToStore)
-               .Include(x => x.ShipmentDetail)
-               .ThenInclude(x => x.ShipperCity)
-               .Include(x => x.ShipmentDetail)
-            .ThenInclude(x => x.ConsigneeCity)
-                 .Where(x => !x.IsDeleted).ToListAsync();
+                .Include(x => x.ShipmentDetail)
+                .ThenInclude(x => x.FromStore)
+                .Include(x => x.ShipmentDetail)
+                .ThenInclude(x => x.ToStore)
+                .Include(x => x.ShipmentDetail)
+                .ThenInclude(x => x.ShipperCity)
+                .Include(x => x.ShipmentDetail)
+                .ThenInclude(x => x.ConsigneeCity)
+                .Where(x => !x.IsDeleted).ToListAsync();
         }
 
         public async Task<bool> IsShipmentExists(string shipmentNo)
@@ -195,7 +204,6 @@ namespace MKExpress.API.Repository
                     throw new BusinessRuleViolationException(StaticValues.Error_InvalidCurrentShipmentStatus, $"{StaticValues.Message_InvalidCurrentShipmentStatus} {res.ShipmentNumber}");
                 res.Status = _commonService.ValidateShipmentStatus(currentStatus, newStatus);
                 res.LastStatusUpdate = DateTime.Now;
-                res.UpdatedBy = 0;// _commonService.GetLoggedInUserId();
             });
 
             _context.Shipments.AttachRange(shipments);
@@ -210,7 +218,7 @@ namespace MKExpress.API.Repository
                         ShipmentId = shipment.Id,
                         Activity = newStatus.ToFormatString(),
                         Comment1 = comment,
-                        CommentBy = _commonService.GetLoggedInUserId(),
+                        CommentBy = JwtMiddleware.GetUserId(),
                         CreatedAt = DateTime.UtcNow,
                         Id = Guid.NewGuid(),
                     });

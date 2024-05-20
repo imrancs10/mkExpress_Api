@@ -8,8 +8,8 @@ namespace MKExpress.API.Models
         [Key]
         public virtual Guid Id { get; set; }
         public Guid? CreatedBy { get; set; }
-        public int? UpdatedBy { get; set; }
-        public int? DeletedBy { get; set; }
+        public Guid? UpdatedBy { get; set; }
+        public Guid? DeletedBy { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
@@ -17,6 +17,6 @@ namespace MKExpress.API.Models
         public string? DeleteNote { get; set; }
 
         [ForeignKey("CreatedBy")]
-        public User CreatedByUser { get; set; }
+        public User? CreatedByUser { get; set; }
     }
 }

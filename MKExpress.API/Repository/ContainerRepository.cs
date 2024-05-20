@@ -7,6 +7,7 @@ using MKExpress.API.Enums;
 using MKExpress.API.Exceptions;
 using MKExpress.API.Extension;
 using MKExpress.API.Logger;
+using MKExpress.API.Middleware;
 using MKExpress.API.Models;
 using MKExpress.API.Repository.IRepository;
 using MKExpress.API.Services.IServices;
@@ -94,7 +95,7 @@ namespace MKExpress.API.Repository
                 throw new BusinessRuleViolationException(StaticValues.Error_CantCheckinAtSourceStation, StaticValues.Message_CantCheckinAtSourceStation);
 
             oldData.ArrivalAt = DateTime.Now;
-            oldData.UpdatedBy = 0;// _commonService.GetLoggedInUserId();
+           // oldData.UpdatedBy = JwtMiddleware.GetUserId();
             var trans = _context.Database.BeginTransaction();
             var entity = _context.ContainerJourneys.Attach(oldData);
             entity.State = EntityState.Modified;
@@ -105,7 +106,7 @@ namespace MKExpress.API.Repository
                     Code = GetTrackingCode(ContainerTrackingCodeEnum.CheckedIn),
                     ContainerId = containerId,
                     ContainerJourneyId = containerJourneyId,
-                    CreatedById = _commonService.GetLoggedInUserId(),
+                    CreatedById = JwtMiddleware.GetUserId(),
                     Id = Guid.NewGuid()
                 };
                 _context.ContainerTrackings.Add(tracking);
@@ -135,7 +136,7 @@ namespace MKExpress.API.Repository
                 throw new BusinessRuleViolationException(StaticValues.Error_CantCheckOutAtDestinationStation, StaticValues.Message_CantCheckOutAtDestinationStation);
 
             oldData.DepartureOn = DateTime.Now;
-            oldData.UpdatedBy = 0;// _commonService.GetLoggedInUserId();
+            //oldData.UpdatedBy = JwtMiddleware.GetUserId();
 
             var trans = _context.Database.BeginTransaction();
             var entity = _context.ContainerJourneys.Attach(oldData);
@@ -147,7 +148,7 @@ namespace MKExpress.API.Repository
                     Code = GetTrackingCode(ContainerTrackingCodeEnum.CheckedOut),
                     ContainerId = containerId,
                     ContainerJourneyId = containerJourneyId,
-                    CreatedById = _commonService.GetLoggedInUserId(),
+                    CreatedById = JwtMiddleware.GetUserId(),
                     Id = Guid.NewGuid()
                 };
                 _context.ContainerTrackings.Add(tracking);
@@ -176,7 +177,7 @@ namespace MKExpress.API.Repository
 
             oldData.IsClosed = true;
             oldData.ClosedOn = DateTime.Now;
-            oldData.ClosedBy = _commonService.GetLoggedInUserId();
+            oldData.ClosedBy = JwtMiddleware.GetUserId();       
             var trans = _context.Database.BeginTransaction();
             _context.Containers.Attach(oldData);
 
@@ -191,8 +192,8 @@ namespace MKExpress.API.Repository
                         ContainerId = oldData.Id,
                         Id = Guid.NewGuid(),
                         CreatedAt = DateTime.UtcNow,
-                        CreatedBy = 0,// _commonService.GetLoggedInUserId()
-                        CreatedById = _commonService.GetLoggedInUserId()
+                       // CreatedBy = JwtMiddleware.GetUserId(),
+                        CreatedById = JwtMiddleware.GetUserId()
                     });
 
                     if (await _context.SaveChangesAsync() > 0)
@@ -219,35 +220,27 @@ namespace MKExpress.API.Repository
             {
                 throw new BusinessRuleViolationException(StaticValues.Error_ContainerClosedCantDelete, StaticValues.Message_ContainerClosedCantDelete);
             }
-            var deletedBy = 0;// _commonService.GetLoggedInUserId();
+            var deletedBy = JwtMiddleware.GetUserId(); ;
             var deletedAt = DateTime.UtcNow;
 
             oldData.IsDeleted = true;
-            oldData.DeletedAt = deletedAt;
-            oldData.DeletedBy = deletedBy;
             oldData.DeleteNote = deleteReason;
 
             oldData.ContainerDetails.ForEach(res =>
             {
                 res.IsDeleted = true;
-                res.DeletedAt = deletedAt;
-                res.DeletedBy = deletedBy;
                 res.DeleteNote = deleteReason;
             });
 
             oldData.ContainerJourneys.ForEach(res =>
             {
                 res.IsDeleted = true;
-                res.DeletedAt = deletedAt;
-                res.DeletedBy = deletedBy;
                 res.DeleteNote = deleteReason;
             });
 
             oldData.ContainerTrackings.ForEach(res =>
             {
                 res.IsDeleted = true;
-                res.DeletedAt = deletedAt;
-                res.DeletedBy = deletedBy;
                 res.DeleteNote = deleteReason;
             });
 

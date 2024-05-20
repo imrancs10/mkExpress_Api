@@ -9,7 +9,8 @@ namespace MKExpress.API.Middleware
     public class JwtMiddleware
     {
         private readonly RequestDelegate _next;
-        private static string _userId;
+        private static Guid _userId;
+        private static string _userRole;
 
         public JwtMiddleware(RequestDelegate next)
         {
@@ -48,15 +49,17 @@ namespace MKExpress.API.Middleware
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
-              //      ValidateIssuer = true,
-               //     ValidateAudience = true,
-                ValidIssuer = ConfigManager.AppSetting["JWT:ValidIssuer"],
-                   ValidAudience = ConfigManager.AppSetting["JWT:ValidAudience"],
+                    ValidIssuer = ConfigManager.AppSetting["JWT:ValidIssuer"],
+                    ValidAudience = ConfigManager.AppSetting["JWT:ValidAudience"],
                     ValidateLifetime = true
                 }, out SecurityToken validatedToken);
 
                 var jwtToken = (JwtSecurityToken)validatedToken;
-                _userId = jwtToken.Claims.First(x => x.Type == "userId").Value;
+
+                var userId = jwtToken.Claims.First(x => x.Type == "userId").Value;
+                _userRole=jwtToken.Claims.First(x=>x.Type=="role").Value;
+                if (!Guid.TryParse(userId, out _userId))
+                    return false;
 
                 return true;
             }
@@ -66,9 +69,14 @@ namespace MKExpress.API.Middleware
             }
         }
 
-        public static string GetUserId()
+        public static Guid GetUserId()
         {
             return _userId;
+        }
+
+        public static string GetUserRole()
+        {
+            return _userRole;
         }
     }
 

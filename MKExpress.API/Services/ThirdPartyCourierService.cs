@@ -4,6 +4,7 @@ using MKExpress.API.Contants;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
 using MKExpress.API.Exceptions;
+using MKExpress.API.Middleware;
 using MKExpress.API.Models;
 using MKExpress.API.Repository.IRepository;
 using MKExpress.API.Services.IServices;
@@ -72,12 +73,12 @@ namespace MKExpress.API.Services
                    "These shipment already added to third party courier : "+ string.Join(", ", alreadyAddedShipment.Select(x => x.Shipment.ShipmentNumber)));
             }
 
-            var loggedInId = _commonService.GetLoggedInUserId();
             request.ForEach(res =>
             {
-                res.AssignById = loggedInId;
+                res.AssignById = JwtMiddleware.GetUserId();
                 res.AssignAt = DateTime.UtcNow;
             });
+
             var thirdPartyShipment = _mapper.Map<List<ThirdPartyShipment>>(request);
             return await _repository.AddShipmentToThirdParty(thirdPartyShipment);
         }
