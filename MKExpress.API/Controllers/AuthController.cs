@@ -82,9 +82,9 @@ namespace MKExpress.API.Controllers
         
         [ProducesResponseType(typeof(bool), StatusCodes.Status201Created)]
         [HttpPost(StaticValues.UserAssignRolePath)]
-        public async Task<bool> AssignRole([FromRoute] string email, [FromRoute] string role)
+        public async Task<bool> AssignRole([FromRoute] string email, [FromRoute] Guid roleId)
         {
-            return await _loginService.AssignRole(email,role);
+            return await _loginService.AssignRole(email,roleId);
         }
 
         [AllowAnonymous]

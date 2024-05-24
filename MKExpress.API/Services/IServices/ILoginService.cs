@@ -12,7 +12,7 @@ namespace MKExpress.API.Services.IServices
         Task<string> ResetPassword(string userName);
         Task<string> VerifyEmail(string token);
         Task<bool> UpdateProfile(UserRequest request);
-        Task<bool> AssignRole(string email, string Role);
+        Task<bool> AssignRole(string email, Guid roleId);
         Task<bool> ResetEmailVerificationCode(string email);
         Task<bool> DeleteUser(string email);
         Task<bool> BlockUser(string email);

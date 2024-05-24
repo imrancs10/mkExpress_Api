@@ -70,6 +70,12 @@ namespace MKExpress.API.Config
             CreateMap<PagingResponse<Member>, PagingResponse<MemberResponse>>();
             #endregion
 
+            #region Menu
+            CreateMap<MenuRequest, Menu>();
+            CreateMap<Menu, MenuResponse>();
+            CreateMap<PagingResponse<Menu>, PagingResponse<MenuResponse>>();
+            #endregion
+
             #region Shipment
             CreateMap<ShipmentRequest, Shipment>();
             CreateMap<Shipment, ShipmentResponse>()

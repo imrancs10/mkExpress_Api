@@ -12,7 +12,7 @@ namespace MKExpress.API.Repository.IRepository
         Task<bool> VerifyEmail(string token);
         Task<bool> UpdateProfile(User request);
         Task<bool> IsUserExist(string email);
-        Task<bool> AssignRole(string email,string Role);
+        Task<bool> AssignRole(string email,Guid roleId);
         Task<bool> ResetEmailVerificationCode(string email);
         Task<bool> DeleteUser(string email);
         Task<bool> BlockUser(string email);

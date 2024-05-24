@@ -75,6 +75,9 @@ namespace MKExpress.API.Data
         public DbSet<AppSetting> AppSettings { get; set; }
         public DbSet<AssignShipmentMember> AssignShipmentMembers { get; set; }
         public DbSet<AppSettingGroup> AppSettingGroups { get; set; }
+        public DbSet<Menu> Menus { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<UserRoleMenuMapper> UserRoleMenuMappers { get; set; }
         public override int SaveChanges()
         {
             AddDateTimeStamp();

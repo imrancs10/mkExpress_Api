@@ -25,7 +25,7 @@ namespace MKExpress.API.Repository
             {
                 throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidParameters, StaticValues.Error_InvalidParameters);
             }
-            shipmentTracking.CommentBy = JwtMiddleware.GetUserId();
+            //shipmentTracking.CommentBy = JwtMiddleware.GetUserId();
             var entity = _context.ShipmentTrackings.Add(shipmentTracking);
             entity.State = EntityState.Added;
             if(await _context.SaveChangesAsync()<1)

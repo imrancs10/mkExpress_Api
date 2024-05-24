@@ -56,7 +56,7 @@ namespace MKExpress.API.Repositories
                     IsTcAccepted = true,
                     Password = PasswordHasher.GenerateHash(_defaultPassword),
                     UserName = customer.Email,
-                    Role="CustomerAdmin",
+                    RoleId=Guid.NewGuid(),
                     Mobile=customer.ContactNo  
                 };
                var savedUser=await _userRepository.Add(user);

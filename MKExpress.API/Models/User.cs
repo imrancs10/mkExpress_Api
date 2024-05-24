@@ -1,4 +1,5 @@
 ﻿using MKExpress.API.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MKExpress.API.Models
 {
@@ -20,8 +21,10 @@ namespace MKExpress.API.Models
         public string? PasswordResetCode { get; set; }
         public DateTime? PasswordResetCodeExpireOn { get; set; }
         public string? EmailVerificationCode { get; set; }
-        public string Role { get; set; } = "User";
+        public Guid? RoleId { get; set; }
         public bool IsCustomer { get; set; }
         public DateTime? EmailVerificationCodeExpireOn { get; set; }
+        [ForeignKey("RoleId")]
+        public UserRole UserRole { get; set; }
     }
 }

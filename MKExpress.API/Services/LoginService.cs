@@ -28,9 +28,9 @@ namespace MKExpress.API.Services
             _configuration = configuration;
         }
 
-        public async Task<bool> AssignRole(string email, string role)
+        public async Task<bool> AssignRole(string email, Guid roleId)
         {
-            return await _loginRepository.AssignRole(email, role);
+            return await _loginRepository.AssignRole(email, roleId);
         }
 
         public async Task<bool> BlockUser(string email)

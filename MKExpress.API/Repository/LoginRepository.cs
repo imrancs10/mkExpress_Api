@@ -122,14 +122,14 @@ namespace MKExpress.API.Repository
             return await _context.Users.Where(x => !x.IsDeleted && x.Email == email).CountAsync() > 0;
         }
 
-        public async Task<bool> AssignRole(string email, string Role)
+        public async Task<bool> AssignRole(string email, Guid roleId)
         {
             if (email == null)
                 return false;
             var oldData = await _context.Users.Where(x => !x.IsDeleted && (x.Email == email || x.UserName == email)).FirstOrDefaultAsync();
             if (oldData == null)
                 return false;
-            oldData.Role = Role;
+            oldData.RoleId = roleId;
             var entity = _context.Attach(oldData);
             entity.State = EntityState.Modified;
             return await _context.SaveChangesAsync() > 0;
