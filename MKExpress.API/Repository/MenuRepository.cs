@@ -19,16 +19,16 @@ namespace MKExpress.API.Repository
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task AddMenuAsync(Menu menu)
+        public async Task<bool> AddMenuAsync(Menu menu)
         {
             if (menu == null)
                 throw new ArgumentNullException(nameof(menu));
 
             _context.Menus.Add(menu);
-            await _context.SaveChangesAsync();
+           return await _context.SaveChangesAsync()>0;
         }
 
-        public async Task DeleteMenuAsync(int id)
+        public async Task<bool> DeleteMenuAsync(Guid id)
         {
             var menu = await _context.Menus.FindAsync(id);
             if (menu == null)
@@ -36,30 +36,28 @@ namespace MKExpress.API.Repository
 
             menu.IsDeleted = true;
             _context.Menus.Update(menu);
-            await _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync()>0;
         }
 
-        public async Task UpdateMenuAsync(Menu menu)
+        public async Task<bool> UpdateMenuAsync(Menu menu)
         {
             if (menu == null)
                 throw new ArgumentNullException(nameof(menu));
 
-            var existingMenu = await _context.Menus.FindAsync(menu.Id);
-            if (existingMenu == null)
-                throw new KeyNotFoundException("Menu not found");
-
+            var existingMenu = await _context.Menus.FindAsync(menu.Id) ?? throw new KeyNotFoundException("Menu not found");
             existingMenu.Name = menu.Name;
             existingMenu.Code = menu.Code;
             existingMenu.Link = menu.Link;
 
             _context.Menus.Update(existingMenu);
-            await _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<Menu> GetMenuByIdAsync(int id)
+        public async Task<Menu> GetMenuByIdAsync(Guid id)
         {
-            var menu = await _context.Menus.FindAsync(id);
-            return menu?.IsDeleted == true ? null : menu;
+            return await _context.Menus
+                .Where(x=>!x.IsDeleted&& x.Id==id)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<PagingResponse<Menu>> GetAllMenusAsync(PagingRequest request)

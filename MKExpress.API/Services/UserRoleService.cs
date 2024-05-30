@@ -27,7 +27,7 @@ namespace MKExpress.API.Services
             return _mapper.Map<PagingResponse<UserRoleResponse>>(await _repository.GetAllRolesAsync(request));
         }
 
-        public async Task<UserRoleResponse> GetRoleByIdAsync(int id)
+        public async Task<UserRoleResponse> GetRoleByIdAsync(Guid id)
         {
            return _mapper.Map<UserRoleResponse>(await _repository.GetRoleByIdAsync(id));
         }
@@ -37,7 +37,7 @@ namespace MKExpress.API.Services
             return _mapper.Map<PagingResponse<UserRoleResponse>>(await _repository.SearchRolesAsync(pagingRequest));
         }
 
-        public async Task<bool> DeleteRoleAsync(int id)
+        public async Task<bool> DeleteRoleAsync(Guid id)
         {
             return await _repository.DeleteRoleAsync(id);
         }

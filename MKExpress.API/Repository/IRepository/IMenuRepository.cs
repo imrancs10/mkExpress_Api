@@ -6,7 +6,7 @@ namespace MKExpress.API.Repository
 {
     public interface IMenuRepository
     {
-        Task<Menu> AddMenuAsync(Menu menu);
+        Task<bool> AddMenuAsync(Menu menu);
         Task<bool> DeleteMenuAsync(Guid id);
         Task<bool> UpdateMenuAsync(Menu menu);
         Task<Menu> GetMenuByIdAsync(Guid id);
