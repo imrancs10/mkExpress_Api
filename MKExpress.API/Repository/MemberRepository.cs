@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.EntityFrameworkCore;
 using MKExpress.API.Common;
 using MKExpress.API.Contants;
@@ -9,7 +8,6 @@ using MKExpress.API.DTO.Response;
 using MKExpress.API.Exceptions;
 using MKExpress.API.Models;
 using MKExpress.API.Repository.IRepository;
-using MKExpress.API.Services.Interfaces;
 
 namespace MKExpress.API.Repository
 {
@@ -18,14 +16,12 @@ namespace MKExpress.API.Repository
         private readonly MKExpressContext _context;
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-        private readonly IMasterDataService _masterDataService;
 
-        public MemberRepository(MKExpressContext context, IUserRepository userRepository, IMapper mapper,IMasterDataService masterDataService)
+        public MemberRepository(MKExpressContext context, IUserRepository userRepository, IMapper mapper)
         {
             _context = context;
             _userRepository = userRepository;
             _mapper = mapper;
-            _masterDataService = masterDataService; 
         }
 
         public async Task<bool> ActiveDeactivate(Guid memberId)
@@ -56,15 +52,9 @@ namespace MKExpress.API.Repository
             var entity = _context.Members.Add(request);
             if (await _context.SaveChangesAsync() > 0)
             {
-                var role=await _masterDataService.Get(request.RoleId);
-                if(role==null)
-                {
-                    trans.Rollback();
-                    return default(Member);
-                }
                 var user = _mapper.Map<User>(request);
                 user.Password=PasswordHasher.GenerateHash(password);
-                user.RoleId = Guid.NewGuid();
+                user.RoleId =request.RoleId;
                 var res = await _userRepository.Add(user);
                 if (res?.Id is Guid)
                 {
@@ -156,7 +146,7 @@ namespace MKExpress.API.Repository
                    x.IdNumber.Contains(searchTerm) ||
                    x.Mobile.Contains(searchTerm) ||
                    x.Phone.Contains(searchTerm) ||
-                   x.Role.Value.Contains(searchTerm) ||
+                   x.Role.Name.Contains(searchTerm) ||
                    x.Station.Value.Contains(searchTerm)
                ))
                .OrderBy(x => x.FirstName)
@@ -205,7 +195,7 @@ namespace MKExpress.API.Repository
             return await _context
                 .Members
                 .Include(x=>x.Role)
-                .Where(x=>!x.IsDeleted && x.Role.Value.ToLower()==role.ToLower())
+                .Where(x=>!x.IsDeleted && x.Role.Name.ToLower()==role.ToLower())
                 .OrderBy(x=>x.FirstName)
                 .ToListAsync();
         }

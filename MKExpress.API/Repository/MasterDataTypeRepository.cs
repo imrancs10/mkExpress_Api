@@ -107,7 +107,9 @@ namespace MKExpress.API.Repositories
 
         public async Task<bool> IsMasterDataTypeExist(string masterDataType)
         {
-            return await _context.MasterDataTypes.Where(x => !x.IsDeleted && x.Value.Trim().Equals(masterDataType.Trim()) || x.Code.Trim().Equals(masterDataType.Trim())).CountAsync() > 0;
+            return await _context.MasterDataTypes
+                .Where(x => !x.IsDeleted && x.Value.Trim().Equals(masterDataType.Trim()) || x.Code.Trim().Equals(masterDataType.Trim()))
+                .AnyAsync();
         }
 
         public async Task<PagingResponse<MasterDataType>> Search(SearchPagingRequest searchPagingRequest)
@@ -116,8 +118,9 @@ namespace MKExpress.API.Repositories
            
             var data = _context.MasterDataTypes
                 .Where(mdt => !mdt.IsDeleted &&
-                        searchTerm.Equals(string.Empty) ||
-                        searchTerm.Equals(mdt.Value)
+                        (searchTerm.Contains(string.Empty) ||
+                        searchTerm.Contains(mdt.Code) ||
+                        searchTerm.Contains(mdt.Value))
                     )
                 .OrderBy(x => x.Value)
                 .AsQueryable();

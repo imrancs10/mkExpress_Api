@@ -43,6 +43,21 @@
         public const string MasterJourneyByIdPath = APIPrefix + "master-journey/get/{id}";
         public const string MasterJourneySearchPath = APIPrefix + "master-journey/search";
         public const string MasterJourneyDropdownPath = APIPrefix + "master-journey/dropdown/journey";
+
+        #region Master Roles
+        public const string MasterRolePath = APIPrefix + "master-role";
+        public const string MasterRoleDeletePath = APIPrefix + "master-role/{id}";
+        public const string MasterRoleByIdPath = APIPrefix + "master-role/get/{id}";
+        public const string MasterRoleSearchPath = APIPrefix + "master-role/search";
+        #endregion
+
+        #region Master Roles
+        public const string MasterMenuPath = APIPrefix + "master-menu";
+        public const string MasterMenuDeletePath = APIPrefix + "master-menu/{id}";
+        public const string MasterMenuByIdPath = APIPrefix + "master-menu/get/{id}";
+        public const string MasterMenuSearchPath = APIPrefix + "master-menu/search";
+        #endregion
+
         #endregion
 
         #region Customer API Path

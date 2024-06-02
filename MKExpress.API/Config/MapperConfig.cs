@@ -16,7 +16,9 @@ namespace MKExpress.API.Config
             #endregion
 
             #region User
-            CreateMap<User, UserResponse>();
+            CreateMap<User, UserResponse>()
+                 .ForMember(des => des.Role, src => src.MapFrom(x => x.UserRole.Name))
+                 .ForMember(des => des.RoleCode, src => src.MapFrom(x => x.UserRole.Code));
             CreateMap<UserRequest, User>()
                 .ForMember(des => des.EmailVerificationCode, src => src.MapFrom(x => Guid.NewGuid().ToString()))
                 .ForMember(des => des.EmailVerificationCodeExpireOn, src => src.MapFrom(x => DateTime.Now.AddHours(24)));
@@ -66,7 +68,7 @@ namespace MKExpress.API.Config
             CreateMap<Member, MemberResponse>()
                  .ForMember(des => des.GenderName, src => src.MapFrom(x => x.Gender.ToString()))
                  .ForMember(des => des.Station, src => src.MapFrom(x => x.Station.Value))
-                 .ForMember(des => des.Role, src => src.MapFrom(x => x.Role.Value));
+                 .ForMember(des => des.Role, src => src.MapFrom(x => x.Role.Name));
             CreateMap<PagingResponse<Member>, PagingResponse<MemberResponse>>();
             #endregion
 
@@ -182,6 +184,12 @@ namespace MKExpress.API.Config
                 .ForMember(des => des.UniqueRefNo, src => src.MapFrom(x => x.Shipment.UniqueRefNo));
 
             CreateMap<PagingResponse<AssignShipmentMember>, PagingResponse<AssignShipmentMemberResponse>>();
+            #endregion
+
+            #region User Role
+            CreateMap<UserRoleRequest, UserRole>();
+            CreateMap<UserRole, UserRoleResponse>();
+            CreateMap<PagingResponse<UserRole>, PagingResponse<UserRoleResponse>>();
             #endregion
         }
 

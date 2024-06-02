@@ -17,7 +17,7 @@ namespace MKExpress.API.Models
         public bool IsActive { get; set; }
 
         [ForeignKey("RoleId")]
-        public MasterData Role { get; set; }
+        public UserRole Role { get; set; }
         [ForeignKey("StationId")]
         public MasterData Station { get; set; }
     }

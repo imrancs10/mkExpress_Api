@@ -61,6 +61,10 @@ namespace MKExpress.API.Utility
                                                     claims: new List<Claim>()
                                                     {
                                                         new Claim("role",response.UserResponse.Role),
+                                                        new Claim("roleCode",response.UserResponse.RoleCode),
+                                                        new Claim("email",response.UserResponse.Email),
+                                                        new Claim("firstName",response.UserResponse.FirstName),
+                                                        new Claim("lastName",response.UserResponse.LastName),
                                                         new Claim("userId",response.UserResponse.Id.ToString())
                                                     },
                                                     expires: DateTime.Now.AddDays(7),

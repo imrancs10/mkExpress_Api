@@ -42,6 +42,7 @@ namespace MKExpress.API.Repository
             try
             {
                 var oldData = await _context.Users
+                                           .Include(x=>x.UserRole)
                                            .Where(x => (x.UserName == request.UserName || x.Email == request.UserName) && x.Password == request.Password)
                                            .FirstOrDefaultAsync();
                 if (oldData == null)

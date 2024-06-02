@@ -377,7 +377,7 @@ namespace MKExpress.API.Repository
                x.ContainerNo.ToString().Contains(searchTerm) ||
                x.ClosedByMember.FirstName.Contains(searchTerm) ||
                 x.ClosedByMember.LastName.Contains(searchTerm) ||
-                 x.ClosedByMember.Role.Value.Contains(searchTerm) ||
+                 x.ClosedByMember.Role.Name.Contains(searchTerm) ||
                   x.ContainerType.Value.Contains(searchTerm) ||
                     x.Journey.FromStation.Value.Contains(searchTerm) ||
                      x.Journey.ToStation.Value.Contains(searchTerm)

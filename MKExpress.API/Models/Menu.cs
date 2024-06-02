@@ -17,6 +17,10 @@ namespace MKExpress.API.Models
         [MaxLength(500)]
         public string? Link { get; set; }
 
-        public string MenuPosition { get; set; }
+        public string? MenuPosition { get; set; }
+        public string? Icon { get; set; }
+        public string? Title { get; set; }
+        public bool? Disable { get; set; }
+        public string? Tag { get; set; }
     }
 }

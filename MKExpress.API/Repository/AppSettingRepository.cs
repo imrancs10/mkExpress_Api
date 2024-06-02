@@ -86,7 +86,7 @@ namespace MKExpress.API.Repository
         {
             var searchTerm = string.IsNullOrEmpty(searchPagingRequest.SearchTerm) ? string.Empty : searchPagingRequest.SearchTerm;
             var data = _context.AppSettings
-          .Where(x => !x.IsDeleted && (x.Key.Contains(searchTerm) || x.Value.Contains(searchTerm)) || x.AppSettingGroup.Name==searchTerm)
+          .Where(x => !x.IsDeleted && (x.Key.Contains(searchTerm) || x.Value.Contains(searchTerm)) || x.AppSettingGroup.Name.Contains(searchTerm))
              .OrderBy(x => x.AppSettingGroup.Name)
              .AsQueryable();
             PagingResponse<AppSetting> pagingResponse = new()

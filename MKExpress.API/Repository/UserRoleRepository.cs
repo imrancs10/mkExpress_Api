@@ -1,8 +1,10 @@
 ﻿using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.EntityFrameworkCore;
+using MKExpress.API.Contants;
 using MKExpress.API.Data;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
+using MKExpress.API.Exceptions;
 using MKExpress.API.Models;
 using MKExpress.API.Repository.IRepository;
 using StackExchange.Redis;
@@ -21,6 +23,11 @@ namespace MKExpress.API.Repository
             if (role == null)
                 throw new ArgumentNullException(nameof(role));
 
+            if(await _context.UserRoles.Where(x=>!x.IsDeleted && (x.Name == role.Name || x.Code==role.Code)).AnyAsync())
+            {
+                throw new BusinessRuleViolationException(StaticValues.RecordAlreadyExistError,StaticValues.RecordAlreadyExistMessage($"{role.Name} or {role.Code}"));
+            }
+
             var entity = _context.UserRoles.Add(role);
             if (await _context.SaveChangesAsync() > 0)
                 return entity.Entity;
@@ -30,9 +37,8 @@ namespace MKExpress.API.Repository
         public async Task<bool> DeleteRoleAsync(Guid id)
         {
             var role = await _context.UserRoles
-                .Where(x=>x.Id==id &&!x.IsDeleted)
-                .FirstOrDefaultAsync() ?? throw new KeyNotFoundException("Role not found");
-
+                .Where(x => !x.IsDeleted && x.Id.ToString().ToLower() == id.ToString().ToLower())
+                .FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.ErrorType_RecordNotFound,StaticValues.Error_RecordNotFound);
             role.IsDeleted = true;
             _context.UserRoles.Update(role);
 
@@ -72,7 +78,7 @@ namespace MKExpress.API.Repository
             request.SearchTerm = string.IsNullOrEmpty(request.SearchTerm) ? "all" : request.SearchTerm;
             var query = _context.UserRoles
                 .Where(x => !x.IsDeleted && (
-                request.SearchTerm=="all" || 
+                request.SearchTerm == "all" ||
                 x.Name.Contains(request.SearchTerm) || 
                 x.Code.Contains(request.SearchTerm)
                 ))

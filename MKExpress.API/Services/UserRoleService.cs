@@ -19,6 +19,7 @@ namespace MKExpress.API.Services
         public async Task<UserRoleResponse> AddRoleAsync(UserRoleRequest req)
         {
             var userRole = _mapper.Map<UserRole>(req);
+            userRole.Id=Guid.NewGuid();
             return _mapper.Map< UserRoleResponse>( await _repository.AddRoleAsync(userRole));
         }
 

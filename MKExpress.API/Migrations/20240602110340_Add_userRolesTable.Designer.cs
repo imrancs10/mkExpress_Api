@@ -4,6 +4,7 @@ using MKExpress.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MKExpress.API.Migrations
 {
     [DbContext(typeof(MKExpressContext))]
-    partial class MKExpressContextModelSnapshot : ModelSnapshot
+    [Migration("20240602110340_Add_userRolesTable")]
+    partial class Add_userRolesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -843,13 +846,6 @@ namespace MKExpress.API.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Disable")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Icon")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -866,14 +862,6 @@ namespace MKExpress.API.Migrations
                         .IsRequired()
                         .HasMaxLength(70)
                         .HasColumnType("nvarchar(70)");
-
-                    b.Property<string>("Tag")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -1837,7 +1825,7 @@ namespace MKExpress.API.Migrations
                         .WithMany()
                         .HasForeignKey("CreatedBy");
 
-                    b.HasOne("MKExpress.API.Models.UserRole", "Role")
+                    b.HasOne("MKExpress.API.Models.MasterData", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)

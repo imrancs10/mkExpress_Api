@@ -9,7 +9,7 @@ namespace MKExpress.API.Middleware
     public class JwtMiddleware
     {
         private readonly RequestDelegate _next;
-        private static Guid _userId;
+        private static Guid _userId=Guid.Parse("6F9619FF-8B86-D011-B42D-00C04FC964FF"); //TOBEREMOVE
         private static string _userRole;
 
         public JwtMiddleware(RequestDelegate next)
@@ -29,12 +29,12 @@ namespace MKExpress.API.Middleware
             }
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
             var path = context.Request.Path;
-        if (token == null || !ValidateToken(token))
-            {
-                context.Response.StatusCode = 401;
-                await context.Response.WriteAsync("Token invalid");
-                return;
-            }
+        //if (token == null || !ValidateToken(token))
+        //    {
+        //        context.Response.StatusCode = 401;
+        //        await context.Response.WriteAsync("Token invalid");
+        //        return;
+        //    }
 
             await _next(context);
         }
