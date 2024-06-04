@@ -94,7 +94,7 @@ namespace MKExpress.API.Repository
                     Id = Guid.NewGuid(),
                     Activity = ShipmentStatusEnum.Created.ToString(),
                     ShipmentId = shipment.Id,
-                    CommentBy=null
+                    CommentBy=JwtMiddleware.GetUserId()
                 };
                 if (await _shipmentTrackingRepository.AddTracking(tracking)!=null)
                 {
@@ -111,7 +111,7 @@ namespace MKExpress.API.Repository
             var _role = JwtMiddleware.GetUserRole();
             var _userId = JwtMiddleware.GetUserId();
             var _filterByCreatedBy = false;
-            if(_role=="CustomerAdmin")
+            if(_role?.ToLower()=="customeradmin")
             {
                 _filterByCreatedBy=true;
             }

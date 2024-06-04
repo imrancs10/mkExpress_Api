@@ -7,7 +7,8 @@ namespace MKExpress.API.Services
     public interface IUserRoleMenuMapperService
     {
         Task<bool> Add(List<UserRoleMenuMapperRequest> req);
-        Task<bool> Delete(Guid RoleId);
+        Task<bool> DeleteByRoleId(Guid RoleId);
+        Task<bool> DeleteById(Guid id);
         Task<List<UserRoleMenuMapperResponse>> GetByRoleId(Guid id);
         Task<List<UserRoleMenuMapperResponse>> GetAll();
         Task<List<UserRoleMenuMapperResponse>> SearchRolesAsync(string searchTerm);

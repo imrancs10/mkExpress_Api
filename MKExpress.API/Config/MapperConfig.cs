@@ -3,6 +3,7 @@ using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Request.ImageStore;
 using MKExpress.API.DTO.Response;
 using MKExpress.API.DTO.Response.Image;
+using MKExpress.API.DTO.Response.User;
 using MKExpress.API.Models;
 
 namespace MKExpress.API.Config
@@ -76,6 +77,11 @@ namespace MKExpress.API.Config
             CreateMap<MenuRequest, Menu>();
             CreateMap<Menu, MenuResponse>();
             CreateMap<PagingResponse<Menu>, PagingResponse<MenuResponse>>();
+            #endregion
+
+            #region Menu
+            CreateMap<UserRoleMenuMapperRequest, UserRoleMenuMapper>();
+            CreateMap<UserRoleMenuMapper, UserRoleMenuMapperResponse>();
             #endregion
 
             #region Shipment

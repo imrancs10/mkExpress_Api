@@ -22,5 +22,6 @@ namespace MKExpress.API.DTO.Request
         public string? Title { get; set; }
         public bool? Disable { get; set; }
         public string? Tag { get; set; }
+        public int DisplayOrder { get; set; }
     }
 }

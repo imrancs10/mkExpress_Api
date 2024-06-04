@@ -118,9 +118,9 @@ namespace MKExpress.API.Repositories
            
             var data = _context.MasterDataTypes
                 .Where(mdt => !mdt.IsDeleted &&
-                        (searchTerm.Contains(string.Empty) ||
-                        searchTerm.Contains(mdt.Code) ||
-                        searchTerm.Contains(mdt.Value))
+                        (searchTerm==string.Empty ||
+                        mdt.Code.Contains(searchTerm) ||
+                        mdt.Value.Contains(searchTerm))
                     )
                 .OrderBy(x => x.Value)
                 .AsQueryable();

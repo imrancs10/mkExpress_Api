@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DocumentFormat.OpenXml.Drawing;
+using Microsoft.AspNetCore.Mvc;
 using MKExpress.API.Contants;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
+using MKExpress.API.DTO.Response.User;
 using MKExpress.API.Services;
 using MKExpress.API.Services.Interfaces;
 using MKExpress.API.Services.IServices;
+using Org.BouncyCastle.Ocsp;
 
 namespace MKExpress.Web.API.Controllers
 {
@@ -17,16 +20,20 @@ namespace MKExpress.Web.API.Controllers
         private readonly IMasterJourneyService _masterJourneyService;
         private readonly IUserRoleService _userRoleService;
         private readonly IMenuService _menuService;
+        private readonly IUserRoleMenuMapperService _userRoleMenuMapper;
         public MasterDataController(IMasterDataService masterDataService, 
             IMasterDataTypeService masterDataTypeService, 
             IMasterJourneyService masterJourneyService,
-            IUserRoleService userRoleService,IMenuService menuService)
+            IUserRoleService userRoleService,
+            IUserRoleMenuMapperService userRoleMenuMapper,
+            IMenuService menuService)
         {
             _masterDataService = masterDataService;
             _masterDataTypeService = masterDataTypeService;
             _masterJourneyService = masterJourneyService;
             _userRoleService = userRoleService;
             _menuService = menuService;
+            _userRoleMenuMapper = userRoleMenuMapper;
         }
         
         [ProducesResponseType(typeof(MasterDataResponse), StatusCodes.Status200OK)]
@@ -363,6 +370,66 @@ namespace MKExpress.Web.API.Controllers
         public async Task<PagingResponse<MenuResponse>> SearchMenusAsync([FromQuery] SearchPagingRequest pagingRequest)
         {
            return await _menuService.SearchMenusAsync(pagingRequest);
+        }
+
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpPut(StaticValues.MasterRoleMenuMapperPath)]
+        public async Task<bool> AddRoleMenuMapper([FromBody] List<UserRoleMenuMapperRequest> req)
+        {
+            return await _userRoleMenuMapper.Add(req);
+        }
+
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpDelete(StaticValues.MasterRoleMenuMapperDeleteByRolePath)]
+        public async Task<bool> DeleteRoleMenuMapperByRoleId([FromRoute] Guid roleId)
+        {
+            return await _userRoleMenuMapper.DeleteByRoleId(roleId);
+        }
+
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpDelete(StaticValues.MasterRoleMenuMapperDeleteByIdPath)]
+        public async Task<bool> DeleteRoleMenuMapperById([FromRoute] Guid id)
+        {
+            return await _userRoleMenuMapper.DeleteById(id);
+        }
+
+        [ProducesResponseType(typeof(List<UserRoleMenuMapperResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpGet(StaticValues.MasterRoleMenuMapperByIdPath)]
+        public async Task<List<UserRoleMenuMapperResponse>> GetByRoleId([FromRoute] Guid id)
+        {
+            return await _userRoleMenuMapper.GetByRoleId(id);
+        }
+
+        [ProducesResponseType(typeof(List<UserRoleMenuMapperResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpGet(StaticValues.MasterRoleMenuMapperGetAllPath)]
+        public async Task<List<UserRoleMenuMapperResponse>> GetAll()
+        {
+            return await _userRoleMenuMapper.GetAll();
+        }
+
+        [ProducesResponseType(typeof(List<UserRoleMenuMapperResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpGet(StaticValues.MasterRoleMenuMapperSearchPath)]
+        public async Task<List<UserRoleMenuMapperResponse>> SearchRolesAsync([FromQuery] string searchTerm)
+        {
+            return await _userRoleMenuMapper.SearchRolesAsync(searchTerm);
         }
     }
 }

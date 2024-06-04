@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MKExpress.API.Contants;
 using MKExpress.API.Data;
+using MKExpress.API.Exceptions;
 using MKExpress.API.Models;
 
 namespace MKExpress.API.Repository
@@ -16,32 +18,52 @@ namespace MKExpress.API.Repository
             if(req == null || req.Count==0) {
                 throw new ArgumentNullException(nameof(req));
             }
-            var roleId = req[0].Id;
-            var menuIds=req.Select(x=>x.MenuId).ToList();
-            var existingMenuRoles = await _context.UserRoleMenuMappers
-                .Where(mr =>!mr.IsDeleted && mr.RoleId==roleId && menuIds.Contains( mr.MenuId))
-                .ToListAsync();
-
-            if (existingMenuRoles.Any())
+            var roleId = req[0].RoleId;
+            var trans=_context.Database.BeginTransaction();
+            if (await DeleteByRoleId(roleId))
             {
-                throw new InvalidOperationException("One or more Menu are already associated with the given Role");
+                //var menuIds = req.Select(x => x.MenuId).ToList();
+                //var existingMenuRoles = await _context.UserRoleMenuMappers
+                //    .Where(mr => !mr.IsDeleted && mr.RoleId == roleId && menuIds.Contains(mr.MenuId))
+                //    .ToListAsync();
+
+                //if (existingMenuRoles.Any())
+                //{
+                //    throw new InvalidOperationException("One or more Menu are already associated with the given Role");
+                //}
+                _context.AddRange(req);
+                if(await _context.SaveChangesAsync() > 0)
+                {
+                    trans.Commit();
+                    return true;
+                }
             }
-            _context.AddRange(req);
-            return await _context.SaveChangesAsync()>0;
+            trans.Rollback();
+            return false;
         }
 
-        public async Task<bool> Delete(Guid RoleId)
+        public async Task<bool> DeleteByRoleId(Guid RoleId)
         {
             var oldData=await _context.UserRoleMenuMappers.Where(mr => !mr.IsDeleted &&mr.RoleId==RoleId)
                 .ToListAsync();
             if (!oldData.Any())
             {
-                throw new InvalidOperationException("No record found for given role");
+                return true;
             }
 
             oldData.ForEach(x => x.IsDeleted = true);
-            _context.UpdateRange(oldData);
+            _context.RemoveRange(oldData);
             return await _context.SaveChangesAsync()>0;
+        }
+
+        public async Task<bool> DeleteById(Guid id)
+        {
+            var oldData = await _context.UserRoleMenuMappers.Where(mr => !mr.IsDeleted && mr.Id == id)
+                .FirstOrDefaultAsync()??throw new BusinessRuleViolationException(StaticValues.ErrorType_RecordNotFound,StaticValues.Error_RecordNotFound);
+
+            oldData.IsDeleted= true;
+            _context.Update(oldData);
+            return await _context.SaveChangesAsync() > 0;
         }
 
         public async Task<List<UserRoleMenuMapper>> GetAll()

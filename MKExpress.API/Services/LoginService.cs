@@ -67,7 +67,7 @@ namespace MKExpress.API.Services
                 UserResponse = _mapper.Map<UserResponse>(await _loginRepository.Login(request))
             };
 
-            if (response.UserResponse.Id == null)
+            if (response?.UserResponse?.Id == null)
             {
                 throw new UnauthorizedException();
             }

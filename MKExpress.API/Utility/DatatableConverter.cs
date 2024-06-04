@@ -65,7 +65,8 @@ namespace MKExpress.API.Utility
                                                         new Claim("email",response.UserResponse.Email),
                                                         new Claim("firstName",response.UserResponse.FirstName),
                                                         new Claim("lastName",response.UserResponse.LastName),
-                                                        new Claim("userId",response.UserResponse.Id.ToString())
+                                                        new Claim("userId",response.UserResponse.Id.ToString()),
+                                                        new Claim("roleId",response.UserResponse.RoleId.ToString())
                                                     },
                                                     expires: DateTime.Now.AddDays(7),
                                                     signingCredentials: signinCredentials);

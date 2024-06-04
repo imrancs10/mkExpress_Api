@@ -58,6 +58,15 @@
         public const string MasterMenuSearchPath = APIPrefix + "master-menu/search";
         #endregion
 
+        #region Master Roles Menu Mapper
+        public const string MasterRoleMenuMapperPath = APIPrefix + "master/menu/role/mapper/add";
+        public const string MasterRoleMenuMapperGetAllPath = APIPrefix + "master/menu/role/mapper/get/all";
+        public const string MasterRoleMenuMapperDeleteByRolePath = APIPrefix + "master/menu/role/mapper/delete/role/{id}";
+        public const string MasterRoleMenuMapperDeleteByIdPath = APIPrefix + "master/menu/role/mapper/delete/{id}";
+        public const string MasterRoleMenuMapperByIdPath = APIPrefix + "master/menu/role/mapper/get/{id}";
+        public const string MasterRoleMenuMapperSearchPath = APIPrefix + "master/menu/role/mapper/search";
+        #endregion
+
         #endregion
 
         #region Customer API Path

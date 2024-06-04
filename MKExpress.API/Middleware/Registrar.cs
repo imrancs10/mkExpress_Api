@@ -39,6 +39,8 @@ namespace MKExpress.API.Middleware
                 .AddScoped<IMenuService, MenuService>()
                 .AddScoped<IMasterJourneyRepository, MasterJourneyRepository>()
                 .AddScoped<IMasterJourneyService, MasterJourneyService>()
+                .AddScoped<IUserRoleMenuMapperRepository, UserRoleMenuMapperRepository>()
+                .AddScoped<IUserRoleMenuMapperService, UserRoleMenuMapperService>()
                 .AddScoped<IContainerRepository, ContainerRepository>()
                 .AddScoped<IContainerService, ContainerService>()
                 .AddScoped<IAppSettingRepository, AppSettingRepository>()
