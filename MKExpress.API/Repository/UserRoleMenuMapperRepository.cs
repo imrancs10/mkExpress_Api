@@ -22,15 +22,6 @@ namespace MKExpress.API.Repository
             var trans=_context.Database.BeginTransaction();
             if (await DeleteByRoleId(roleId))
             {
-                //var menuIds = req.Select(x => x.MenuId).ToList();
-                //var existingMenuRoles = await _context.UserRoleMenuMappers
-                //    .Where(mr => !mr.IsDeleted && mr.RoleId == roleId && menuIds.Contains(mr.MenuId))
-                //    .ToListAsync();
-
-                //if (existingMenuRoles.Any())
-                //{
-                //    throw new InvalidOperationException("One or more Menu are already associated with the given Role");
-                //}
                 _context.AddRange(req);
                 if(await _context.SaveChangesAsync() > 0)
                 {
@@ -82,6 +73,7 @@ namespace MKExpress.API.Repository
                 .Include(x => x.UserRole)
                 .Include(x => x.Menu)
                 .Where(mr => !mr.IsDeleted && mr.RoleId == roleId)
+                .OrderBy(x => x.Menu.DisplayOrder)
                 .ToListAsync();
         }
 

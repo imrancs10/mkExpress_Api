@@ -28,7 +28,7 @@ namespace MKExpress.API.Repository
                  x.ParentStationId == request.ParentStationId
             ).CountAsync();
 
-            if (oldRegion > 0) throw new BusinessRuleViolationException(StaticValues.ErrorType_CustomerAlreadyExist, StaticValues.Error_CustomerAlreadyExist);
+            if (oldRegion > 0) throw new BusinessRuleViolationException(StaticValues.Error_LogisiticReasonAlreadyExist, StaticValues.Message_LogisiticReasonAlreadyExist);
             
             var entity = _context.LogisticRegions.Attach(request);
             entity.State = EntityState.Added;

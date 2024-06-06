@@ -229,7 +229,6 @@
         public const string Error_UserAccountLocked = "User's account is locked!";
         public const string Error_UserAccountEmailNotVerified = "User's email is not varified!";
         public const string Error_EmailAlreadyVerified = "";
-        public const string Error_CustomerAlreadyExist = "Customer already exist!";
         public const string Error_CustomerNotFoundError = "Customer not found!";
         public const string Error_InvalidParameters= "Invalid parameters!";
         public const string Error_InvalidGUID = "Invalid GUID!";
@@ -242,6 +241,8 @@
         public const string Error_ContainerIsNotClosed = "ContainerIsNotClosed!";
         public const string Error_ContainerAlreadyClosed = "ContainerAlreadyClosed!";
         public const string Error_ContainerClosedCantDelete = "ContainerClosedCantDelete!";
+        public const string Error_LogisiticReasonAlreadyExist = "LogisiticReasonAlreadyExist";
+        public const string Error_ThirdPartyCouierAlreadyExist = "Third party couier already exist";
         public const string Message_ContainerAlreadyCheckedInAtStation = "Container already checked-in at station!";
         public const string Message_ContainerAlreadyCheckedOutAtStation = "Container already checked-out at station!";
         public const string Message_UserIdInvalidPresentInHeader = "UserId is invalid present in header!";
@@ -264,9 +265,17 @@
         public const string Message_DeleteNotAllowed = "Delete not allowed";
         public const string Message_UpdateNotAllowed = "Update not allowed";
 
+        public const string Message_LogisiticReasonAlreadyExist = "Logisitic reason already exist";
+        public const string Message_ThirdPartyCouierAlreadyExist = "Third party couier already exist";
+
         public static string RecordAlreadyExistMessage(string recordType)
         {
             return $"Record already exist with same: {recordType}";
+        }
+
+
+        public static string Error_CustomerAlreadyExist (string? reason) {
+            return "Customer already exist with same "+reason+" !";
         }
         #endregion
 

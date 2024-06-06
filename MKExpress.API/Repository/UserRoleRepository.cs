@@ -67,6 +67,13 @@ namespace MKExpress.API.Repository
             };
         }
 
+        public async Task<UserRole> GetRoleByCode(string roleCode)
+        {
+            return await _context.UserRoles
+                .Where(x=>!x.IsDeleted && x.Code.ToLower()==roleCode.ToLower())
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<UserRole> GetRoleByIdAsync(Guid id)
         {
            return await _context.UserRoles

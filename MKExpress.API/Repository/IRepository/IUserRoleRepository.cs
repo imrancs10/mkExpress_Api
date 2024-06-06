@@ -9,6 +9,7 @@ namespace MKExpress.API.Repository.IRepository
     {
         Task<UserRole> AddRoleAsync(UserRole role);
         Task<bool> DeleteRoleAsync(Guid id);
+        Task<UserRole> GetRoleByCode(string roleCode);
         Task<bool> UpdateRoleAsync(UserRole role);
         Task<UserRole> GetRoleByIdAsync(Guid id);
         Task<PagingResponse<UserRole>> GetAllRolesAsync(PagingRequest request);

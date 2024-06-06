@@ -23,7 +23,7 @@ namespace MKExpress.API.Repository
                 .Where(x => x.Name.Trim() == request.Name || x.Email.Trim() == request.Email.Trim()).CountAsync();
             if (oldCompany > 0)
             {
-                throw new BusinessRuleViolationException(StaticValues.ErrorType_CustomerAlreadyExist, StaticValues.Error_CustomerAlreadyExist);
+                throw new BusinessRuleViolationException(StaticValues.Error_ThirdPartyCouierAlreadyExist, StaticValues.Message_ThirdPartyCouierAlreadyExist);
             }
             var entity = _context.ThirdPartyCourierCompanies.Attach(request);
             entity.State = EntityState.Added;

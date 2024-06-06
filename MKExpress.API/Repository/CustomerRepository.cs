@@ -21,19 +21,24 @@ namespace MKExpress.API.Repositories
     {
         private readonly MKExpressContext _context;
         private readonly IUserRepository _userRepository;
+        private readonly IUserRoleRepository _userRoleRepository;
         private readonly IAppSettingRepository _appSettingRepository;
-        public CustomerRepository(MKExpressContext context,IUserRepository userRepository,IAppSettingRepository appSettingRepository)
+        public CustomerRepository(MKExpressContext context,IUserRepository userRepository,IAppSettingRepository appSettingRepository, IUserRoleRepository userRoleRepository)
         {
             _context = context;
             _userRepository = userRepository;
             _appSettingRepository = appSettingRepository;
+            _userRoleRepository = userRoleRepository;
         }
         public async Task<Customer> Add(Customer customer)
         {
-            var oldCustomer = await _context.Customers.Where(x => x.ContactNo == customer.ContactNo && x.Name == customer.Name).CountAsync();
-            if (oldCustomer > 0)
+            var oldCustomer = await _context.Customers.Where(x =>!x.IsDeleted && (x.ContactNo == customer.ContactNo ||x.Email==customer.Email)).FirstOrDefaultAsync();
+            if (oldCustomer!=null)
             {
-                throw new BusinessRuleViolationException(StaticValues.ErrorType_CustomerAlreadyExist, StaticValues.Error_CustomerAlreadyExist);
+                if(oldCustomer.ContactNo==customer.ContactNo)
+                throw new BusinessRuleViolationException(StaticValues.ErrorType_CustomerAlreadyExist, StaticValues.Error_CustomerAlreadyExist(customer.ContactNo));
+                if (oldCustomer.Email == customer.Email)
+                    throw new BusinessRuleViolationException(StaticValues.ErrorType_CustomerAlreadyExist, StaticValues.Error_CustomerAlreadyExist(customer.Email));
             }
             var trans=await _context.Database.BeginTransactionAsync();
             var entity = _context.Customers.Attach(customer);
@@ -41,6 +46,12 @@ namespace MKExpress.API.Repositories
             if(await _context.SaveChangesAsync() > 0)
             {
                 var _defaultPassword = await _appSettingRepository.GetAppSettingValueByKey<string>("defaultPassword");
+                var customerAdminRole = await _userRoleRepository.GetRoleByCode("customeradmin");
+                if (customerAdminRole == null)
+                {
+                    trans.Rollback();
+                    return default;
+                }
                 var user = new User()
                 {
                     CreatedAt = DateTime.Now,
@@ -56,7 +67,7 @@ namespace MKExpress.API.Repositories
                     IsTcAccepted = true,
                     Password = PasswordHasher.GenerateHash(_defaultPassword),
                     UserName = customer.Email,
-                    RoleId=Guid.NewGuid(),
+                    RoleId=customerAdminRole.Id,
                     Mobile=customer.ContactNo  
                 };
                var savedUser=await _userRepository.Add(user);

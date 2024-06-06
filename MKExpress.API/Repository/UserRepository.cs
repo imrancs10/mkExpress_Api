@@ -33,7 +33,7 @@ namespace MKExpress.API.Repository
 
         public async Task<User> Add(User request)
         {
-            var oldData = await _context.Users.Where(x => x.Email == request.Email).FirstOrDefaultAsync();
+            var oldData = await _context.Users.Where(x =>!x.IsDeleted && x.Email == request.Email).FirstOrDefaultAsync();
             if (oldData != null) throw new BusinessRuleViolationException(StaticValues.EmailAlreadyExist_Error, StaticValues.EmailAlreadyExist_Message);
           
             var entity = _context.Users.Add(request);
