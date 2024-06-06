@@ -15,7 +15,7 @@ namespace MKExpress.API.Models
         public Shipment Shipment { get; set; }
 
         [ForeignKey("CommentBy")]
-        public Member? CommentByMember { get; set; }
+        public User? CommentByMember { get; set; }
 
         public List<ShipmentImage> ShipmentImages { get; set; }
 
