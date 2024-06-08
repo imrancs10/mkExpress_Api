@@ -4,6 +4,7 @@ using MKExpress.API.Contants;
 using MKExpress.API.Dto.Request;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
+using MKExpress.API.DTO.Response.User;
 using MKExpress.API.Exceptions;
 using MKExpress.API.Extension;
 using MKExpress.API.Models;
@@ -14,15 +15,17 @@ namespace MKExpress.API.Services
     public class LoginService : ILoginService
     {
         private readonly ILoginRepository _loginRepository;
+        private readonly IUserRoleMenuMapperRepository _roleMenuMapperRepository;
         private readonly IMapper _mapper;/**/
         private readonly IMailService _mailService;
         private readonly IConfiguration _configuration;
-        public LoginService(ILoginRepository loginRepository, IMapper mapper, IMailService mailService, IConfiguration configuration)
+        public LoginService(IUserRoleMenuMapperRepository roleMenuMapperRepository,ILoginRepository loginRepository, IMapper mapper, IMailService mailService, IConfiguration configuration)
         {
             _loginRepository = loginRepository;
             _mapper = mapper;
             _mailService = mailService;
             _configuration = configuration;
+            _roleMenuMapperRepository= roleMenuMapperRepository;
         }
 
         public async Task<bool> AssignRole(string email, Guid roleId)
@@ -68,7 +71,13 @@ namespace MKExpress.API.Services
             {
                 throw new UnauthorizedException();
             }
+            var permissions = await _roleMenuMapperRepository.GetByRoleId(response.UserResponse.RoleId);
 
+            if (permissions?.Count<1)
+            {
+                throw new BusinessRuleViolationException(StaticValues.Error_PermissionNotMapped,StaticValues.Message_PermissionNotMapped);
+            }
+            response.UserResponse.Permissions = _mapper.Map<List<UserRoleMenuMapperResponse>>(permissions);
             response.AccessToken = Utility.Utility.GenerateAccessToken(response);
             response.IsAuthenticated = true;
             return response;

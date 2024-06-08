@@ -204,9 +204,11 @@
         public const string Error_ShipmentNumberAlreadyExist = "ShipmentNumberAlreadyExist!";
         public const string Error_EmailAlreadyRegistered = "Email is already registered";
         public const string Error_UnauthorizedAccess = "Unauthorized Access";
+        public const string Error_PermissionNotMapped = "PermissionNotMapped";
         #endregion
 
         #region Error Message
+        public const string Message_PermissionNotMapped = "Permission not mapped with user!";
         public const string Message_ShipmentNumberAlreadyExist = "Shipment number ({0}) already exist!";
         public const string Message_ShipmentNotAssignedToYou = "This shipment is not assigned to you!";
         public const string EmailAlreadyExist_Message = "Email already exist!";

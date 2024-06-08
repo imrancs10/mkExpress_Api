@@ -6,6 +6,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using MKExpress.API.DTO.Response;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace MKExpress.API.Utility
 {
@@ -66,7 +68,8 @@ namespace MKExpress.API.Utility
                                                         new Claim("firstName",response.UserResponse.FirstName),
                                                         new Claim("lastName",response.UserResponse.LastName),
                                                         new Claim("userId",response.UserResponse.Id.ToString()),
-                                                        new Claim("roleId",response.UserResponse.RoleId.ToString())
+                                                        new Claim("roleId",response.UserResponse.RoleId.ToString()),
+                                                        new Claim("permissions",JsonSerializer.Serialize(response.UserResponse.Permissions))
                                                     },
                                                     expires: DateTime.Now.AddDays(7),
                                                     signingCredentials: signinCredentials);

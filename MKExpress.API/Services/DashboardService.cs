@@ -18,7 +18,7 @@ namespace MKExpress.API.Services
 
         public async Task<List<DashboardShipmentStatusWiseCountResponse>> GetDashboardShipmentStatusWiseCount(int year)
         {
-            return await GetDashboardShipmentStatusWiseCount(year);
+            return await _repository.GetDashboardShipmentStatusWiseCount(year);
         }
     }
 }

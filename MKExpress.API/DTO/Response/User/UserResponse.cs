@@ -1,4 +1,5 @@
 ﻿using MKExpress.API.DTO.Base;
+using MKExpress.API.DTO.Response.User;
 
 namespace MKExpress.API.DTO.Response
 {
@@ -17,5 +18,6 @@ namespace MKExpress.API.DTO.Response
         public string RoleCode { get; set; }
         public bool IsTcAccepted { get; set; }
         public bool IsEmailVerified { get; set; }
+        public List<UserRoleMenuMapperResponse>? Permissions { get; set; }
     }
 }
