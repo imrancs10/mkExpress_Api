@@ -2,7 +2,7 @@
 using MKExpress.API.DTO.Response;
 using MKExpress.API.Models;
 
-namespace MKExpress.API.Services.IServices
+namespace MKExpress.API.Services
 {
     public interface ILoginService
     {

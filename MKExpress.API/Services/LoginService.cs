@@ -7,10 +7,7 @@ using MKExpress.API.DTO.Response;
 using MKExpress.API.Exceptions;
 using MKExpress.API.Extension;
 using MKExpress.API.Models;
-using MKExpress.API.Repository.IRepository;
-using MKExpress.API.Services.Interfaces;
-using MKExpress.API.Services.IServices;
-using StackExchange.Redis;
+using MKExpress.API.Repository;
 
 namespace MKExpress.API.Services
 {

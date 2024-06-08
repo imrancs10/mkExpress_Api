@@ -3,7 +3,7 @@ using MKExpress.API.DTO.Response;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MKExpress.API.Services.Interfaces
+namespace MKExpress.API.Services
 {
     public interface ICustomerService : ICrudService<CustomerRequest, CustomerResponse>
     {

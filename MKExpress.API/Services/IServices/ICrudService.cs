@@ -2,7 +2,7 @@
 using MKExpress.API.DTO.Response;
 using System.Threading.Tasks;
 
-namespace MKExpress.API.Services.Interfaces
+namespace MKExpress.API.Services
 {
     public interface ICrudService<TRequest, TResponse> where TRequest : class where TResponse : class
     {

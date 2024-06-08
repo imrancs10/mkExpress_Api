@@ -78,6 +78,11 @@
         public const string CustomerPath = APIPrefix;
         #endregion
 
+        #region Dashboard API Path
+        public const string DashboardShipmenyStatusCountPath = APIPrefix+"dashboard/status/count";
+        public const string DashboardShipmenyStatusWiseCountPath = APIPrefix + "dashboard/status/wise/count";
+        #endregion
+
         #region Assign Member
         public const string GetCourierRunsheetPath = APIPrefix + "get/courier/runsheet";
         #endregion

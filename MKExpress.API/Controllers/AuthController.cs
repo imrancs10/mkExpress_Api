@@ -1,7 +1,7 @@
 ﻿using MKExpress.API.Contants;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
-using MKExpress.API.Services.IServices;
+using MKExpress.API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

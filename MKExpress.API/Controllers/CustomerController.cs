@@ -2,8 +2,7 @@
 using MKExpress.API.Contants;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
-using MKExpress.API.Middleware;
-using MKExpress.API.Services.Interfaces;
+using MKExpress.API.Services;
 
 namespace MKExpress.API.Controllers
 {
@@ -11,7 +10,7 @@ namespace MKExpress.API.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerService _customerService;
-       public CustomerController(ICustomerService customerService)
+        public CustomerController(ICustomerService customerService)
         {
             _customerService = customerService;
         }

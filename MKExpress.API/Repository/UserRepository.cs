@@ -7,7 +7,7 @@ using MKExpress.API.DTO.Request;
 using MKExpress.API.Exceptions;
 using MKExpress.API.Models;
 using MKExpress.API.Repository.IRepository;
-using MKExpress.API.Services.Interfaces;
+using MKExpress.API.Services;
 
 namespace MKExpress.API.Repository
 {

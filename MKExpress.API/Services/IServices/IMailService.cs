@@ -2,7 +2,7 @@
 using MKExpress.API.Constants;
 using System.Threading.Tasks;
 
-namespace MKExpress.API.Services.Interfaces
+namespace MKExpress.API.Services
 {
     public interface IMailService
     {

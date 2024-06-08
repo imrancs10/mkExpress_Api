@@ -1,11 +1,9 @@
-﻿using MKExpress.API.Contants;
+﻿using Microsoft.EntityFrameworkCore;
+using MKExpress.API.Contants;
 using MKExpress.API.Data;
 using MKExpress.API.DTO.Request;
-using MKExpress.API.DTO.Response;
 using MKExpress.API.Exceptions;
 using MKExpress.API.Models;
-using MKExpress.API.Repository.IRepository;
-using Microsoft.EntityFrameworkCore;
 
 namespace MKExpress.API.Repository
 {
