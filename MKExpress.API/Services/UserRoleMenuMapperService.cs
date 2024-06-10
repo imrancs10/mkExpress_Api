@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MKExpress.API.DTO.Request;
-using MKExpress.API.DTO.Response.User;
+using MKExpress.API.DTO.Response;
 using MKExpress.API.Models;
 using MKExpress.API.Repository;
 using Org.BouncyCastle.Ocsp;

@@ -1,5 +1,4 @@
 ﻿using MKExpress.API.DTO.Base;
-using MKExpress.API.DTO.Response.Image;
 
 namespace MKExpress.API.DTO.Response
 {

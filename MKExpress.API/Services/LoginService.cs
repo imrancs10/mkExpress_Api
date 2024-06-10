@@ -4,7 +4,6 @@ using MKExpress.API.Contants;
 using MKExpress.API.Dto.Request;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
-using MKExpress.API.DTO.Response.User;
 using MKExpress.API.Exceptions;
 using MKExpress.API.Extension;
 using MKExpress.API.Models;
