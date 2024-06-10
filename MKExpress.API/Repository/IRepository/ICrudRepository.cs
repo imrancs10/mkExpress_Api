@@ -1,8 +1,7 @@
 ﻿using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
-using System.Threading.Tasks;
 
-namespace MKExpress.API.Repositories.Interfaces
+namespace MKExpress.API.Repository
 {
     public interface ICrudRepository<T> where T : class
     {

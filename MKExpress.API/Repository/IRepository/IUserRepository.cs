@@ -1,7 +1,7 @@
 ﻿using MKExpress.API.DTO.Request;
 using MKExpress.API.Models;
 
-namespace MKExpress.API.Repository.IRepository
+namespace MKExpress.API.Repository
 {
     public interface IUserRepository
     {

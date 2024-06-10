@@ -2,11 +2,7 @@
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
 using MKExpress.API.Models;
-using MKExpress.API.Repositories.Interfaces;
-using MKExpress.API.Services.Interfaces;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using MKExpress.API.Repository;
 
 namespace MKExpress.API.Services
 {

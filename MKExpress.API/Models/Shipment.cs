@@ -11,11 +11,13 @@ namespace MKExpress.API.Models
         public string StatusReason { get; set; }
         public int FailedDelivery { get; set; }
         public decimal? CODAmount { get; set; }
+        public DateTime? CODDate { get; set; }
         public string? Location { get; set; }
         public int StatusDuration { get; set; }
         public DateTime? SchedulePickupDate { get; set; }
         public DateTime? PickupDate { get; set; }
         public DateTime? DeliveryDate { get; set; }
+        public DateTime? ReceiveDate { get; set; }
         public DateTime? ScheduleDeliveryDate { get; set; }
         public DateTime? LastStatusUpdate { get; set; }
 

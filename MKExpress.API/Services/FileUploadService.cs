@@ -1,22 +1,13 @@
 using AutoMapper;
-using Azure.Core;
 using MKExpress.API.Contants;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response.Image;
 using MKExpress.API.Enums;
 using MKExpress.API.Exceptions;
 using MKExpress.API.Models;
-using MKExpress.API.Repository.IRepository;
-using MKExpress.API.Services.IServices;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
+using MKExpress.API.Repository;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MKExpress.API.Services
 {

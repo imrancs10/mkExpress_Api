@@ -6,11 +6,8 @@ using MKExpress.API.DTO.Response.Image;
 using MKExpress.API.Enums;
 using MKExpress.API.Exceptions;
 using MKExpress.API.Extension;
-using MKExpress.API.Middleware;
 using MKExpress.API.Models;
-using MKExpress.API.Repository.IRepository;
 using MKExpress.API.Services;
-using MKExpress.API.Services.IServices;
 
 namespace MKExpress.API.Repository
 {

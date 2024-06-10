@@ -1,14 +1,10 @@
 ﻿using MailKit.Net.Smtp;
 using MailKit.Security;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MKExpress.API.Constants;
 using MKExpress.API.Dto;
 using MKExpress.API.Dto.Request;
-using MKExpress.API.Services.Interfaces;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace MKExpress.API.Services
 {

@@ -1,9 +1,7 @@
 ﻿using MKExpress.API.DTO.Response;
 using MKExpress.API.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
-namespace MKExpress.API.Repositories.Interfaces
+namespace MKExpress.API.Repository
 {
     public interface ICustomerRepository : ICrudRepository<Customer>
     {

@@ -1,16 +1,10 @@
-using MKExpress.API.Config;
-using MKExpress.API.Data;
-using MKExpress.API.Repository;
-using MKExpress.API.Repository.IRepository;
-using MKExpress.API.Services;
-using MKExpress.API.Services.Interfaces;
-using MKExpress.API.Services.IServices;
-using MKExpress.API.Utility;
 using Microsoft.EntityFrameworkCore;
-using MKExpress.API.Repositories.Interfaces;
-using MKExpress.API.Repositories;
-using MKExpress.API.Repositories;
+using MKExpress.API.Data;
 using MKExpress.API.Logger;
+using MKExpress.API.Repositories;
+using MKExpress.API.Repository;
+using MKExpress.API.Services;
+using MKExpress.API.Utility;
 
 namespace MKExpress.API.Middleware
 {

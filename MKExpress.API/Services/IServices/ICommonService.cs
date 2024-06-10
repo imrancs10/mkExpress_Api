@@ -1,6 +1,6 @@
 ﻿using MKExpress.API.Contants;
 
-namespace MKExpress.API.Services.IServices
+namespace MKExpress.API.Services
 {
     public interface ICommonService
     {

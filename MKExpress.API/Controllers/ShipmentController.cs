@@ -1,13 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MKExpress.API.Contants;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
 using MKExpress.API.Enums;
-using MKExpress.API.Exceptions;
-using MKExpress.API.Middleware;
-using MKExpress.API.Models;
-using MKExpress.API.Services.IServices;
+using MKExpress.API.Services;
 
 namespace MKExpress.API.Controllers
 {
@@ -29,6 +25,16 @@ namespace MKExpress.API.Controllers
         public async Task<ShipmentResponse> CreateShipment([FromBody] ShipmentRequest request)
         {
             return await _shipmentService.CreateShipment(request);
+        }
+
+        [ProducesResponseType(typeof(PagingResponse<ShipmentResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpGet(StaticValues.ShipmentSearchPath)]
+        public async Task<PagingResponse<ShipmentResponse>> SearchShipment([FromQuery] SearchShipmentRequest request)
+        {
+            return await _shipmentService.SearchShipment(request);
         }
 
         [ProducesResponseType(typeof(PagingResponse<ShipmentResponse>), StatusCodes.Status200OK)]
@@ -66,7 +72,7 @@ namespace MKExpress.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpGet(StaticValues.ShipmentByIdsPath)]
-        public async Task<List<ShipmentResponse>> GetTrackingByShipmentIds([FromRoute] string id)
+        public async Task<List<ShipmentResponse>> GetShipment([FromRoute] string id)
         {
             return await _shipmentService.GetShipment(id);
         }
@@ -101,6 +107,16 @@ namespace MKExpress.API.Controllers
             return await _shipmentService.AssignForPickup(request);
         }
 
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpPost(StaticValues.ShipmentHoldPath)]
+        public async Task<bool> HoldShipment([FromBody] List<Guid> request)
+        {
+            return await _shipmentService.HoldShipment(request);
+        }
+
         [ProducesResponseType(typeof(List<ShipmentResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -116,7 +132,7 @@ namespace MKExpress.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpGet(StaticValues.ShipmentValidateStatusPath)]
-        public async Task<ShipmentResponse?> GetShipments([FromQuery] string shipmentNo, [FromQuery] string status)
+        public async Task<ShipmentResponse?> ValidateShipmentStatus([FromQuery] string shipmentNo, [FromQuery] string status)
         {
             return await _shipmentService.ValidateShipmentStatus(shipmentNo, status);
         }

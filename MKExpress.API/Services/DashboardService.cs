@@ -1,5 +1,5 @@
 ﻿using MKExpress.API.DTO.Response;
-using MKExpress.API.Repository.IRepository;
+using MKExpress.API.Repository;
 
 namespace MKExpress.API.Services
 {

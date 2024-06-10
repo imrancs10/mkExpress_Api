@@ -1,6 +1,6 @@
 ﻿using MKExpress.API.DTO.Response;
 
-namespace MKExpress.API.Repository.IRepository
+namespace MKExpress.API.Repository
 {
     public interface IDashboardRepository
     {

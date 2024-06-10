@@ -1,19 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MKExpress.API.Common;
-using MKExpress.API.Constants;
 using MKExpress.API.Contants;
 using MKExpress.API.Data;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
 using MKExpress.API.Exceptions;
 using MKExpress.API.Models;
-using MKExpress.API.Repositories.Interfaces;
-using MKExpress.API.Repository.IRepository;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Threading.Tasks;
+using MKExpress.API.Repository;
 
 namespace MKExpress.API.Repositories
 {

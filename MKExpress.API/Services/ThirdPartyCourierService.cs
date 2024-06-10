@@ -1,13 +1,11 @@
 ﻿using AutoMapper;
-using DocumentFormat.OpenXml.Office2010.Excel;
 using MKExpress.API.Contants;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
 using MKExpress.API.Exceptions;
 using MKExpress.API.Middleware;
 using MKExpress.API.Models;
-using MKExpress.API.Repository.IRepository;
-using MKExpress.API.Services.IServices;
+using MKExpress.API.Repository;
 
 namespace MKExpress.API.Services
 {
@@ -15,12 +13,10 @@ namespace MKExpress.API.Services
     {
         private readonly IThirdPartyCourierRepository _repository;
         private readonly IMapper _mapper;
-        private readonly ICommonService _commonService;
-        public ThirdPartyCourierService(IThirdPartyCourierRepository repository, IMapper mapper, ICommonService commonService)
+        public ThirdPartyCourierService(IThirdPartyCourierRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
-            _commonService = commonService;
 
         }
         public async Task<ThirdPartyCourierResponse> Add(ThirdPartyCourierCompanyRequest thirdPartyCourierCompanyRequest)

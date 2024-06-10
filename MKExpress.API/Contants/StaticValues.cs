@@ -118,11 +118,13 @@
 
         #region Shipment
         public const string ShipmentPath = APIPrefix;
+        public const string ShipmentSearchPath = APIPrefix+"search";
         public const string ShipmentByIdPath = APIPrefix + "get/{id}";
         public const string ShipmentTrackingByShipmentIdPath = APIPrefix + "get/tracking/{id}";
         public const string ShipmentByIdsPath = APIPrefix + "get/by-ids/{id}";
         public const string ShipmentValidatePath = APIPrefix + "validate/{id}";
         public const string ShipmentAssignPickupPath = APIPrefix + "assign/pickup";
+        public const string ShipmentHoldPath = APIPrefix + "assign/hold";
         public const string ShipmentValidateThirdPartyPath = APIPrefix + "validate/thirdparty";
         public const string ShipmentByUserNamePath = APIPrefix + "get/{username}/{shipment}/{shipmentStatus}";
         public const string ShipmentValidateStatusPath = APIPrefix + "validate/status";
@@ -278,6 +280,11 @@
         public static string RecordAlreadyExistMessage(string recordType)
         {
             return $"Record already exist with same: {recordType}";
+        }
+
+        public static string InvalidShipmentStatus(string oldStatus,string newStatus,string shipmentNo)
+        {
+            return $"You can't change the status of shipment {shipmentNo} from {oldStatus} to {newStatus}";
         }
 
 

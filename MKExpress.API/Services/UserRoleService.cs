@@ -2,8 +2,7 @@
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
 using MKExpress.API.Models;
-using MKExpress.API.Repository.IRepository;
-using Org.BouncyCastle.Ocsp;
+using MKExpress.API.Repository;
 
 namespace MKExpress.API.Services
 {

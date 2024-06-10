@@ -2,9 +2,8 @@
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
 using MKExpress.API.Enums;
-using MKExpress.API.Models;
 
-namespace MKExpress.API.Services.IServices
+namespace MKExpress.API.Services
 {
     public interface IShipmentService
     {
@@ -16,7 +15,9 @@ namespace MKExpress.API.Services.IServices
         Task<ShipmentValidateResponse> ValidateContainerShipment(List<string> shipmentNo,Guid containerJourneyId);
         Task<ShipmentResponse> ValidateThirdPartyShipment(string shipmentNo);
         Task<bool> AssignForPickup(List<AssignForPickupRequest> requests);
+        Task<bool> HoldShipment(List<Guid> requests);
         Task<List<ShipmentResponse>> GetShipments(string userId, ShipmentEnum shipment, ShipmentStatusEnum shipmentStatus);
         Task<ShipmentResponse?> ValidateShipmentStatus(string shipmentNo, string status);
+        Task<PagingResponse<ShipmentResponse>> SearchShipment(SearchShipmentRequest requests);
     }
 }

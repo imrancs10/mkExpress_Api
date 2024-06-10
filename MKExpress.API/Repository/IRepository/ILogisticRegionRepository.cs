@@ -1,7 +1,6 @@
 ﻿using MKExpress.API.Models;
-using MKExpress.API.Repositories.Interfaces;
 
-namespace MKExpress.API.Repository.IRepository
+namespace MKExpress.API.Repository
 {
     public interface ILogisticRegionRepository:ICrudRepository<LogisticRegion>
     {

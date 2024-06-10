@@ -1,11 +1,8 @@
 ﻿using AutoMapper;
-using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Office2010.Excel;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
 using MKExpress.API.Models;
-using MKExpress.API.Repository.IRepository;
-using MKExpress.API.Services.IServices;
+using MKExpress.API.Repository;
 
 namespace MKExpress.API.Services
 {

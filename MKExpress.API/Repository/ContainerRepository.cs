@@ -9,8 +9,7 @@ using MKExpress.API.Extension;
 using MKExpress.API.Logger;
 using MKExpress.API.Middleware;
 using MKExpress.API.Models;
-using MKExpress.API.Repository.IRepository;
-using MKExpress.API.Services.IServices;
+using MKExpress.API.Services;
 
 namespace MKExpress.API.Repository
 {
@@ -18,15 +17,13 @@ namespace MKExpress.API.Repository
     {
         private readonly MKExpressContext _context;
         private readonly ILoggerManager _loggerManager;
-        private readonly ICommonService _commonService;
         private readonly IMasterJourneyRepository _masterJourneyRepository;
         private readonly IShipmentService _shipmentService;
         private readonly IShipmentRepository _shipmentRepository;
-        public ContainerRepository(MKExpressContext context, ILoggerManager loggerManager, ICommonService commonService, IMasterJourneyRepository masterJourneyRepository, IShipmentService shipmentService, IShipmentRepository shipmentRepository)
+        public ContainerRepository(MKExpressContext context, ILoggerManager loggerManager, IMasterJourneyRepository masterJourneyRepository, IShipmentService shipmentService, IShipmentRepository shipmentRepository)
         {
             _context = context;
             _loggerManager = loggerManager;
-            _commonService = commonService;
             _masterJourneyRepository = masterJourneyRepository;
             _shipmentService = shipmentService;
             _shipmentRepository = shipmentRepository;

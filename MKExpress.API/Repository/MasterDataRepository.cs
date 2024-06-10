@@ -1,4 +1,3 @@
-using DocumentFormat.OpenXml.InkML;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MKExpress.API.Contants;
@@ -7,13 +6,9 @@ using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
 using MKExpress.API.Exceptions;
 using MKExpress.API.Models;
-using MKExpress.API.Repositories.Interfaces;
 using MKExpress.API.Utility;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace MKExpress.API.Repositories
+namespace MKExpress.API.Repository
 {
     public class MasterDataRepository : IMasterDataRepository
     {

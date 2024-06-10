@@ -1,4 +1,4 @@
-﻿namespace MKExpress.API.DTO.Response.User
+﻿namespace MKExpress.API.DTO.Response
 {
     public class UserRoleMenuMapperResponse
     {

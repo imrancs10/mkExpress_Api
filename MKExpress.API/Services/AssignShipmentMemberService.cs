@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
-using MKExpress.API.Repository.IRepository;
-using MKExpress.API.Services.IServices;
+using MKExpress.API.Repository;
 
 namespace MKExpress.API.Services
 {

@@ -2,10 +2,8 @@
 using MKExpress.API.Contants;
 using MKExpress.API.Data;
 using MKExpress.API.Exceptions;
-using MKExpress.API.Middleware;
 using MKExpress.API.Models;
-using MKExpress.API.Repository.IRepository;
-using MKExpress.API.Services.IServices;
+using MKExpress.API.Services;
 
 namespace MKExpress.API.Repository
 {

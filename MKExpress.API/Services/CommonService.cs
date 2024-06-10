@@ -76,6 +76,7 @@ namespace MKExpress.API.Services
                 ShipmentStatusEnum.Received => newStatus switch
                 {
                     ShipmentStatusEnum.Stored => ShipmentStatusEnum.Stored.ToFormatString(),
+                    ShipmentStatusEnum.OnHold => ShipmentStatusEnum.OnHold.ToFormatString(),
                     ShipmentStatusEnum.Lost => ShipmentStatusEnum.Lost.ToFormatString(),
                     ShipmentStatusEnum.MarkedAsLost => ShipmentStatusEnum.MarkedAsLost.ToFormatString(),
                     ShipmentStatusEnum.AssignedForDelivery => ShipmentStatusEnum.AssignedForDelivery.ToFormatString(),
@@ -98,6 +99,7 @@ namespace MKExpress.API.Services
                 ShipmentStatusEnum.AssignedForTransfer => newStatus switch
                 {
                     ShipmentStatusEnum.Lost => ShipmentStatusEnum.Lost.ToFormatString(),
+                    ShipmentStatusEnum.OnHold => ShipmentStatusEnum.OnHold.ToFormatString(),
                     ShipmentStatusEnum.MarkedAsLost => ShipmentStatusEnum.MarkedAsLost.ToFormatString(),
                     ShipmentStatusEnum.ChangedManually => ShipmentStatusEnum.ChangedManually.ToFormatString(),
                     _ => ThrowException()
@@ -117,6 +119,7 @@ namespace MKExpress.API.Services
                     ShipmentStatusEnum.AssignedForReturn => ShipmentStatusEnum.AssignedForReturn.ToFormatString(),
                     ShipmentStatusEnum.AssignedForDelivery => ShipmentStatusEnum.AssignedForDelivery.ToFormatString(),
                     ShipmentStatusEnum.Lost => ShipmentStatusEnum.Lost.ToFormatString(),
+                    ShipmentStatusEnum.OnHold => ShipmentStatusEnum.OnHold.ToFormatString(),
                     ShipmentStatusEnum.MarkedAsLost => ShipmentStatusEnum.MarkedAsLost.ToFormatString(),
                     ShipmentStatusEnum.ChangedManually => ShipmentStatusEnum.ChangedManually.ToFormatString(),
                     _ => ThrowException()
@@ -124,6 +127,7 @@ namespace MKExpress.API.Services
                 ShipmentStatusEnum.AssignedForDelivery => newStatus switch
                 {
                     ShipmentStatusEnum.Lost => ShipmentStatusEnum.Lost.ToFormatString(),
+                    ShipmentStatusEnum.OnHold => ShipmentStatusEnum.OnHold.ToFormatString(),
                     ShipmentStatusEnum.MarkedAsLost => ShipmentStatusEnum.MarkedAsLost.ToFormatString(),
                     ShipmentStatusEnum.OutForDelivery => ShipmentStatusEnum.OutForDelivery.ToFormatString(),
                     ShipmentStatusEnum.ChangedManually => ShipmentStatusEnum.ChangedManually.ToFormatString(),
@@ -153,6 +157,7 @@ namespace MKExpress.API.Services
                     ShipmentStatusEnum.Lost => ShipmentStatusEnum.Lost.ToFormatString(),
                     ShipmentStatusEnum.MarkedAsLost => ShipmentStatusEnum.MarkedAsLost.ToFormatString(),
                     ShipmentStatusEnum.Received => ShipmentStatusEnum.Received.ToFormatString(),
+                    ShipmentStatusEnum.OnHold => ShipmentStatusEnum.OnHold.ToFormatString(),
                     ShipmentStatusEnum.ChangedManually => ShipmentStatusEnum.ChangedManually.ToFormatString(),
                     _ => ThrowException()
                 },

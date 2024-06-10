@@ -1,7 +1,7 @@
 ﻿using MKExpress.API.DTO.Base;
 using Microsoft.AspNetCore.Http;
 
-namespace MKExpress.API.DTO.Request.ImageStore
+namespace MKExpress.API.DTO.Request
 {
     public class ImageStoreRequest:BaseRequest
     {

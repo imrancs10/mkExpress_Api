@@ -165,27 +165,21 @@ namespace MKExpress.API.Repository
 
         public async Task<Member> Update(Member request)
         {
-            var oldData = await _context.Members.Where(x => !x.IsDeleted && x.Id == request.Id).FirstOrDefaultAsync();
-            if (oldData == null) throw new BusinessRuleViolationException(StaticValues.ErrorType_RecordNotFound, StaticValues.ErrorType_RecordNotFound);
-
+            var oldData = await _context.Members.Where(x => !x.IsDeleted && x.Id == request.Id).FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.ErrorType_RecordNotFound, StaticValues.ErrorType_RecordNotFound);
             oldData.FirstName= request.FirstName;
             oldData.LastName= request.LastName;
             oldData.Phone= request.Phone;   
             oldData.Role= request.Role;
             oldData.IdNumber= request.IdNumber;
+            oldData.RoleId= request.RoleId;
             oldData.Gender= request.Gender;
             oldData.Mobile= request.Mobile;
-            var trans = _context.Database.BeginTransaction();
+           // var trans = _context.Database.BeginTransaction();
             _context.Attach(oldData);
             if (await _context.SaveChangesAsync() > 0)
             {
-                if (await _userRepository.DeleteUser(oldData.Email))
-                {
-                    trans.Commit();
                     return oldData;
-                }
             }
-            trans.Rollback();
             return default;
 
         }

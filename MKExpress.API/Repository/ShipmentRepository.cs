@@ -8,8 +8,7 @@ using MKExpress.API.Exceptions;
 using MKExpress.API.Extension;
 using MKExpress.API.Middleware;
 using MKExpress.API.Models;
-using MKExpress.API.Repository.IRepository;
-using MKExpress.API.Services.IServices;
+using MKExpress.API.Services;
 
 namespace MKExpress.API.Repository
 {
@@ -20,7 +19,7 @@ namespace MKExpress.API.Repository
         private readonly ICommonService _commonService;
         private readonly IAppSettingRepository _appSettingRepository;
 
-        public ShipmentRepository(MKExpressContext context, IShipmentTrackingRepository shipmentTrackingRepository, ICommonService commonService,IAppSettingRepository appSettingRepository)
+        public ShipmentRepository(MKExpressContext context, IShipmentTrackingRepository shipmentTrackingRepository, ICommonService commonService, IAppSettingRepository appSettingRepository)
         {
             _context = context;
             _shipmentTrackingRepository = shipmentTrackingRepository;
@@ -47,30 +46,30 @@ namespace MKExpress.API.Repository
             var trans = _context.Database.BeginTransaction();
             var userId = JwtMiddleware.GetUserId();
             if ((oldMemberData.Any() && await _context.SaveChangesAsync() > 0) || !oldMemberData.Any())
+            {
+                var shipmentMember = new List<AssignShipmentMember>();
+                requests.ForEach(res =>
                 {
-                    var shipmentMember = new List<AssignShipmentMember>();
-                    requests.ForEach(res =>
+                    shipmentMember.Add(new AssignShipmentMember()
                     {
-                        shipmentMember.Add(new AssignShipmentMember()
-                        {
-                            AssignAt = DateTime.UtcNow,
-                            ShipmentId = res.ShipmentId,
-                            Id = Guid.NewGuid(),
-                            AssignById = userId,
-                            MemberId = res.MemberId,
-                            Status = _commonService.ValidateShipmentStatus(shipments[res.ShipmentId].Status, ShipmentStatusEnum.AssignedForPickup),
-                        });
+                        AssignAt = DateTime.UtcNow,
+                        ShipmentId = res.ShipmentId,
+                        Id = Guid.NewGuid(),
+                        AssignById = userId,
+                        MemberId = res.MemberId,
+                        Status = _commonService.ValidateShipmentStatus(shipments[res.ShipmentId].Status, ShipmentStatusEnum.AssignedForPickup),
                     });
-                    _context.AssignShipmentMembers.AddRange(shipmentMember);
-                    if (await _context.SaveChangesAsync() > 0)
+                });
+                _context.AssignShipmentMembers.AddRange(shipmentMember);
+                if (await _context.SaveChangesAsync() > 0)
+                {
+                    if (await UpdateShipmentStatus(shipmentIds, ShipmentStatusEnum.AssignedForPickup))
                     {
-                        if (await UpdateShipmentStatus(shipmentIds, ShipmentStatusEnum.AssignedForPickup))
-                        {
-                            trans.Commit();
-                            return true;
-                        }
+                        trans.Commit();
+                        return true;
                     }
                 }
+            }
             trans.Rollback();
             return false;
         }
@@ -83,7 +82,7 @@ namespace MKExpress.API.Repository
             var trans = _context.Database.BeginTransaction();
 
             var scheduleShipmentAfterHour = await _appSettingRepository.GetAppSettingValueByKey<int>("autoScheduleShipmentInHour");
-            shipment.SchedulePickupDate=DateTime.Now.AddHours(scheduleShipmentAfterHour);
+            shipment.SchedulePickupDate = DateTime.Now.AddHours(scheduleShipmentAfterHour);
 
             var entity = _context.Shipments.Add(shipment);
             entity.State = EntityState.Added;
@@ -94,9 +93,9 @@ namespace MKExpress.API.Repository
                     Id = Guid.NewGuid(),
                     Activity = ShipmentStatusEnum.Created.ToString(),
                     ShipmentId = shipment.Id,
-                    CommentBy=JwtMiddleware.GetUserId()
+                    CommentBy = JwtMiddleware.GetUserId()
                 };
-                if (await _shipmentTrackingRepository.AddTracking(tracking)!=null)
+                if (await _shipmentTrackingRepository.AddTracking(tracking) != null)
                 {
                     trans.Commit();
                     return entity.Entity;
@@ -111,9 +110,9 @@ namespace MKExpress.API.Repository
             var _role = JwtMiddleware.GetUserRole();
             var _userId = JwtMiddleware.GetUserId();
             var _filterByCreatedBy = false;
-            if(_role?.ToLower()=="customeradmin")
+            if (_role?.ToLower() == "customeradmin")
             {
-                _filterByCreatedBy=true;
+                _filterByCreatedBy = true;
             }
             var data = _context.Shipments
                 .Include(x => x.Customer)
@@ -125,7 +124,7 @@ namespace MKExpress.API.Repository
                 .ThenInclude(x => x.ShipperCity)
                 .Include(x => x.ShipmentDetail)
                 .ThenInclude(x => x.ConsigneeCity)
-                .Where(x => !x.IsDeleted && (!_filterByCreatedBy || x.CreatedBy==_userId))
+                .Where(x => !x.IsDeleted && (!_filterByCreatedBy || x.CreatedBy == _userId))
                 .OrderByDescending(x => x.CreatedAt)
                 .AsQueryable();
             PagingResponse<Shipment> response = new()
@@ -182,9 +181,84 @@ namespace MKExpress.API.Repository
                 .Where(x => !x.IsDeleted).ToListAsync();
         }
 
+        public async Task<bool> HoldShipment(List<Guid> requests)
+        {
+            var oldShipments = await _context.Shipments
+                                             .Where(x => !x.IsDeleted && requests.Contains(x.Id)).ToListAsync();
+            if (!oldShipments.Any())
+                throw new BusinessRuleViolationException(StaticValues.Error_ShipmentNumberNotFound, StaticValues.Message_ShipmentNumberNotFound);
+            if (oldShipments.Count != requests.Count)
+                throw new BusinessRuleViolationException(StaticValues.Error_SomeShipmentNoNotFound, StaticValues.Message_SomeShipmentNoNotFound);
+
+            foreach (var item in oldShipments)
+            {
+                try
+                {
+                    item.Status = _commonService.ValidateShipmentStatus(item.Status, ShipmentStatusEnum.OnHold);
+                }
+                catch (BusinessRuleViolationException ex)
+                {
+
+                    throw new BusinessRuleViolationException(StaticValues.Error_InvalidShipmentStatus, StaticValues.InvalidShipmentStatus(item.Status, ShipmentStatusEnum.OnHold.ToFormatString(), item.ShipmentNumber));
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+
+            _context.AttachRange(oldShipments);
+            return await _context.SaveChangesAsync() > 0;
+        }
+
         public async Task<bool> IsShipmentExists(string shipmentNo)
         {
-            return await _context.Shipments.Where(x=>!x.IsDeleted && x.ShipmentNumber== shipmentNo).AnyAsync();
+            return await _context.Shipments.Where(x => !x.IsDeleted && x.ShipmentNumber == shipmentNo).AnyAsync();
+        }
+
+        public async Task<PagingResponse<Shipment>> SearchShipment(SearchShipmentRequest requests)
+        {
+            if (requests.CreatedFrom != null && requests.CreatedTo == null)
+            {
+                requests.CreatedTo = DateTime.Now.Date;
+            }
+            if (requests.CodDateFrom != null && requests.CodDateTo == null)
+            {
+                requests.CodDateTo = DateTime.Now.Date;
+            }
+            if (requests.ReceivedFrom != null && requests.ReceivedTo == null)
+            {
+                requests.ReceivedTo = DateTime.Now.Date;
+            }
+            if (requests.DeliveredFrom != null && requests.DeliveredTo == null)
+            {
+                requests.DeliveredTo = DateTime.Now.Date;
+            }
+            if (requests.ReturnFrom != null && requests.ReturnTo == null)
+            {
+                requests.ReturnTo = DateTime.Now.Date;
+            }
+            var query = _context.Shipments
+                .Include(x => x.ShipmentDetail)
+                .Where(x => !x.IsDeleted && (
+            (requests.CustomerId == null || x.CustomerId == requests.CustomerId) &&
+            (requests.StationId == null || x.ShipmentDetail.ToStoreId == requests.StationId) &&
+            (string.IsNullOrEmpty(requests.Status) || x.Status == requests.Status) &&
+            (requests.CreatedFrom == null || (x.CreatedAt.Date >= requests.ReceivedFrom.Value.Date && x.CreatedAt.Date <= requests.CreatedTo.Value.Date)) &&
+            (requests.DeliveredFrom == null || (x.DeliveryDate.Value.Date >= requests.DeliveredFrom.Value.Date && x.DeliveryDate.Value.Date <= requests.DeliveredTo.Value.Date)) &&
+            (requests.ReceivedFrom == null || (x.ReceiveDate.Value.Date >= requests.ReceivedFrom.Value.Date && x.ReceiveDate.Value.Date <= requests.ReceivedTo.Value.Date)) &&
+            (requests.CodDateFrom == null || (x.CODDate.Value.Date >= requests.CodDateFrom.Value.Date && x.CODDate.Value.Date <= requests.CodDateTo.Value.Date)) &&
+            (string.IsNullOrEmpty(requests.Reason) || x.StatusReason == requests.Reason) &&
+            (requests.ConsigneeCityId == null || x.ShipmentDetail.ConsigneeCityId == requests.ConsigneeCityId)
+            ));
+
+            return new PagingResponse<Shipment>()
+            {
+                Data = await query.Skip((requests.PageNo - 1) * requests.PageSize).Take(requests.PageSize).ToListAsync(),
+                TotalRecords = await query.CountAsync(),
+                PageNo = requests.PageNo,
+                PageSize = requests.PageSize
+            };
         }
 
         public async Task<bool> UpdateShipmentStatus(List<Guid> shipmentIds, ShipmentStatusEnum newStatus, string comment = "")
@@ -247,9 +321,9 @@ namespace MKExpress.API.Repository
         public async Task<Shipment?> ValidateShipmentStatus(string shipmentNo, ShipmentStatusEnum status)
         {
             return await _context.Shipments
-                .Include (x => x.Customer)
+                .Include(x => x.Customer)
                 .Include(x => x.ShipmentDetail)
-                .ThenInclude(x=>x.ConsigneeCity)
+                .ThenInclude(x => x.ConsigneeCity)
                 .Include(x => x.ShipmentDetail)
                 .ThenInclude(x => x.ShipperCity)
                 .Where(x => !x.IsDeleted && x.ShipmentNumber == shipmentNo)

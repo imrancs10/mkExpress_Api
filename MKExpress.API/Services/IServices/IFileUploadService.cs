@@ -4,7 +4,7 @@ using MKExpress.API.DTO.Request.ImageStore;
 using MKExpress.API.DTO.Response.Image;
 using MKExpress.API.Enums;
 
-namespace MKExpress.API.Services.IServices
+namespace MKExpress.API.Services
 {
     public interface IFileUploadService
     {
