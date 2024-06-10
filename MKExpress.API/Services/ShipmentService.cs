@@ -198,6 +198,40 @@ namespace MKExpress.API.Services
 
         public async Task<PagingResponse<ShipmentResponse>> SearchShipment(SearchShipmentRequest requests)
         {
+            if (requests.CreatedFrom != null && requests.CreatedTo == null)
+            {
+                requests.CreatedTo = DateTime.Now.Date;
+            }
+            if (requests.CreatedFrom == null)
+                requests.CreatedTo = null;
+
+            if (requests.CodDateFrom != null && requests.CodDateTo == null)
+            {
+                requests.CodDateTo = DateTime.Now.Date;
+            }
+            if (requests.CodDateFrom == null)
+                requests.CodDateTo = null;
+
+            if (requests.ReceivedFrom != null && requests.ReceivedTo == null)
+            {
+                requests.ReceivedTo = DateTime.Now.Date;
+            }
+            if (requests.ReceivedFrom == null)
+                requests.ReceivedTo = null;
+
+            if (requests.DeliveredFrom != null && requests.DeliveredTo == null)
+            {
+                requests.DeliveredTo = DateTime.Now.Date;
+            }
+            if (requests.DeliveredFrom == null)
+                requests.DeliveredTo = null;
+
+            if (requests.ReturnFrom != null && requests.ReturnTo == null)
+            {
+                requests.ReturnTo = DateTime.Now.Date;
+            }
+            if (requests.ReturnFrom == null)
+                requests.ReturnTo = null;
             return _mapper.Map<PagingResponse<ShipmentResponse>>(await _repo.SearchShipment(requests));
         }
     }

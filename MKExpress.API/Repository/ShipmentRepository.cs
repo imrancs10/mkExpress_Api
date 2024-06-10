@@ -218,38 +218,35 @@ namespace MKExpress.API.Repository
 
         public async Task<PagingResponse<Shipment>> SearchShipment(SearchShipmentRequest requests)
         {
-            if (requests.CreatedFrom != null && requests.CreatedTo == null)
+            
+            var _role = JwtMiddleware.GetUserRole();
+            var _userId = JwtMiddleware.GetUserId();
+            var _filterByCreatedBy = false;
+            if (_role?.ToLower() == "customeradmin")
             {
-                requests.CreatedTo = DateTime.Now.Date;
-            }
-            if (requests.CodDateFrom != null && requests.CodDateTo == null)
-            {
-                requests.CodDateTo = DateTime.Now.Date;
-            }
-            if (requests.ReceivedFrom != null && requests.ReceivedTo == null)
-            {
-                requests.ReceivedTo = DateTime.Now.Date;
-            }
-            if (requests.DeliveredFrom != null && requests.DeliveredTo == null)
-            {
-                requests.DeliveredTo = DateTime.Now.Date;
-            }
-            if (requests.ReturnFrom != null && requests.ReturnTo == null)
-            {
-                requests.ReturnTo = DateTime.Now.Date;
+                _filterByCreatedBy = true;
             }
             var query = _context.Shipments
+                .Include(x => x.Customer)
                 .Include(x => x.ShipmentDetail)
-                .Where(x => !x.IsDeleted && (
-            (requests.CustomerId == null || x.CustomerId == requests.CustomerId) &&
-            (requests.StationId == null || x.ShipmentDetail.ToStoreId == requests.StationId) &&
-            (string.IsNullOrEmpty(requests.Status) || x.Status == requests.Status) &&
-            (requests.CreatedFrom == null || (x.CreatedAt.Date >= requests.ReceivedFrom.Value.Date && x.CreatedAt.Date <= requests.CreatedTo.Value.Date)) &&
-            (requests.DeliveredFrom == null || (x.DeliveryDate.Value.Date >= requests.DeliveredFrom.Value.Date && x.DeliveryDate.Value.Date <= requests.DeliveredTo.Value.Date)) &&
-            (requests.ReceivedFrom == null || (x.ReceiveDate.Value.Date >= requests.ReceivedFrom.Value.Date && x.ReceiveDate.Value.Date <= requests.ReceivedTo.Value.Date)) &&
-            (requests.CodDateFrom == null || (x.CODDate.Value.Date >= requests.CodDateFrom.Value.Date && x.CODDate.Value.Date <= requests.CodDateTo.Value.Date)) &&
-            (string.IsNullOrEmpty(requests.Reason) || x.StatusReason == requests.Reason) &&
-            (requests.ConsigneeCityId == null || x.ShipmentDetail.ConsigneeCityId == requests.ConsigneeCityId)
+                .ThenInclude(x => x.FromStore)
+                .Include(x => x.ShipmentDetail)
+                .ThenInclude(x => x.ToStore)
+                .Include(x => x.ShipmentDetail)
+                .ThenInclude(x => x.ShipperCity)
+                .Include(x => x.ShipmentDetail)
+                .ThenInclude(x => x.ConsigneeCity)
+                .Where(x => !x.IsDeleted && (!_filterByCreatedBy || x.CreatedBy == _userId) &&
+                (
+                    (requests.CustomerId == null || x.CustomerId == requests.CustomerId) &&
+                    (requests.StationId == null || x.ShipmentDetail.ToStoreId == requests.StationId) &&
+                    (string.IsNullOrEmpty(requests.Status) || x.Status == requests.Status) &&
+                    (requests.CreatedFrom == null || (x.CreatedAt.Date >= requests.ReceivedFrom.Value.Date && x.CreatedAt.Date <= requests.CreatedTo.Value.Date)) &&
+                    (requests.DeliveredFrom == null || (x.DeliveryDate.Value.Date >= requests.DeliveredFrom.Value.Date && x.DeliveryDate.Value.Date <= requests.DeliveredTo.Value.Date)) &&
+                    (requests.ReceivedFrom == null || (x.ReceiveDate.Value.Date >= requests.ReceivedFrom.Value.Date && x.ReceiveDate.Value.Date <= requests.ReceivedTo.Value.Date)) &&
+                    (requests.CodDateFrom == null || (x.CODDate.Value.Date >= requests.CodDateFrom.Value.Date && x.CODDate.Value.Date <= requests.CodDateTo.Value.Date)) &&
+                    (string.IsNullOrEmpty(requests.Reason) || x.StatusReason == requests.Reason) &&
+                    (requests.ConsigneeCityId == null || x.ShipmentDetail.ConsigneeCityId == requests.ConsigneeCityId)
             ));
 
             return new PagingResponse<Shipment>()
