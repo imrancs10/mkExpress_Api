@@ -4,6 +4,7 @@ using MKExpress.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MKExpress.API.Migrations
 {
     [DbContext(typeof(MKExpressContext))]
-    partial class MKExpressContextModelSnapshot : ModelSnapshot
+    [Migration("20240610185419_Update_Shipment")]
+    partial class Update_Shipment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1395,9 +1398,6 @@ namespace MKExpress.API.Migrations
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("MemberId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Mobile")
                         .IsRequired()

@@ -84,7 +84,7 @@ builder.Services.AddCors(options =>
         builder =>
         {
             builder
-                .WithOrigins("http://localhost:3000", "http://localhost:3001", "http://imkexpress.com", "http://web.imkexpress.com") // Replace with the origins you want to allow
+                .WithOrigins("http://web.imkexpress.com", "http://localhost:3000", "http://localhost:3001", "http://imkexpress.com") // Replace with the origins you want to allow
                 .AllowAnyHeader()
                 .AllowAnyMethod();
         });
@@ -108,8 +108,8 @@ app.UseSwaggerUI(options =>
     options.DocExpansion(DocExpansion.None);
 });
 app.UseCustomExceptionHandler();
-app.UseCors(_policyName);
 app.UseRouting();
+app.UseCors(_policyName);
 app.UseMiddleware<JwtMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication();

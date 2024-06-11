@@ -15,14 +15,14 @@ namespace MKExpress.API.Services
             _mapper = mapper;
             _mobileApiRepository = mobileApiRepository;
         }
-        public async Task<List<ShipmentResponse>> GetShipmentByMember(Guid memberId, ShipmentStatusEnum shipmentStatus)
+        public async Task<List<ShipmentResponse>> GetShipmentByMember(ShipmentStatusEnum shipmentStatus)
         {
-           return _mapper.Map<List<ShipmentResponse>>(await _mobileApiRepository.GetShipmentByMember(memberId, shipmentStatus));
+           return _mapper.Map<List<ShipmentResponse>>(await _mobileApiRepository.GetShipmentByMember(shipmentStatus));
         }
 
-        public async Task<bool> MarkPickupDone(Guid memberId, Guid shipmentId)
+        public async Task<bool> MarkPickupDone(Guid shipmentId)
         {
-          return  await _mobileApiRepository.MarkPickupDone(memberId, shipmentId);
+          return  await _mobileApiRepository.MarkPickupDone(shipmentId);
         }
 
         public async Task<bool> MarkPickupFailed(MarkPickupStatusRequest request)
@@ -35,9 +35,9 @@ namespace MKExpress.API.Services
             return await _mobileApiRepository.MarkPickupReschedule(request);
         }
 
-        public async Task<bool> MarkReadyForPickup(Guid memberId, Guid shipmentId)
+        public async Task<bool> MarkReadyForPickup(Guid shipmentId)
         {
-            return await _mobileApiRepository.MarkReadyForPickup(memberId, shipmentId);
+            return await _mobileApiRepository.MarkReadyForPickup(shipmentId);
         }
     }
 }

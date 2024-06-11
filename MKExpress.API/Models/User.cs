@@ -22,6 +22,7 @@ namespace MKExpress.API.Models
         public DateTime? PasswordResetCodeExpireOn { get; set; }
         public string? EmailVerificationCode { get; set; }
         public Guid? RoleId { get; set; }
+        public Guid? MemberId { get; set; }
         public bool IsCustomer { get; set; }
         public DateTime? EmailVerificationCodeExpireOn { get; set; }
         [ForeignKey("RoleId")]

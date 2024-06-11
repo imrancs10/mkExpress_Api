@@ -14,6 +14,7 @@ namespace MKExpress.API.DTO.Response
         public string Mobile { get; set; }
         public string Role { get; set; }
         public Guid RoleId { get; set; }
+        public Guid? MemberId { get; set; }
         public string RoleCode { get; set; }
         public bool IsTcAccepted { get; set; }
         public bool IsEmailVerified { get; set; }

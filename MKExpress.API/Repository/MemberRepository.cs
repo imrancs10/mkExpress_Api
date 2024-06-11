@@ -55,6 +55,7 @@ namespace MKExpress.API.Repository
                 var user = _mapper.Map<User>(request);
                 user.Password=PasswordHasher.GenerateHash(password);
                 user.RoleId =request.RoleId;
+                user.MemberId = entity.Entity.Id;
                 var res = await _userRepository.Add(user);
                 if (res?.Id is Guid)
                 {

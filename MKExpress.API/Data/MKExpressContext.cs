@@ -26,6 +26,8 @@ namespace MKExpress.API.Data
         {
 
             options.UseSqlServer(_defaultConnection);
+            options.LogTo(Console.WriteLine)
+        .EnableDetailedErrors();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
