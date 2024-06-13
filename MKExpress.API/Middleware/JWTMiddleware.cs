@@ -29,7 +29,7 @@ namespace MKExpress.API.Middleware
             }
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
             var path = context.Request.Path;
-            if (token == null || !ValidateToken(token))
+            if ((token == null || !ValidateToken(token)) && path.Value != "/")
             {
                 context.Response.StatusCode = 401;
                 await context.Response.WriteAsync("Token invalid");
@@ -57,13 +57,13 @@ namespace MKExpress.API.Middleware
                 var jwtToken = (JwtSecurityToken)validatedToken;
 
                 var userId = jwtToken.Claims.First(x => x.Type == "userId").Value;
-                _userRole=jwtToken.Claims.First(x=>x.Type=="roleCode").Value;
+                _userRole = jwtToken.Claims.First(x => x.Type == "roleCode").Value;
                 if (!Guid.TryParse(userId, out _userId))
                     return false;
 
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
             }
