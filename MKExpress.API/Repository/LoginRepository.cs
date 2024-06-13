@@ -2,7 +2,9 @@
 using MKExpress.API.Contants;
 using MKExpress.API.Data;
 using MKExpress.API.DTO.Request;
+using MKExpress.API.Enums;
 using MKExpress.API.Exceptions;
+using MKExpress.API.Middleware;
 using MKExpress.API.Models;
 
 namespace MKExpress.API.Repository
@@ -16,23 +18,33 @@ namespace MKExpress.API.Repository
         }
 
         public async Task<bool> ChangePassword(PasswordChangeRequest request)
-        {
+        {           
             var oldData = await _context.Users
-                                            .Where(x => (x.Email == request.UserName || x.UserName == request.UserName) && x.Password == request.OldPassword)
-                                            .FirstOrDefaultAsync();
-            if (oldData == null)
-            {
-                throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidCredentials, StaticValues.Error_InvalidOldPassword);
-            }
-            else if (oldData.IsDeleted)
-            {
-                throw new BusinessRuleViolationException(StaticValues.ErrorType_UserNotFound, StaticValues.UserNotFound_Error);
-            }
-
+                                            .Where(x =>!x.IsDeleted && x.Id == JwtMiddleware.GetUserId() && x.Password == request.OldPassword)
+                                            .FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidCredentials, StaticValues.Error_InvalidOldPassword);
+            
+            var trans=_context.Database.BeginTransaction();
             oldData.Password = request.NewPassword;
             var entity = _context.Attach(oldData);
             entity.State = EntityState.Modified;
-            return await _context.SaveChangesAsync() > 0;
+            if(await _context.SaveChangesAsync() > 0)
+            {
+                var userActivity = new UserActivity()
+                {
+                    UserId = JwtMiddleware.GetUserId(),
+                    ActivityType = UserActivityType.ChangePassword.ToString(),
+                    Activity = "Password Change"
+                };
+
+                _context.Add(userActivity);
+                if (await _context.SaveChangesAsync() > 0)
+                {
+                    trans.Commit();
+                    return true;
+                }
+            }
+            trans.Rollback();
+            return false;
         }
 
         public async Task<User> Login(LoginRequest request)
@@ -63,6 +75,7 @@ namespace MKExpress.API.Repository
                 {
                     throw new BusinessRuleViolationException(StaticValues.ErrorType_UserAccountEmailNotVerified, StaticValues.Error_UserAccountEmailNotVerified);
                 }
+
                 return oldData;
             }
             catch (Exception ex)
@@ -73,7 +86,7 @@ namespace MKExpress.API.Repository
 
         public async Task<User> RegisterUser(User request)
         {
-            request.IsEmailVerified = true;
+            //request.IsEmailVerified = true;
             var entity = _context.Users.Add(request);
             entity.State = EntityState.Added;
             await _context.SaveChangesAsync();
@@ -118,7 +131,7 @@ namespace MKExpress.API.Repository
 
         public async Task<bool> IsUserExist(string email)
         {
-            return await _context.Users.Where(x => !x.IsDeleted && x.Email == email).CountAsync() > 0;
+            return await _context.Users.Where(x => !x.IsDeleted && x.Email == email).AnyAsync();
         }
 
         public async Task<bool> AssignRole(string email, Guid roleId)

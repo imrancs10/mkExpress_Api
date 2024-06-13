@@ -1,20 +1,16 @@
-﻿using MKExpress.API.Contants;
+﻿using MKExpress.API.Common;
+using MKExpress.API.Contants;
 using MKExpress.API.Exceptions;
 using MKExpress.API.Extension;
-using MKExpress.API.Logger;
-using MKExpress.API.Services.IServices;
 
 namespace MKExpress.API.Services
 {
     public class CommonService : ICommonService
     {
-
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILoggerManager _loggerManager;
-        public CommonService(IHttpContextAccessor httpContextAccessor, ILoggerManager loggerManager)
+        public string GeneratePasswordHash(string base64String)
         {
-            _httpContextAccessor = httpContextAccessor;
-            _loggerManager = loggerManager;
+            base64String = base64String.DecodeBase64();
+            return PasswordHasher.GenerateHash(base64String);
         }
 
         public string ValidateShipmentStatus(ShipmentStatusEnum currentStatus, ShipmentStatusEnum newStatus)

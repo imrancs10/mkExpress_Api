@@ -5,6 +5,7 @@ using MKExpress.API.Data;
 using MKExpress.API.Dto.Request;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.Exceptions;
+using MKExpress.API.Middleware;
 using MKExpress.API.Models;
 using MKExpress.API.Repository.IRepository;
 using MKExpress.API.Services;
@@ -51,7 +52,7 @@ namespace MKExpress.API.Repository
 
             var _oldPasswordHash= PasswordHasher.GenerateHash(changeRequest.OldPassword);
 
-            var oldData = await _context.Users.Where(x => !x.IsDeleted && x.Email == changeRequest.UserName && x.Password == _oldPasswordHash).FirstOrDefaultAsync()
+            var oldData = await _context.Users.Where(x => !x.IsDeleted && x.Id == JwtMiddleware.GetUserId() && x.Password == _oldPasswordHash).FirstOrDefaultAsync()
                                ?? throw new BusinessRuleViolationException(StaticValues.ErrorType_RecordNotFound, StaticValues.ErrorType_RecordNotFound);
 
             oldData.Password = PasswordHasher.GenerateHash(changeRequest.NewPassword); ;

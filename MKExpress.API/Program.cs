@@ -84,10 +84,10 @@ builder.Services.AddCors(options =>
         builder =>
         {
             builder
-                .WithOrigins("http://web.imkexpress.com", "http://localhost:3000", "http://localhost:3001", "http://imkexpress.com") // Replace with the origins you want to allow
+                .AllowAnyOrigin()
                 .AllowAnyHeader()
                 .AllowAnyMethod();
-        });
+});
 });
 var app = builder.Build();
 
@@ -107,11 +107,11 @@ app.UseSwaggerUI(options =>
         options.SwaggerEndpoint("/swagger/V1/swagger.json", "IMK Express Web API Production");
     options.DocExpansion(DocExpansion.None);
 });
-app.UseCustomExceptionHandler();
+app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors(_policyName);
+app.UseCustomExceptionHandler();
 app.UseMiddleware<JwtMiddleware>();
-app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 

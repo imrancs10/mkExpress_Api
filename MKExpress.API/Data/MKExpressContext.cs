@@ -80,6 +80,7 @@ namespace MKExpress.API.Data
         public DbSet<Menu> Menus { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserRoleMenuMapper> UserRoleMenuMappers { get; set; }
+        public DbSet<UserActivity> UserActivities { get; set; }
         public override int SaveChanges()
         {
             AddDateTimeStamp();
