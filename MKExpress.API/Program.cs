@@ -85,7 +85,7 @@ builder.Services.AddCors(options =>
         {
             builder
                 //.AllowAnyOrigin()
-                .WithOrigins("http://localhost:3000", "http://localhost:3001", "http://imkexpress.com", "http://web.imkexpress.com", "http://imkexpressksa.com") // Replace with the origins you want to allow
+                .WithOrigins("http://imkexpressksa.com", "http://localhost:3000", "http://localhost:3001", "http://imkexpress.com", "http://web.imkexpress.com") // Replace with the origins you want to allow
                 .AllowAnyHeader()
                 .AllowAnyMethod();
         });
