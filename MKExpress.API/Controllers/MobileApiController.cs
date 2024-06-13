@@ -20,9 +20,9 @@ namespace MKExpress.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpGet(StaticValues.MobileAPIGetShipmentByMemberPath)]
-        public async Task<List<ShipmentResponse>> GetShipmentByMember([FromQuery] Guid memberId, [FromQuery] ShipmentStatusEnum shipmentStatus)
+        public async Task<List<ShipmentResponse>> GetShipmentByMember([FromQuery] ShipmentStatusEnum shipmentStatus)
         {
-            return await _mobileApiService.GetShipmentByMember(memberId, shipmentStatus);
+            return await _mobileApiService.GetShipmentByMember(shipmentStatus);
         }
 
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
@@ -30,9 +30,9 @@ namespace MKExpress.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpPost(StaticValues.MobileAPIMarkPickupDonePath)]
-        public async Task<bool> MarkPickupDone([FromQuery] Guid memberId, [FromQuery] Guid shipmentId)
+        public async Task<bool> MarkPickupDone([FromQuery] Guid shipmentId)
         {
-            return await _mobileApiService.MarkPickupDone(memberId, shipmentId);
+            return await _mobileApiService.MarkPickupDone(shipmentId);
         }
 
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
@@ -40,9 +40,9 @@ namespace MKExpress.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpPost(StaticValues.MobileAPIMarkReadyForPickupPath)]
-        public async Task<bool> MarkReadyForPickup([FromQuery] Guid memberId, [FromQuery] Guid shipmentId)
+        public async Task<bool> MarkReadyForPickup([FromQuery] Guid shipmentId)
         {
-            return await _mobileApiService.MarkReadyForPickup(memberId, shipmentId);
+            return await _mobileApiService.MarkReadyForPickup(shipmentId);
         }
 
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]

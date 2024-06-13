@@ -11,6 +11,7 @@ namespace MKExpress.API.Middleware
         private readonly RequestDelegate _next;
         private static Guid _userId;
         private static string _userRole;
+        private static Guid? _memberId;
 
         public JwtMiddleware(RequestDelegate next)
         {
@@ -57,7 +58,8 @@ namespace MKExpress.API.Middleware
                 var jwtToken = (JwtSecurityToken)validatedToken;
 
                 var userId = jwtToken.Claims.First(x => x.Type == "userId").Value;
-                _userRole = jwtToken.Claims.First(x => x.Type == "roleCode").Value;
+                var memberId = jwtToken.Claims.FirstOrDefault(x => x.Type == "memberId")?.Value??null;
+                _userRole =jwtToken.Claims.First(x=>x.Type=="roleCode").Value;
                 if (!Guid.TryParse(userId, out _userId))
                     return false;
 
@@ -72,6 +74,10 @@ namespace MKExpress.API.Middleware
         public static Guid GetUserId()
         {
             return _userId;
+        }
+        public static Guid? GetMemberId()
+        {
+            return _memberId;
         }
 
         public static string GetUserRole()

@@ -109,8 +109,8 @@ app.UseSwaggerUI(options =>
     options.DocExpansion(DocExpansion.None);
 });
 app.UseCustomExceptionHandler();
-app.UseCors(_policyName);
 app.UseRouting();
+app.UseCors(_policyName);
 app.UseMiddleware<JwtMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication();

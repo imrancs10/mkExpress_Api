@@ -6,9 +6,9 @@ namespace MKExpress.API.Repository
 {
     public interface IMobileApiRepository
     {
-        Task<List<Shipment>> GetShipmentByMember(Guid memberId,ShipmentStatusEnum shipmentStatus);
-        Task<bool> MarkReadyForPickup(Guid memberId,Guid shipmentId);
-        Task<bool> MarkPickupDone(Guid memberId, Guid shipmentId);
+        Task<List<Shipment>> GetShipmentByMember(ShipmentStatusEnum shipmentStatus);
+        Task<bool> MarkReadyForPickup(Guid shipmentId);
+        Task<bool> MarkPickupDone(Guid shipmentId);
         Task<bool> MarkPickupFailed(MarkPickupStatusRequest request);
         Task<bool> MarkPickupReschedule(MarkPickupStatusRequest request);
     }

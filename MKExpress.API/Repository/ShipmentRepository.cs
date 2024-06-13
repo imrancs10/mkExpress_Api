@@ -237,25 +237,25 @@ namespace MKExpress.API.Repository
                 .Include(x => x.ShipmentDetail)
                 .ThenInclude(x => x.ConsigneeCity)
                 .Where(x => !x.IsDeleted && (!_filterByCreatedBy || x.CreatedBy == _userId) &&
-                (
-                    (requests.CustomerId == null || x.CustomerId == requests.CustomerId) &&
+                (requests.CustomerId == null || x.CustomerId == requests.CustomerId) &&
                     (requests.StationId == null || x.ShipmentDetail.ToStoreId == requests.StationId) &&
                     (string.IsNullOrEmpty(requests.Status) || x.Status == requests.Status) &&
-                    (requests.CreatedFrom == null || (x.CreatedAt.Date >= requests.ReceivedFrom.Value.Date && x.CreatedAt.Date <= requests.CreatedTo.Value.Date)) &&
+                    (requests.CreatedFrom == null || (x.CreatedAt.Date >= requests.CreatedFrom.Value.Date && x.CreatedAt.Date <= requests.CreatedTo.Value.Date)) &&
                     (requests.DeliveredFrom == null || (x.DeliveryDate.Value.Date >= requests.DeliveredFrom.Value.Date && x.DeliveryDate.Value.Date <= requests.DeliveredTo.Value.Date)) &&
                     (requests.ReceivedFrom == null || (x.ReceiveDate.Value.Date >= requests.ReceivedFrom.Value.Date && x.ReceiveDate.Value.Date <= requests.ReceivedTo.Value.Date)) &&
                     (requests.CodDateFrom == null || (x.CODDate.Value.Date >= requests.CodDateFrom.Value.Date && x.CODDate.Value.Date <= requests.CodDateTo.Value.Date)) &&
                     (string.IsNullOrEmpty(requests.Reason) || x.StatusReason == requests.Reason) &&
                     (requests.ConsigneeCityId == null || x.ShipmentDetail.ConsigneeCityId == requests.ConsigneeCityId)
-            ));
+            );
 
-            return new PagingResponse<Shipment>()
+            var res= new PagingResponse<Shipment>()
             {
                 Data = await query.Skip((requests.PageNo - 1) * requests.PageSize).Take(requests.PageSize).ToListAsync(),
                 TotalRecords = await query.CountAsync(),
                 PageNo = requests.PageNo,
                 PageSize = requests.PageSize
             };
+            return res;
         }
 
         public async Task<bool> UpdateShipmentStatus(List<Guid> shipmentIds, ShipmentStatusEnum newStatus, string comment = "")

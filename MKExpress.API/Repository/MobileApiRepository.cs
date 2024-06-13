@@ -6,6 +6,7 @@ using MKExpress.API.DTO.Response;
 using MKExpress.API.Enums;
 using MKExpress.API.Exceptions;
 using MKExpress.API.Extension;
+using MKExpress.API.Middleware;
 using MKExpress.API.Models;
 using MKExpress.API.Services;
 
@@ -28,20 +29,20 @@ namespace MKExpress.API.Repository
             _appSettingRepository = appSettingRepository;
         }
 
-        public async Task<List<Shipment>> GetShipmentByMember(Guid memberId, ShipmentStatusEnum shipmentStatus)
+        public async Task<List<Shipment>> GetShipmentByMember(ShipmentStatusEnum shipmentStatus)
         {
             return await _context.AssignShipmentMembers
                 .Include(x => x.Shipment)
-                .Where(x => !x.IsDeleted && x.MemberId == memberId && x.Shipment.Status == shipmentStatus.ToFormatString())
+                .Where(x => !x.IsDeleted && x.MemberId == JwtMiddleware.GetMemberId() && x.Shipment.Status == shipmentStatus.ToFormatString())
                 .Select(x => x.Shipment)
                 .OrderBy(x => x.SchedulePickupDate)
                 .ToListAsync();
         }
 
-        public async Task<bool> MarkPickupDone(Guid memberId, Guid shipmentId)
+        public async Task<bool> MarkPickupDone(Guid shipmentId)
         {
             var data = await _context.AssignShipmentMembers
-                .Where(x => !x.IsDeleted && x.ShipmentId == shipmentId && x.MemberId == memberId)
+                .Where(x => !x.IsDeleted && x.ShipmentId == shipmentId && x.MemberId == JwtMiddleware.GetMemberId())
                 .FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.Error_ShipmentNotAssignedToYou, StaticValues.Message_ShipmentNotAssignedToYou);
 
             var trans = _context.Database.BeginTransaction();
@@ -60,7 +61,7 @@ namespace MKExpress.API.Repository
                     Comment1 = ShipmentStatusEnum.PickedUp.ToFormatString(),
                     Activity = ShipmentStatusEnum.PickedUp.ToFormatString(),
                     ShipmentId = shipmentId,
-                    CommentBy = memberId,
+                    CommentBy = JwtMiddleware.GetMemberId(),
                     CreatedAt = DateTime.Now
                 };
 
@@ -86,7 +87,7 @@ namespace MKExpress.API.Repository
             try
             {
                 var data = await _context.AssignShipmentMembers
-                       .Where(x => !x.IsDeleted && x.ShipmentId == request.ShipmentId && x.MemberId == request.MemberId)
+                       .Where(x => !x.IsDeleted && x.ShipmentId == request.ShipmentId && x.MemberId == JwtMiddleware.GetMemberId())
                        .FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.Error_ShipmentNotAssignedToYou, StaticValues.Message_ShipmentNotAssignedToYou);
 
                 var shipment = await _context.Shipments.Where(x => !x.IsDeleted && x.Id == request.ShipmentId)
@@ -99,7 +100,7 @@ namespace MKExpress.API.Repository
                     Comment1 = request.Reason,
                     Activity = ShipmentStatusEnum.PickupFailed.ToFormatString(),
                     ShipmentId = request.ShipmentId,
-                    CommentBy = request.MemberId,
+                    CommentBy = JwtMiddleware.GetMemberId(),
                     CreatedAt = DateTime.Now
                 };
                 var trackResult = await _shipmentTrackingRepository.AddTracking(newShipmentTracking);
@@ -270,10 +271,10 @@ namespace MKExpress.API.Repository
             }
         }
 
-        public async Task<bool> MarkReadyForPickup(Guid memberId, Guid shipmentId)
+        public async Task<bool> MarkReadyForPickup(Guid shipmentId)
         {
             var data = await _context.AssignShipmentMembers
-               .Where(x => !x.IsDeleted && x.ShipmentId == shipmentId && x.MemberId == memberId)
+               .Where(x => !x.IsDeleted && x.ShipmentId == shipmentId && x.MemberId == JwtMiddleware.GetMemberId())
                .FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.Error_ShipmentNotAssignedToYou, StaticValues.Message_ShipmentNotAssignedToYou);
 
             var trans = _context.Database.BeginTransaction();
@@ -291,7 +292,7 @@ namespace MKExpress.API.Repository
                     Comment1 = ShipmentStatusEnum.ReadyForPickup.ToFormatString(),
                     Activity = ShipmentStatusEnum.ReadyForPickup.ToFormatString(),
                     ShipmentId = shipmentId,
-                    CommentBy = memberId,
+                    CommentBy = JwtMiddleware.GetMemberId(),
                     CreatedAt = DateTime.Now
                 };
 
