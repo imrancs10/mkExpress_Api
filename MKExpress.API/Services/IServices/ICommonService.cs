@@ -7,5 +7,6 @@ namespace MKExpress.API.Services
         bool ValidateThirdPartyShipmentStatus(ShipmentStatusEnum shipmentStatus);
         string ValidateShipmentStatus(ShipmentStatusEnum currentStatus,ShipmentStatusEnum newStatus);
         string ValidateShipmentStatus(string currentStatus, ShipmentStatusEnum newStatus);
+        string GeneratePasswordHash(string base64String);
     }
 }

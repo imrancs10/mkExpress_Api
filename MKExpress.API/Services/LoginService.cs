@@ -18,13 +18,15 @@ namespace MKExpress.API.Services
         private readonly IMapper _mapper;
         private readonly IMailService _mailService;
         private readonly IConfiguration _configuration;
-        public LoginService(IUserRoleMenuMapperRepository roleMenuMapperRepository,ILoginRepository loginRepository, IMapper mapper, IMailService mailService, IConfiguration configuration)
+        private readonly ICommonService _commonService;
+        public LoginService(IUserRoleMenuMapperRepository roleMenuMapperRepository,ILoginRepository loginRepository, IMapper mapper, IMailService mailService, IConfiguration configuration, ICommonService commonService)
         {
             _loginRepository = loginRepository;
             _mapper = mapper;
             _mailService = mailService;
             _configuration = configuration;
-            _roleMenuMapperRepository= roleMenuMapperRepository;
+            _roleMenuMapperRepository = roleMenuMapperRepository;
+            _commonService = commonService;
         }
 
         public async Task<bool> AssignRole(string email, Guid roleId)
@@ -39,6 +41,9 @@ namespace MKExpress.API.Services
 
         public async Task<bool> ChangePassword(PasswordChangeRequest request)
         {
+            request.OldPassword =_commonService.GeneratePasswordHash(request.OldPassword);
+            request.NewPassword = _commonService.GeneratePasswordHash(request.NewPassword);
+            request.ConfirmNewPassword = _commonService.GeneratePasswordHash(request.ConfirmNewPassword);
             return await _loginRepository.ChangePassword(request);
         }
 
@@ -58,9 +63,8 @@ namespace MKExpress.API.Services
             {
                 throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidDataSupplied, StaticValues.ErrorType_InvalidDataSupplied);
             }
-            request.Password = request.Password.DecodeBase64();
-            request.Password = PasswordHasher.GenerateHash(request.Password);
-
+           
+            request.Password=_commonService.GeneratePasswordHash(request.Password);
             LoginResponse response = new()
             {
                 UserResponse = _mapper.Map<UserResponse>(await _loginRepository.Login(request))
@@ -84,27 +88,26 @@ namespace MKExpress.API.Services
 
         public async Task<UserResponse> RegisterUser(UserRequest request)
         {
-
             if (await _loginRepository.IsUserExist(request.Email))
             {
                 throw new BusinessRuleViolationException(StaticValues.ErrorType_AlreadyExist, StaticValues.Error_EmailAlreadyRegistered);
             }
             User user = _mapper.Map<User>(request);
             user.IsEmailVerified = _configuration.GetValue<int>("EnableEmailVerification", 0) == 0;
-            user.Password = PasswordHasher.GenerateHash(request.Password.DecodeBase64());
+            user.Password = _commonService.GeneratePasswordHash(request?.Password);
             user.EmailVerificationCode = Guid.NewGuid().ToString() + Guid.NewGuid().ToString();
             user.EmailVerificationCodeExpireOn = DateTime.Now.AddHours(48);
             var res = _mapper.Map<UserResponse>(await _loginRepository.RegisterUser(user));
             if (res.Id != null)
             {
-                var emailBody = await _mailService.GetMailTemplete(Constants.EmailTemplateEnum.EmailVerification);
+                //var emailBody = await _mailService.GetMailTemplete(Constants.EmailTemplateEnum.EmailVerification);
 
-                MailRequest mailRequest = new()
-                {
-                    ToEmail = request.Email,
-                    Body = emailBody,
-                    Subject = "Email verification | MK Express"
-                };
+                //MailRequest mailRequest = new()
+                //{
+                //    ToEmail = request.Email,
+                //    Body = emailBody,
+                //    Subject = "Email verification | MK Express"
+                //};
                 // _mailService.SendEmailAsync(mailRequest);
             }
             return res;
