@@ -307,12 +307,12 @@ namespace MKExpress.Web.API.Controllers
             return await _userRoleService.SearchRolesAsync(pagingRequest);
         }
 
-        [ProducesResponseType(typeof(MenuResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpPut(StaticValues.MasterMenuPath)]
-        public async Task<MenuResponse> AddMenuAsync([FromBody] MenuRequest menu)
+        public async Task<bool> AddMenuAsync([FromBody] MenuRequest menu)
         {
             return await _menuService.AddMenuAsync(menu);
         }

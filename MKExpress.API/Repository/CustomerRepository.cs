@@ -6,8 +6,10 @@ using MKExpress.API.Data;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
 using MKExpress.API.Exceptions;
+using MKExpress.API.Extension;
 using MKExpress.API.Models;
 using MKExpress.API.Repository;
+using MKExpress.API.Services;
 
 namespace MKExpress.API.Repositories
 {
@@ -17,12 +19,14 @@ namespace MKExpress.API.Repositories
         private readonly IUserRepository _userRepository;
         private readonly IUserRoleRepository _userRoleRepository;
         private readonly IAppSettingRepository _appSettingRepository;
-        public CustomerRepository(MKExpressContext context,IUserRepository userRepository,IAppSettingRepository appSettingRepository, IUserRoleRepository userRoleRepository)
+        private readonly ICommonService _commonService;
+        public CustomerRepository(MKExpressContext context,IUserRepository userRepository,IAppSettingRepository appSettingRepository, IUserRoleRepository userRoleRepository,ICommonService commonService)
         {
             _context = context;
             _userRepository = userRepository;
             _appSettingRepository = appSettingRepository;
             _userRoleRepository = userRoleRepository;
+            _commonService = commonService;
         }
         public async Task<Customer> Add(Customer customer)
         {
@@ -41,10 +45,10 @@ namespace MKExpress.API.Repositories
             {
                 var _defaultPassword = await _appSettingRepository.GetAppSettingValueByKey<string>("defaultPassword");
                 var customerAdminRole = await _userRoleRepository.GetRoleByCode("customeradmin");
-                if (customerAdminRole == null)
+                if (string.IsNullOrEmpty(_defaultPassword) || customerAdminRole==null)
                 {
                     trans.Rollback();
-                    return default;
+                    throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidConfigData, StaticValues.ErrorType_InvalidConfigData);
                 }
                 var user = new User()
                 {
@@ -59,7 +63,7 @@ namespace MKExpress.API.Repositories
                     IsLocked = false,
                     IsDeleted = false,
                     IsTcAccepted = true,
-                    Password = PasswordHasher.GenerateHash(_defaultPassword),
+                    Password = _commonService.GeneratePasswordHash(_defaultPassword?.EncodeBase64()??string.Empty),
                     UserName = customer.Email,
                     RoleId=customerAdminRole.Id,
                     Mobile=customer.ContactNo  
@@ -96,7 +100,7 @@ namespace MKExpress.API.Repositories
             return await _context.Customers
                 .Include(x => x.City)
                 .Where(customer => customer.Id == customerId)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.DataNotFoundMessage); ;
         }
 
         public async Task<Customer> Update(Customer customer)

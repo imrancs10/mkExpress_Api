@@ -15,10 +15,10 @@ namespace MKExpress.API.Services
             _mapper = mapper;
             _repository = repository;
         }
-        public async Task<MenuResponse> AddMenuAsync(MenuRequest req)
+        public async Task<bool> AddMenuAsync(MenuRequest req)
         {
             var Menu = _mapper.Map<Menu>(req);
-            return _mapper.Map<MenuResponse>( await _repository.AddMenuAsync(Menu));
+            return await _repository.AddMenuAsync(Menu);
         }
 
         public async Task<PagingResponse<MenuResponse>> GetAllMenusAsync(PagingRequest request)

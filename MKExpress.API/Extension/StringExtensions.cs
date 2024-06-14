@@ -14,6 +14,8 @@ namespace MKExpress.API.Extension
 
         public static string EncodeBase64(this String str)
         {
+            if(string.IsNullOrEmpty(str))
+                throw new ArgumentNullException(nameof(str));
             var plainTextBytes = Encoding.UTF8.GetBytes(str);
             return Convert.ToBase64String(plainTextBytes);
         } 

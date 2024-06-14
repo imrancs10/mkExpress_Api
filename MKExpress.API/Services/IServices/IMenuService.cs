@@ -5,7 +5,7 @@ namespace MKExpress.API.Services
 {
     public interface IMenuService
     {
-        Task<MenuResponse> AddMenuAsync(MenuRequest menu);
+        Task<bool> AddMenuAsync(MenuRequest menu);
         Task<bool> DeleteMenuAsync(Guid id);
         Task<bool> UpdateMenuAsync(MenuRequest menu);
         Task<MenuResponse> GetMenuByIdAsync(Guid id);
