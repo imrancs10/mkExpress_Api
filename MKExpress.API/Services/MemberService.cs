@@ -24,7 +24,7 @@ namespace MKExpress.API.Services
         public async Task<MemberResponse> Add(MemberRequest request)
         {
             Member member=_mapper.Map<Member>(request);
-            return _mapper.Map<MemberResponse>(await _memberRepository.Add(member,request.Password));
+            return _mapper.Map<MemberResponse>(await _memberRepository.Add(member));
         }
 
         public async Task<bool> ChangePassword(PasswordChangeRequest changeRequest)

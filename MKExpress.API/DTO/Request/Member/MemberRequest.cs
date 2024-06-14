@@ -10,7 +10,6 @@ namespace MKExpress.API.DTO.Request
         public string Email { get; set; }
         public string? Phone { get; set; }
         public string Mobile { get; set; }
-        public string? Password { get; set; }
         public string? IdNumber { get; set; }
         public GenderEnum Gender { get; set; }
         public Guid RoleId { get; set; }

@@ -6,7 +6,7 @@ namespace MKExpress.API.Repository
 {
     public interface IMemberRepository
     {
-        Task<Member> Add(Member entity,string password);
+        Task<Member> Add(Member entity);
         Task<Member> Update(Member entity);
         Task<int> Delete(Guid Id);
         Task<Member> Get(Guid Id);

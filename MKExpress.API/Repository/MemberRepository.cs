@@ -6,8 +6,9 @@ using MKExpress.API.Data;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
 using MKExpress.API.Exceptions;
+using MKExpress.API.Extension;
 using MKExpress.API.Models;
-using MKExpress.API.Repository.IRepository;
+using MKExpress.API.Services;
 
 namespace MKExpress.API.Repository
 {
@@ -16,12 +17,16 @@ namespace MKExpress.API.Repository
         private readonly MKExpressContext _context;
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly ICommonService _commonService;
+        private readonly IAppSettingRepository _appSettingRepository;
 
-        public MemberRepository(MKExpressContext context, IUserRepository userRepository, IMapper mapper)
+        public MemberRepository(MKExpressContext context, IUserRepository userRepository, IMapper mapper,ICommonService commonService, IAppSettingRepository appSettingRepository)
         {
             _context = context;
             _userRepository = userRepository;
             _mapper = mapper;
+            _commonService = commonService;
+            _appSettingRepository = appSettingRepository;
         }
 
         public async Task<bool> ActiveDeactivate(Guid memberId)
@@ -43,7 +48,7 @@ namespace MKExpress.API.Repository
             return false;
         }
 
-        public async Task<Member> Add(Member request, string password)
+        public async Task<Member> Add(Member request)
         {
             var oldData = await _context.Members.Where(x => x.Email == request.Email).FirstOrDefaultAsync();
             if (oldData != null) throw new BusinessRuleViolationException(StaticValues.EmailAlreadyExist_Error, StaticValues.EmailAlreadyExist_Message);
@@ -52,8 +57,9 @@ namespace MKExpress.API.Repository
             var entity = _context.Members.Add(request);
             if (await _context.SaveChangesAsync() > 0)
             {
+                var _defaultPassword = await _appSettingRepository.GetAppSettingValueByKey<string>("defaultPassword");
                 var user = _mapper.Map<User>(request);
-                user.Password=PasswordHasher.GenerateHash(password);
+                user.Password=PasswordHasher.GenerateHash(_defaultPassword.EncodeBase64());
                 user.RoleId =request.RoleId;
                 user.MemberId = entity.Entity.Id;
                 var res = await _userRepository.Add(user);
