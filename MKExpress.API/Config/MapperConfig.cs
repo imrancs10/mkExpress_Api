@@ -192,6 +192,7 @@ namespace MKExpress.API.Config
             #region System Actions
             CreateMap<ShipmentTracking, SystemActionResponse>()
                         .ForMember(des => des.CustomerName, src => src.MapFrom(x => x.Shipment.Customer.Name))
+                        .ForMember(des => des.ShipmentCreatedOn, src => src.MapFrom(x => x.Shipment.CreatedAt))
                         .ForMember(des => des.UniqueReferanceNumber, src => src.MapFrom(x => x.Shipment.UniqueRefNo))
                         .ForMember(des => des.CurrentStatus, src => src.MapFrom(x => x.Shipment.Status))
                         .ForMember(des => des.ShipmentNumber, src => src.MapFrom(x => x.Shipment.ShipmentNumber))

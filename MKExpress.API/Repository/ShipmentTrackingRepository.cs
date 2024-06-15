@@ -1,20 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using MKExpress.API.Contants;
 using MKExpress.API.Data;
 using MKExpress.API.Exceptions;
 using MKExpress.API.Models;
-using MKExpress.API.Services;
+using MKExpress.API.SignalR;
 
 namespace MKExpress.API.Repository
 {
     public class ShipmentTrackingRepository: IShipmentTrackingRepository
     {
-        private readonly MKExpressContext _context;
-        private readonly ICommonService _commonService;
-        public ShipmentTrackingRepository(MKExpressContext context, ICommonService commonService)
+        private readonly MKExpressContext _context; 
+        private readonly IHubContext<ShipmentTrackingSingleRHub> _hubContext;
+        public ShipmentTrackingRepository(MKExpressContext context, IHubContext<ShipmentTrackingSingleRHub> hubContext)
         {
             _context = context;
-            _commonService = commonService;
+            _hubContext = hubContext;
         }
 
         public async Task<ShipmentTracking> AddTracking(ShipmentTracking shipmentTracking)
@@ -28,6 +29,8 @@ namespace MKExpress.API.Repository
             entity.State = EntityState.Added;
             if(await _context.SaveChangesAsync()<1)
                 return default;
+
+            await _hubContext.Clients.All.SendAsync("ReceiveShipmentUpdate", "New shipment added");
             return entity.Entity;
 
         }

@@ -6,6 +6,7 @@ using Microsoft.OpenApi.Models;
 using MKExpress.API.Config;
 using MKExpress.API.Dto;
 using MKExpress.API.Middleware;
+using MKExpress.API.SignalR;
 using MKExpress.API.Validations;
 using NLog;
 using Swashbuckle.AspNetCore.SwaggerUI;
@@ -64,7 +65,8 @@ builder.Services.AddAuthentication(opt =>
 {
     opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
+})
+.AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -87,9 +89,11 @@ builder.Services.AddCors(options =>
                 //.AllowAnyOrigin()
                 .WithOrigins("http://imkexpressksa.com", "http://localhost:3000", "http://localhost:3001", "http://imkexpress.com", "http://web.imkexpress.com") // Replace with the origins you want to allow
                 .AllowAnyHeader()
-                .AllowAnyMethod();
+                .AllowAnyMethod()
+                .AllowCredentials();
 });
 });
+builder.Services.AddSignalR();
 var app = builder.Build();
 
 
@@ -111,6 +115,10 @@ app.UseSwaggerUI(options =>
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors(_policyName);
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHub<ShipmentTrackingSingleRHub>("/shipment/tracking/live").RequireCors(_policyName);
+});
 app.UseCustomExceptionHandler();
 app.UseMiddleware<JwtMiddleware>();
 app.UseAuthentication();
