@@ -161,7 +161,7 @@ namespace MKExpress.API.Services
 
         //Deliver API
         //Get Assigned Shipment
-        public async Task<List<ShipmentResponse>> GetShipments(string userId, ShipmentEnum shipment, ShipmentStatusEnum shipmentStatus)
+        public async Task<List<ShipmentResponse>> GetShipments(string userId, ShipmentStatusEnum shipment, ShipmentStatusEnum shipmentStatus)
         {
             try
             {

@@ -122,7 +122,7 @@ namespace MKExpress.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpGet(StaticValues.ShipmentByUserNamePath)]
-        public async Task<List<ShipmentResponse>> GetShipments([FromQuery] string userId, [FromQuery] ShipmentEnum shipment, [FromQuery] ShipmentStatusEnum shipmentStatus)
+        public async Task<List<ShipmentResponse>> GetShipments([FromQuery] string userId, [FromQuery] ShipmentStatusEnum shipment, [FromQuery] ShipmentStatusEnum shipmentStatus)
         {
             return await _shipmentService.GetShipments(userId, shipment, shipmentStatus);
         }

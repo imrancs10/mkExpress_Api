@@ -167,7 +167,7 @@ namespace MKExpress.API.Repository
                  .Where(x => !x.IsDeleted && ids.Contains(x.Id)).ToListAsync();
         }
 
-        public async Task<List<Shipment>> GetShipmentByUser(string userName, ShipmentEnum shipment, ShipmentStatusEnum shipmentStatus)
+        public async Task<List<Shipment>> GetShipmentByUser(string userName, ShipmentStatusEnum shipment, ShipmentStatusEnum shipmentStatus)
         {
             return await _context.Shipments
                 .Include(x => x.ShipmentDetail)

@@ -43,6 +43,7 @@
         public const string MasterJourneyByIdPath = APIPrefix + "master-journey/get/{id}";
         public const string MasterJourneySearchPath = APIPrefix + "master-journey/search";
         public const string MasterJourneyDropdownPath = APIPrefix + "master-journey/dropdown/journey";
+        public const string MasterDataShipmentStatusListPath = APIPrefix + "master-data/shipment/status/list";
 
         #region Master Roles
         public const string MasterRolePath = APIPrefix + "master-role";
@@ -159,6 +160,10 @@
         public const string MobileAPIMarkPickupRescheduledPath = $"api/mobile/update/pickup/rescheduled";
         public const string MobileAPIMarkReadyForPickupPath = $"api/mobile/update/pickup/ready";
         public const string MobileAPIUploadPodImagePath = $"api/mobile/upload/pod/image";
+        #endregion
+
+        #region System Action
+        public const string SystemActionGetAllPath = APIPrefix + "system/action/get/all";
         #endregion
 
         #endregion

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
+using MKExpress.API.Enums;
 using MKExpress.API.Models;
 using MKExpress.API.Repository;
 
@@ -26,6 +27,11 @@ namespace MKExpress.API.Services
         public async Task<int> Delete(Guid masterDataId)
         {
             return await _masterDataRepository.Delete(masterDataId);
+        }
+
+        public List<string> ShipmentStatusList()
+        {
+            return new List<string>(Enum.GetNames(typeof(ShipmentStatusEnum)));
         }
 
         public async Task<MasterDataResponse> Get(Guid masterDataId)

@@ -426,5 +426,15 @@ namespace MKExpress.Web.API.Controllers
         {
             return await _userRoleMenuMapper.SearchRolesAsync(searchTerm);
         }
+
+        [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpGet(StaticValues.MasterDataShipmentStatusListPath)]
+        public List<string> ShipmentStatusList()
+        {
+            return _masterDataService.ShipmentStatusList();
+        }
     }
 }

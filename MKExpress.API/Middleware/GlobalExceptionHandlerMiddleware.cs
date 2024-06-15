@@ -31,7 +31,7 @@ namespace MKExpress.API.Middleware
             }
             catch (Exception ex)
             {
-                _loggerManager.LogError(ex, ex.Message); // Logging the global exception;
+               //_loggerManager.LogError(ex, ex.Message); // Logging the global exception;
                 await HandleExecptionAsync(context, ex);
             }
         }

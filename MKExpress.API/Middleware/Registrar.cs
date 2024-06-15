@@ -43,6 +43,8 @@ namespace MKExpress.API.Middleware
                 .AddScoped<IThirdPartyCourierService, ThirdPartyCourierService>()
                 .AddScoped<IShipmentTrackingRepository, ShipmentTrackingRepository>()
                 .AddScoped<IShipmentImageRepository,ShipmentImageRepository>()
+                .AddScoped<ISystemActionRepository, SystemActionRepository>()
+                .AddScoped<ISystemActionService, SystemActionService>()
                 .AddScoped<IMobileApiRepository, MobileApiRepository>()
                 .AddScoped<IMobileApiService, MobileApiService>()
                 .AddScoped<IAssignShipmentMemberRepository, AssignShipmentMemberRepository>()

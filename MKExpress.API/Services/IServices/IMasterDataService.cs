@@ -8,5 +8,6 @@ namespace MKExpress.API.Services
     {
         Task<List<MasterDataResponse>> GetByMasterDataType(string masterDataType);
         Task<List<MasterDataResponse>> GetByMasterDataTypes(List<string> masterDataTypes);
+        List<string> ShipmentStatusList();
     }
 }

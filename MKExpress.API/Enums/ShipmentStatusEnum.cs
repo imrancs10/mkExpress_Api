@@ -1,10 +1,38 @@
 ﻿namespace MKExpress.API.Enums
 {
-    public enum ShipmentEnum
+    public enum ShipmentStatusEnum
     {
-        Delivery,
-        Return,
-        Pickup,
-        Trasfer
+        Created = 1,
+        ReadyForPickup,
+        AssignedForPickup,
+        PickedUp,
+        PickupRescheduled,
+        Received,
+        Stored,
+        AssignedForDelivery,
+        OutForDelivery,
+        CalledConsignee,
+        AssignedForReturn,
+        Delivered,
+        FailedDelivery,
+        OnHold,
+        OutForReturn,
+        Returned,
+        AssignedForTransfer,
+        OutForTransfer,
+        InTransit,
+        Canceled,
+        Lost,
+        Owned,
+        Released,
+        ContainerSealed,
+        ReceivedInTransit,
+        ConsigneeInfoUpdated,
+        MarkAsResolved,
+        ReturnedToCustomer,
+        MarkedAsLost,
+        NoStatus,
+        ChangedManually,
+        PickupFailed
     }
 }

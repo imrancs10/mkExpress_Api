@@ -189,6 +189,25 @@ namespace MKExpress.API.Config
             CreateMap<PagingResponse<AssignShipmentMember>, PagingResponse<AssignShipmentMemberResponse>>();
             #endregion
 
+            #region System Actions
+            CreateMap<ShipmentTracking, SystemActionResponse>()
+                        .ForMember(des => des.CustomerName, src => src.MapFrom(x => x.Shipment.Customer.Name))
+                        .ForMember(des => des.UniqueReferanceNumber, src => src.MapFrom(x => x.Shipment.UniqueRefNo))
+                        .ForMember(des => des.CurrentStatus, src => src.MapFrom(x => x.Shipment.Status))
+                        .ForMember(des => des.ShipmentNumber, src => src.MapFrom(x => x.Shipment.ShipmentNumber))
+                        .ForMember(des => des.ActionByName, src => src.MapFrom(x => x.CreatedByUser.FirstName + " " + x.CreatedByUser.LastName))
+                        .ForMember(des => des.ActionDate, src => src.MapFrom(x => x.CreatedAt))
+                        .ForMember(des => des.ActionType, src => src.MapFrom(x => x.Activity))
+                        .ForMember(des => des.CodAmount, src => src.MapFrom(x => x.Shipment.CODAmount))
+                        .ForMember(des => des.ConsigneeCity, src => src.MapFrom(x => x.Shipment.ShipmentDetail.ConsigneeCity.Value))
+                        .ForMember(des => des.ReceiveOn, src => src.MapFrom(x => x.Shipment.ReceiveDate.Value))
+                        .ForMember(des => des.ConsigneeName, src => src.MapFrom(x => x.Shipment.ShipmentDetail.ConsigneeName))
+                        .ForMember(des => des.ShipperName, src => src.MapFrom(x => x.Shipment.ShipmentDetail.ShipperName))
+                        .ForMember(des => des.Station, src => src.MapFrom(x => x.Shipment.ShipmentDetail.ToStore.Value));
+
+            CreateMap<PagingResponse<ShipmentTracking>, PagingResponse<SystemActionResponse>>();
+            #endregion
+
             #region User Role
             CreateMap<UserRoleRequest, UserRole>();
             CreateMap<UserRole, UserRoleResponse>();

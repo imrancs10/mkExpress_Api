@@ -1,5 +1,6 @@
 ﻿using MKExpress.API.Common;
 using MKExpress.API.Contants;
+using MKExpress.API.Enums;
 using MKExpress.API.Exceptions;
 using MKExpress.API.Extension;
 
