@@ -115,14 +115,14 @@ app.UseSwaggerUI(options =>
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors(_policyName);
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapHub<ShipmentTrackingSingleRHub>("/shipment/tracking/live").RequireCors(_policyName);
-});
 app.UseCustomExceptionHandler();
 app.UseMiddleware<JwtMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHub<ShipmentTrackingSingleRHub>("/shipment/tracking/live").RequireCors(_policyName);
+});
 app.Run();

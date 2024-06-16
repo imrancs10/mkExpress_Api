@@ -58,8 +58,10 @@ namespace MKExpress.API.Repository
             if (await _context.SaveChangesAsync() > 0)
             {
                 var _defaultPassword = await _appSettingRepository.GetAppSettingValueByKey<string>("defaultPassword");
+                var _enableUserEmailVarification = await _appSettingRepository.GetAppSettingValueByKey<int>("EnableEmailVerification");
                 var user = _mapper.Map<User>(request);
                 user.Password=PasswordHasher.GenerateHash(_defaultPassword.EncodeBase64());
+                user.IsEmailVerified=_enableUserEmailVarification==0?true:false;
                 user.RoleId =request.RoleId;
                 user.MemberId = entity.Entity.Id;
                 var res = await _userRepository.Add(user);

@@ -72,6 +72,53 @@ namespace MKExpress.API.Repository
             }
             trans.Rollback();
             return false;
+        } 
+        
+        public async Task<bool> AssignForDelivery(List<AssignShipmentMember> requests)
+        {
+            if (!requests.Any())
+                throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidParameters, StaticValues.Error_InvalidParameters);
+
+            var shipmentIds = requests.Select(x => x.ShipmentId).ToList();
+            var shipments = await _context.Shipments.Where(x => !x.IsDeleted && shipmentIds.Contains(x.Id)).ToDictionaryAsync(x => x.Id, y => y);
+            if (!shipments.Any())
+                throw new BusinessRuleViolationException(StaticValues.Error_ShipmentNumberNotFound, StaticValues.Message_ShipmentNumberNotFound);
+            if (shipments.Count != requests.Count)
+                throw new BusinessRuleViolationException(StaticValues.Error_SomeShipmentNoNotFound, StaticValues.Message_SomeShipmentNoNotFound);
+            var memberId = requests.First().MemberId;
+            var oldMemberData = await _context.AssignShipmentMembers
+                .Where(x => !x.IsDeleted && x.MemberId == memberId && shipmentIds.Contains(x.ShipmentId))
+                .ToListAsync();
+
+            var trans = _context.Database.BeginTransaction();
+            var userId = JwtMiddleware.GetUserId();
+            if ((oldMemberData.Any() && await _context.SaveChangesAsync() > 0) || !oldMemberData.Any())
+            {
+                var shipmentMember = new List<AssignShipmentMember>();
+                requests.ForEach(res =>
+                {
+                    shipmentMember.Add(new AssignShipmentMember()
+                    {
+                        AssignAt = DateTime.UtcNow,
+                        ShipmentId = res.ShipmentId,
+                        Id = Guid.NewGuid(),
+                        AssignById = userId,
+                        MemberId = res.MemberId,
+                        Status = _commonService.ValidateShipmentStatus(shipments[res.ShipmentId].Status, ShipmentStatusEnum.AssignedForDelivery),
+                    });
+                });
+                _context.AssignShipmentMembers.AddRange(shipmentMember);
+                if (await _context.SaveChangesAsync() > 0)
+                {
+                    if (await UpdateShipmentStatus(shipmentIds, ShipmentStatusEnum.AssignedForDelivery))
+                    {
+                        trans.Commit();
+                        return true;
+                    }
+                }
+            }
+            trans.Rollback();
+            return false;
         }
 
         public async Task<Shipment> CreateShipment(Shipment shipment)
@@ -295,11 +342,7 @@ namespace MKExpress.API.Repository
                     });
                 });
 
-                _context.ShipmentTrackings.AddRange(shipmentTrackings);
-                if (await _context.SaveChangesAsync() > 0)
-                {
-                    return true;
-                }
+                return await _shipmentTrackingRepository.AddTracking(shipmentTrackings);
             }
             return false;
         }

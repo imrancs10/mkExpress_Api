@@ -16,6 +16,7 @@ namespace MKExpress.API.Repository
         Task<Shipment?> ValidateShipmentStatus(string shipmentNo, ShipmentStatusEnum status);
         Task<List<Shipment>> GetShipment(List<Guid> ids);
         Task<bool> AssignForPickup(List<AssignShipmentMember> requests);
+        Task<bool> AssignForDelivery(List<AssignShipmentMember> requests);
         Task<bool> UpdateShipmentStatus(List<Guid> shipmentIds,ShipmentStatusEnum newStatus,string comment = "");
         Task<List<Shipment>> GetShipmentByUser(string userName, ShipmentStatusEnum shipment, ShipmentStatusEnum shipmentStatus);
         Task<bool> HoldShipment(List<Guid> requests);

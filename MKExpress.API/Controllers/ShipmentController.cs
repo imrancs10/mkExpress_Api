@@ -111,6 +111,16 @@ namespace MKExpress.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpPost(StaticValues.ShipmentAssignDeliveryPath)]
+        public async Task<bool> AssignForDelivery([FromBody] List<AssignForPickupRequest> request)
+        {
+            return await _shipmentService.AssignForDelivery(request);
+        }
+
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpPost(StaticValues.ShipmentHoldPath)]
         public async Task<bool> HoldShipment([FromBody] List<Guid> request)
         {

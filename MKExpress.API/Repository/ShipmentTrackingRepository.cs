@@ -27,12 +27,28 @@ namespace MKExpress.API.Repository
             //shipmentTracking.CommentBy = JwtMiddleware.GetUserId();
             var entity = _context.ShipmentTrackings.Add(shipmentTracking);
             entity.State = EntityState.Added;
-            if(await _context.SaveChangesAsync()<1)
+            if (await _context.SaveChangesAsync() < 1)
+            {
+                await _hubContext.Clients.All.SendAsync("ReceiveShipmentUpdate", "New shipment added");
+                return entity.Entity;
+            }
+            return default(ShipmentTracking);
+
+        }
+
+        public async Task<bool> AddTracking(List<ShipmentTracking> shipmentTrackings)
+        {
+            if (shipmentTrackings == null)
+            {
+                throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidParameters, StaticValues.Error_InvalidParameters);
+            }
+            //shipmentTracking.CommentBy = JwtMiddleware.GetUserId();
+            _context.ShipmentTrackings.AddRange(shipmentTrackings);
+            if (await _context.SaveChangesAsync() < 1)
                 return default;
 
             await _hubContext.Clients.All.SendAsync("ReceiveShipmentUpdate", "New shipment added");
-            return entity.Entity;
-
+            return true;
         }
 
         public async Task<List<ShipmentTracking>> GetTrackingByShipmentId(Guid shipmentId)

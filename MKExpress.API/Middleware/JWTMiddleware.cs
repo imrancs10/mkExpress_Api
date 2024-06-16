@@ -30,7 +30,7 @@ namespace MKExpress.API.Middleware
             }
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
             var path = context.Request.Path;
-            if ((token == null || !ValidateToken(token)) && path.Value != "/")
+            if ((token == null || !ValidateToken(token)) && path.Value != "/" && path.Value != "/shipment/tracking/live/negotiate" && path.Value!= "/shipment/tracking/live")
             {
                 context.Response.StatusCode = 401;
                 await context.Response.WriteAsync("Token invalid");

@@ -33,6 +33,11 @@ namespace MKExpress.API.Services
             var req = _mapper.Map<List<AssignShipmentMember>>(requests);
             return await _repo.AssignForPickup(req);
         }
+        public async Task<bool> AssignForDelivery(List<AssignForPickupRequest> requests)
+        {
+            var req = _mapper.Map<List<AssignShipmentMember>>(requests);
+            return await _repo.AssignForDelivery(req);
+        }
 
         public async Task<ShipmentResponse> CreateShipment(ShipmentRequest request)
         {
