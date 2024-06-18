@@ -175,5 +175,48 @@ namespace MKExpress.API.Repositories
                 .Select(x=>new DropdownResponse() { Id=x.Id,Value=$"{x.Name}"})
                 .ToListAsync();
         }
+
+        public async Task<bool> ResetPassword(Guid customerId)
+        {
+            var oldCustomer = await _context.Customers
+                .Where(customer => customer.Id == customerId)
+                .FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.DataNotFoundMessage);
+
+            var oldUser = await _context.Users
+              .Where(user => user.Email == oldCustomer.Email)
+              .FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.DataNotFoundMessage);
+
+            var _defaultPassword = await _appSettingRepository.GetAppSettingValueByKey<string>("defaultPassword");
+            _defaultPassword = string.IsNullOrEmpty(_defaultPassword) ? "Admin@12345" : _defaultPassword;
+
+            oldUser.Password = _commonService.GeneratePasswordHash(_defaultPassword.EncodeBase64());
+            _context.Update(oldUser);
+            return await _context.SaveChangesAsync() > 0;
+
+        }
+
+        public async Task<bool> BlockUnblockCustomer(Guid customerId, bool isBlocked)
+        {
+            var oldCustomer = await _context.Customers
+                .Where(customer => customer.Id == customerId)
+                .FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.DataNotFoundMessage);
+
+            var oldUser = await _context.Users
+              .Where(user => user.Email == oldCustomer.Email)
+              .FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.DataNotFoundMessage);
+
+            oldCustomer.IsBlocked = isBlocked;
+            oldUser.IsBlocked = isBlocked;
+            var trans = _context.Database.BeginTransaction();
+            _context.Attach(oldUser);
+            _context.Attach(oldCustomer);
+            if (await _context.SaveChangesAsync() > 0)
+            {
+                trans.Commit();
+                return true;
+            }
+            trans.Rollback();
+            return false;   
+        }
     }
 }

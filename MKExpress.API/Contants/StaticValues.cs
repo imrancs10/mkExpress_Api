@@ -77,6 +77,8 @@
         public const string CustomerSearchPath = APIPrefix + "search";
         public const string CustomerGetDropdownPath = APIPrefix + "get/dropdown";
         public const string CustomerPath = APIPrefix;
+        public const string CustomerResetPasswordPath = APIPrefix+"reset/password/{customerId}";
+        public const string CustomerBlockUnblockPath = APIPrefix + "blocked/unblocked/{customerId}/{isBlocked}";
         #endregion
 
         #region Dashboard API Path

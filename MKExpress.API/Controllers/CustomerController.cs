@@ -97,5 +97,25 @@ namespace MKExpress.API.Controllers
             return await _customerService.GetCustomersDropdown();
         }
 
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpPost(StaticValues.CustomerBlockUnblockPath)]
+        public async Task<bool> BlockUnblockCustomer([FromRoute] Guid customerId, [FromRoute] bool isBlocked)
+        {
+            return await _customerService.BlockUnblockCustomer(customerId,isBlocked);
+        }
+
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        [HttpPost(StaticValues.CustomerResetPasswordPath)]
+        public async Task<bool> ResetCustomerPassword([FromRoute] Guid customerId)
+        {
+            return await _customerService.ResetPassword(customerId);
+        }
+
     }
 }

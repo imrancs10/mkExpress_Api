@@ -7,5 +7,7 @@ namespace MKExpress.API.Repository
     {
         Task<List<Customer>> GetCustomers(string contactNo);
         Task<List<DropdownResponse>> GetCustomersDropdown();
+        Task<bool> ResetPassword(Guid customerId);
+        Task<bool> BlockUnblockCustomer(Guid customerId,bool isBlocked);
     }
 }

@@ -12,6 +12,7 @@ namespace MKExpress.API.Models
         public string ZipCode { get; set; }
         public int MaxDeliveryAttempt { get; set; }
         public bool Confirmed { get; set; }
+        public bool IsBlocked { get; set; }
         public string PreferredPickupTime { get; set; }
 
         [ForeignKey("CityId")]

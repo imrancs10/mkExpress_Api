@@ -25,6 +25,11 @@ namespace MKExpress.API.Services
             return _mapper.Map<CustomerResponse>(await _customerRepository.Add(customer));
         }
 
+        public async Task<bool> BlockUnblockCustomer(Guid customerId, bool isBlocked)
+        {
+           return await _customerRepository.BlockUnblockCustomer(customerId, isBlocked);
+        }
+
         public async Task<int> Delete(Guid customerId)
         {
             await ValidateCustomer(customerId);
@@ -53,6 +58,11 @@ namespace MKExpress.API.Services
         public async Task<List<DropdownResponse>> GetCustomersDropdown()
         {
             return await _customerRepository.GetCustomersDropdown();
+        }
+
+        public async Task<bool> ResetPassword(Guid customerId)
+        {
+            return await _customerRepository.ResetPassword(customerId);
         }
 
         public async Task<PagingResponse<CustomerResponse>> Search(SearchPagingRequest searchPagingRequest)

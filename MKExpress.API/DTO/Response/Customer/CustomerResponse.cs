@@ -13,5 +13,6 @@
         public string ZipCode { get; set; }
         public Guid CityId { get; set; }
         public string City { get; set; }
+        public bool IsBlocked { get; set; }
     }
 }
