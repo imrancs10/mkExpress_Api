@@ -139,7 +139,7 @@ namespace MKExpress.API.Repository
                 {
                     Id = Guid.NewGuid(),
                     Activity = ShipmentStatusEnum.Created.ToString(),
-                    ShipmentId = shipment.Id,
+                    ShipmentId = entity.Entity.Id,
                     CommentBy = JwtMiddleware.GetUserId()
                 };
                 if (await _shipmentTrackingRepository.AddTracking(tracking) != null)

@@ -44,4 +44,14 @@
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MkExpressMessageBroker\MkExpressMessageBroker.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="googleOAuthCredential.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

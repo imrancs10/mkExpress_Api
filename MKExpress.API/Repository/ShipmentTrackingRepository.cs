@@ -27,7 +27,7 @@ namespace MKExpress.API.Repository
             //shipmentTracking.CommentBy = JwtMiddleware.GetUserId();
             var entity = _context.ShipmentTrackings.Add(shipmentTracking);
             entity.State = EntityState.Added;
-            if (await _context.SaveChangesAsync() < 1)
+            if (await _context.SaveChangesAsync()>0)
             {
                 await _hubContext.Clients.All.SendAsync("ReceiveShipmentUpdate", "New shipment added");
                 return entity.Entity;

@@ -15,12 +15,10 @@ namespace MKExpress.API.Repository
     public class UserRepository : IUserRepository
     {
         private readonly MKExpressContext _context;
-        private readonly IMailService _mailService;
 
-        public UserRepository(MKExpressContext context, IMailService mailService)
+        public UserRepository(MKExpressContext context)
         {
             _context = context;
-            _mailService = mailService;
         }
         public async Task<bool> ActiveDeactivate(string email)
         {
@@ -81,14 +79,14 @@ namespace MKExpress.API.Repository
            
             if(await _context.SaveChangesAsync() > 0)
             {
-                string body = await _mailService.GetMailTemplete(Constants.EmailTemplateEnum.ResetPassword);
-                MailRequest mailRequest = new()
-                {
-                    Subject = "IMK Express-Password Reset",
-                    ToEmail = oldData.Email,
-                    Body = body
-                };
-                await _mailService.SendEmailAsync(mailRequest);
+                //string body = await _mailService.GetMailTemplete(Constants.EmailTemplateEnum.ResetPassword);
+                //MailRequest mailRequest = new()
+                //{
+                //    Subject = "IMK Express-Password Reset",
+                //    ToEmail = oldData.Email,
+                //    Body = body
+                //};
+                //await _mailService.SendEmailAsync(mailRequest);
                 return true;
             }
             return false;

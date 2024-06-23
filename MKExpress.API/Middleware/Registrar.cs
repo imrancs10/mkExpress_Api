@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MkExpress.MessageBroker.Services;
 using MKExpress.API.Data;
 using MKExpress.API.Logger;
 using MKExpress.API.Repositories;
@@ -53,7 +54,10 @@ namespace MKExpress.API.Middleware
                 .AddScoped<IDashboardService, DashboardService>()
                 .AddScoped<IFileUploadService, FileUploadService>()
                 .AddScoped<ICommonService, CommonService>()
-                .AddScoped<IMailService, MailService>()
+                .AddScoped<IEmailService, EmailService>()
+                .AddScoped<ITemplateService, TemplateService>()
+                .AddScoped<ISmsService, SmsService>()
+                .AddScoped<INotificationService, NotificationService>()
                 .AddScoped<IExcelReader, ExcelReader>()
                 .AddSingleton<ILoggerManager, LoggerManager>()
                 .AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MkExpress.MessageBroker.Services;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
 using MKExpress.API.Models;
@@ -10,11 +11,13 @@ namespace MKExpress.API.Services
     {
         private readonly IMemberRepository _memberRepository;
         private readonly IMapper _mapper;
+        private readonly INotificationService _emailService;
 
-        public MemberService(IMemberRepository memberRepository, IMapper mapper)
+        public MemberService(IMemberRepository memberRepository, IMapper mapper, INotificationService emailService)
         {
             _memberRepository = memberRepository;
             _mapper = mapper;
+            _emailService = emailService;
         }
         public async Task<bool> ActiveDeactivate(Guid memberId)
         {
@@ -24,7 +27,12 @@ namespace MKExpress.API.Services
         public async Task<MemberResponse> Add(MemberRequest request)
         {
             Member member=_mapper.Map<Member>(request);
-            return _mapper.Map<MemberResponse>(await _memberRepository.Add(member));
+            var res= _mapper.Map<MemberResponse>(await _memberRepository.Add(member));
+            if(res!=null)
+            {
+                _emailService.SendEmailAsync(res.Email,"Account Created","TEst Body");
+            }
+            return res;
         }
 
         public async Task<bool> ChangePassword(PasswordChangeRequest changeRequest)

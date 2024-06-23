@@ -56,7 +56,8 @@ namespace MKExpress.API.Utility
     {
         public static string GenerateAccessToken(LoginResponse response)
         {
-            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ConfigManager.AppSetting["JWT:Secret"]));
+            var _secretKey= ConfigManager.AppSetting["JWT:Secret"]??string.Empty;
+            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
             var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
             var tokeOptions = new JwtSecurityToken(issuer: ConfigManager.AppSetting["JWT:ValidIssuer"],
                                                     audience: ConfigManager.AppSetting["JWT:ValidAudience"],

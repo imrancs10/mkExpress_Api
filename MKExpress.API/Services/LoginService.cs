@@ -16,14 +16,12 @@ namespace MKExpress.API.Services
         private readonly ILoginRepository _loginRepository;
         private readonly IUserRoleMenuMapperRepository _roleMenuMapperRepository;
         private readonly IMapper _mapper;
-        private readonly IMailService _mailService;
         private readonly IConfiguration _configuration;
         private readonly ICommonService _commonService;
-        public LoginService(IUserRoleMenuMapperRepository roleMenuMapperRepository,ILoginRepository loginRepository, IMapper mapper, IMailService mailService, IConfiguration configuration, ICommonService commonService)
+        public LoginService(IUserRoleMenuMapperRepository roleMenuMapperRepository,ILoginRepository loginRepository, IMapper mapper, IConfiguration configuration, ICommonService commonService)
         {
             _loginRepository = loginRepository;
             _mapper = mapper;
-            _mailService = mailService;
             _configuration = configuration;
             _roleMenuMapperRepository = roleMenuMapperRepository;
             _commonService = commonService;

@@ -20,3 +20,4 @@ bin
 obj
 packages
 **/obj/*
+/MKExpress.API/googleOAuthCredential.json
