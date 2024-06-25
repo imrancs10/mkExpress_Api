@@ -2,13 +2,10 @@
 using MKExpress.API.Common;
 using MKExpress.API.Contants;
 using MKExpress.API.Data;
-using MKExpress.API.Dto.Request;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.Exceptions;
 using MKExpress.API.Middleware;
 using MKExpress.API.Models;
-using MKExpress.API.Repository.IRepository;
-using MKExpress.API.Services;
 
 namespace MKExpress.API.Repository
 {
@@ -32,9 +29,9 @@ namespace MKExpress.API.Repository
 
         public async Task<User> Add(User request)
         {
-            var oldData = await _context.Users.Where(x =>!x.IsDeleted && x.Email == request.Email).FirstOrDefaultAsync();
+            var oldData = await _context.Users.Where(x => !x.IsDeleted && x.Email == request.Email).FirstOrDefaultAsync();
             if (oldData != null) throw new BusinessRuleViolationException(StaticValues.EmailAlreadyExist_Error, StaticValues.EmailAlreadyExist_Message);
-          
+
             var entity = _context.Users.Add(request);
             if (await _context.SaveChangesAsync() > 0)
             {
@@ -48,7 +45,7 @@ namespace MKExpress.API.Repository
             if (changeRequest.NewPassword != changeRequest.ConfirmNewPassword)
                 throw new BusinessRuleViolationException(StaticValues.NewAndConfirmPasswordNotSame_Error, StaticValues.NewAndConfirmPasswordNotSame_Message);
 
-            var _oldPasswordHash= PasswordHasher.GenerateHash(changeRequest.OldPassword);
+            var _oldPasswordHash = PasswordHasher.GenerateHash(changeRequest.OldPassword);
 
             var oldData = await _context.Users.Where(x => !x.IsDeleted && x.Id == JwtMiddleware.GetUserId() && x.Password == _oldPasswordHash).FirstOrDefaultAsync()
                                ?? throw new BusinessRuleViolationException(StaticValues.ErrorType_RecordNotFound, StaticValues.ErrorType_RecordNotFound);
@@ -60,7 +57,7 @@ namespace MKExpress.API.Repository
 
         public async Task<bool> DeleteUser(string userName)
         {
-            var oldData = await _context.Users.Where(x => !x.IsDeleted && x.UserName==userName).FirstOrDefaultAsync()??throw new BusinessRuleViolationException(StaticValues.ErrorType_RecordNotFound, StaticValues.ErrorType_RecordNotFound);
+            var oldData = await _context.Users.Where(x => !x.IsDeleted && x.UserName == userName).FirstOrDefaultAsync() ?? throw new BusinessRuleViolationException(StaticValues.ErrorType_RecordNotFound, StaticValues.ErrorType_RecordNotFound);
             oldData.IsDeleted = true;
             _context.Attach(oldData);
             return await _context.SaveChangesAsync() > 0;
@@ -76,8 +73,8 @@ namespace MKExpress.API.Repository
             oldData.PasswordResetCode = $"{Guid.NewGuid()}-{Guid.NewGuid()}";
             oldData.PasswordResetCodeExpireOn = DateTime.Now.AddHours(2);
             _context.Attach(oldData);
-           
-            if(await _context.SaveChangesAsync() > 0)
+
+            if (await _context.SaveChangesAsync() > 0)
             {
                 //string body = await _mailService.GetMailTemplete(Constants.EmailTemplateEnum.ResetPassword);
                 //MailRequest mailRequest = new()
@@ -90,6 +87,24 @@ namespace MKExpress.API.Repository
                 return true;
             }
             return false;
+        }
+
+        public async Task<string?> UpdateProfileImagePath(string path)
+        {
+            var userId = JwtMiddleware.GetUserId();
+            string oldImagePath;
+            var user = await _context.Users.Where(x => !x.IsDeleted && x.Id == userId).FirstOrDefaultAsync();
+            if (user == null)
+                return string.Empty;
+
+            oldImagePath = user?.ProfileImagePath ?? string.Empty;
+            user.ProfileImagePath = path;
+
+            _context.Update(user);
+            if (await _context.SaveChangesAsync() > 0)
+                return oldImagePath;
+            return "ImageNotSaved";
+
         }
     }
 }

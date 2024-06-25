@@ -19,5 +19,6 @@ namespace MKExpress.API.DTO.Response
         public bool IsTcAccepted { get; set; }
         public bool IsEmailVerified { get; set; }
         public List<UserRoleMenuMapperResponse>? Permissions { get; set; }
+        public string? ProfileImagePath { get; set; }
     }
 }

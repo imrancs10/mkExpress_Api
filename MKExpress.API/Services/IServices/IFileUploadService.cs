@@ -6,6 +6,8 @@ namespace MKExpress.API.Services
     public interface IFileUploadService
     {
         Task<List<ShipmentImageResponse>> UploadPhoto(List<FileUploadRequest> fileUploadRequest);
+        Task<string> UploadUserProfileImage(IFormFile file);
         Task<bool> DeleteFile(Guid id);
+        bool DeleteFile(string fileName);
     }
 }

@@ -15,6 +15,7 @@
         public const string UserBlockPath = "user/block/{email}";
         public const string UserAssignRolePath = "user/update/{email}/{role}";
         public const string UserResetEmailVerifyCodePath = "user/update/verify/code/{email}";
+        public const string UserUpdateProfileImagePath = "user/update/profile/image";
         public const string LoginUserVerifyEmailPath = "user/verify/email/{token}";
         #endregion
 
@@ -190,12 +191,17 @@
         public const string EmailAlreadyExist_Error = "EmailAlreadyExist!";
         public const string NewAndConfirmPasswordNotSame_Error = "NewAndConfirmPasswordNotSame!";
         public const string ErrorType_AlreadyDeleted = "AlreadyDeleted";
+        public const string ErrorType_ProfileImageNotUpdated = "ProfileImageNotUpdated";
         public const string ErrorType_AlreadyExist = "AlreadyExist";
         public const string ErrorType_EmailAlreadyVerified = "EmailAlreadyVerified";
         public const string ErrorType_CustomerAlreadyExist= "CustomerAlreadyExist";
         public const string ErrorType_CustomerNotFoundError = "CustomerNotFoundError";
         public const string ErrorType_InvalidParameters = "InvalidParameters!";
         public const string ErrorType_InvalidGUID = "InvalidGUID!";
+        public const string ErrorType_InvalidImageExtension = "InvalidImageExtension!";
+        public const string ErrorType_InvalidImageSize = "InvalidIMageSize!";
+        public const string Error_InvalidImageSize = "Allowed file size 200Kb!";
+        public const string Error_InvalidImageExtension = "Invalid image extension - Allowed .png, .jpg, .jpeg!";
         public const string Error_UserIdNotPresentInHeader = "UserIdNotPresentInHeader!";
         public const string Error_UserIdHeaderNotPresentInRequest = "UserIdHeaderNotPresentInRequest!";
         public const string Error_UserIdInvalidPresentInHeader = "UserIdNotPresentInHeader!";
@@ -214,7 +220,9 @@
         public const string Error_ShipmentNumberAlreadyExist = "ShipmentNumberAlreadyExist!";
         public const string Error_EmailAlreadyRegistered = "Email is already registered";
         public const string Error_UnauthorizedAccess = "Unauthorized Access";
+        public const string Error_InvalidImageUploaded = "Invalid/No image uploaded";
         public const string Error_PermissionNotMapped = "PermissionNotMapped";
+        public const string Error_ProfileImageNotUpdated = "Unable to save profile image with user.";
         #endregion
 
         #region Error Message

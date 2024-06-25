@@ -12,9 +12,11 @@ namespace MKExpress.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly ILoginService _loginService;
-        public AuthController(ILoginService loginService)
+        private readonly IFileUploadService _uploadService;
+        public AuthController(ILoginService loginService, IFileUploadService uploadService)
         {
             _loginService = loginService;
+            _uploadService = uploadService;
         }
 
         [AllowAnonymous]
@@ -93,6 +95,13 @@ namespace MKExpress.API.Controllers
         public async Task<bool> ResetEmailVerificationCode([FromRoute] string email)
         {
             return await _loginService.ResetEmailVerificationCode(email);
+        }
+
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [HttpPost(StaticValues.UserUpdateProfileImagePath)]
+        public async Task<string> ResetEmailVerificationCode([FromForm] IFormFile file)
+        {
+            return await _uploadService.UploadUserProfileImage(file);
         }
 
     }

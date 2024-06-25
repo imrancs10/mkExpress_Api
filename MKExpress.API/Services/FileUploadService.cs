@@ -16,12 +16,14 @@ namespace MKExpress.API.Services
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
         private readonly IShipmentImageRepository _shipmentImageRepository;
+        private readonly IUserRepository _userRepository;
 
-        public FileUploadService(IConfiguration configuration,IMapper mapper, IShipmentImageRepository shipmentImageRepository)
+        public FileUploadService(IConfiguration configuration,IMapper mapper, IShipmentImageRepository shipmentImageRepository, IUserRepository userRepository)
         {
             _configuration = configuration;
             _mapper = mapper;
-            _shipmentImageRepository=shipmentImageRepository;
+            _shipmentImageRepository = shipmentImageRepository;
+            _userRepository = userRepository;
         }
 
         private static string GetFileName(IFormFile file)
@@ -181,6 +183,50 @@ namespace MKExpress.API.Services
             //}
             return true;
 
+        }
+
+        public async Task<string> UploadUserProfileImage(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidParameters, StaticValues.Error_InvalidImageUploaded);
+
+            var imageExt = Path.GetExtension(file.FileName);
+            if (imageExt != ".png" && imageExt != ".jpg" && imageExt != "jpeg")
+                throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidImageExtension, StaticValues.Error_InvalidImageExtension);
+
+            if (file.Length/1000>200)
+                throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidImageSize, StaticValues.Error_InvalidImageSize);
+
+            string? ImagePath = _configuration.GetSection("UserProfileImagePath").Value;
+            string newFileName = GetFileName(file);
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", ImagePath);
+            if(!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            var fullFileName=Path.Combine(path, newFileName);
+            using (var stream = new FileStream(fullFileName, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            var relativePath = Path.Combine(ImagePath, newFileName);
+            var oldProfileImagePath = await _userRepository.UpdateProfileImagePath(relativePath);
+            if(oldProfileImagePath== "ImageNotSaved")
+            {               
+                throw new BusinessRuleViolationException(StaticValues.ErrorType_ProfileImageNotUpdated, StaticValues.Error_ProfileImageNotUpdated);
+            }
+            else DeleteFile(Path.GetFileName(oldProfileImagePath));
+            return relativePath.Replace("\\", "/");
+        }
+
+        public bool DeleteFile(string fileName)
+        {
+            string? ImagePath = _configuration.GetSection("UserProfileImagePath").Value;
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", ImagePath, fileName);
+            if(File.Exists(path))
+                File.Delete(path);
+            return true;
         }
     }
 }

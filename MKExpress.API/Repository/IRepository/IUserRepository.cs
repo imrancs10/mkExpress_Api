@@ -10,5 +10,6 @@ namespace MKExpress.API.Repository
         Task<bool> ChangePassword(PasswordChangeRequest changeRequest);
         Task<bool> ResetPassword(string userName);
         Task<bool> DeleteUser(string userName);
+        Task<string?> UpdateProfileImagePath(string path);
     }
 }

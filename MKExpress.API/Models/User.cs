@@ -27,5 +27,6 @@ namespace MKExpress.API.Models
         public DateTime? EmailVerificationCodeExpireOn { get; set; }
         [ForeignKey("RoleId")]
         public UserRole UserRole { get; set; }
+        public string? ProfileImagePath { get; set; }
     }
 }
