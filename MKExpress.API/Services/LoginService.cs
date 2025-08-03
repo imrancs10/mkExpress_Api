@@ -1,31 +1,20 @@
 ﻿using AutoMapper;
-using MKExpress.API.Common;
 using MKExpress.API.Contants;
-using MKExpress.API.Dto.Request;
 using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
 using MKExpress.API.Exceptions;
-using MKExpress.API.Extension;
 using MKExpress.API.Models;
 using MKExpress.API.Repository;
 
 namespace MKExpress.API.Services
 {
-    public class LoginService : ILoginService
+    public class LoginService(IUserRoleMenuMapperRepository roleMenuMapperRepository, ILoginRepository loginRepository, IMapper mapper, IConfiguration configuration, ICommonService commonService) : ILoginService
     {
-        private readonly ILoginRepository _loginRepository;
-        private readonly IUserRoleMenuMapperRepository _roleMenuMapperRepository;
-        private readonly IMapper _mapper;
-        private readonly IConfiguration _configuration;
-        private readonly ICommonService _commonService;
-        public LoginService(IUserRoleMenuMapperRepository roleMenuMapperRepository,ILoginRepository loginRepository, IMapper mapper, IConfiguration configuration, ICommonService commonService)
-        {
-            _loginRepository = loginRepository;
-            _mapper = mapper;
-            _configuration = configuration;
-            _roleMenuMapperRepository = roleMenuMapperRepository;
-            _commonService = commonService;
-        }
+        private readonly ILoginRepository _loginRepository = loginRepository;
+        private readonly IUserRoleMenuMapperRepository _roleMenuMapperRepository = roleMenuMapperRepository;
+        private readonly IMapper _mapper = mapper;
+        private readonly IConfiguration _configuration = configuration;
+        private readonly ICommonService _commonService = commonService;
 
         public async Task<bool> AssignRole(string email, Guid roleId)
         {

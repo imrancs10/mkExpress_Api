@@ -1,9 +1,7 @@
 ﻿using FluentValidation;
 using MKExpress.API.Contants;
 using MKExpress.API.DTO.Request;
-using MKExpress.API.Enums;
 using MKExpress.API.Extension;
-using System;
 
 namespace MKExpress.API.Validations
 {
@@ -35,16 +33,6 @@ namespace MKExpress.API.Validations
         }
     }
 
-    public static class RegisterValidators
-    {
-        public static IServiceCollection RegisterValidator(this IServiceCollection services)
-        {
-            services.AddScoped<IValidator<UserRequest>, UserRequestValidator>()
-                 .AddScoped<IValidator<PasswordChangeRequest>, ChangePasswordValidator>();
-            return services;
-        }
-    }
-
     public static class CommonValidator
     {
        public static void  CustomPasswordValidator<T>(string password,ValidationContext<T> context)
@@ -71,6 +59,4 @@ namespace MKExpress.API.Validations
                 context.AddFailure(ValidationMessage.PasswordNotContainSpecialChar);
         }
     }
-
-
 }

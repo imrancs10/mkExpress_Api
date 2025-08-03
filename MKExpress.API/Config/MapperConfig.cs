@@ -5,9 +5,9 @@ using MKExpress.API.Models;
 
 namespace MKExpress.API.Config
 {
-    public class MapperConfig : Profile
+    public class MappingProfile : Profile
     {
-        public MapperConfig()
+        public MappingProfile()
         {
             #region Login
 
@@ -98,7 +98,7 @@ namespace MKExpress.API.Config
 
             CreateMap<ShipmentTrackingRequest, ShipmentTracking>();
             CreateMap<ShipmentTracking, ShipmentTrackingResponse>()
-                   .ForMember(des => des.CommentByName, src => src.MapFrom(x =>$"{x.CommentByMember.FirstName} {x.CommentByMember.LastName}"));
+                   .ForMember(des => des.CommentByName, src => src.MapFrom(x => $"{x.CommentByMember.FirstName} {x.CommentByMember.LastName}"));
             CreateMap<PagingResponse<ShipmentTracking>, PagingResponse<ShipmentTrackingResponse>>();
 
             CreateMap<AssignForPickupRequest, AssignShipmentMember>();
@@ -119,7 +119,7 @@ namespace MKExpress.API.Config
                 .ForMember(des => des.SubStationCode, src => src.MapFrom(x => x.SubStation.Code));
 
             CreateMap<MasterJourney, DropdownResponse>()
-                 .ForMember(des => des.Value, src => src.MapFrom(x => x.FromStation.Value + " -> " + x.ToStation.Value??string.Empty))
+                 .ForMember(des => des.Value, src => src.MapFrom(x => x.FromStation.Value + " -> " + x.ToStation.Value ?? string.Empty))
                     .ForMember(des => des.Code, src => src.MapFrom(x => x.FromStation.Code.ToUpper() + " -> " + x.ToStation.Code.ToUpper()));
             #endregion
 
@@ -128,8 +128,8 @@ namespace MKExpress.API.Config
             CreateMap<ContainerRequest, Container>();
             CreateMap<Container, ContainerResponse>()
                    .ForMember(des => des.Journey, src => src.MapFrom<JourneyResolver>())
-                   .ForMember(des => des.ClosedByMember, src => src.MapFrom(x=>$"{x.ClosedByMember.FirstName} {x.ClosedByMember.LastName}"))
-                   .ForMember(des => des.ContainerType, src => src.MapFrom(x=>x.ContainerType.Value))
+                   .ForMember(des => des.ClosedByMember, src => src.MapFrom(x => $"{x.ClosedByMember.FirstName} {x.ClosedByMember.LastName}"))
+                   .ForMember(des => des.ContainerType, src => src.MapFrom(x => x.ContainerType.Value))
                    .ForMember(des => des.TotalShipments, src => src.MapFrom(x => x.ContainerDetails.Count));
             CreateMap<PagingResponse<Container>, PagingResponse<ContainerResponse>>();
 
@@ -214,12 +214,6 @@ namespace MKExpress.API.Config
             CreateMap<UserRole, UserRoleResponse>();
             CreateMap<PagingResponse<UserRole>, PagingResponse<UserRoleResponse>>();
             #endregion
-        }
-
-        public static IMapper GetMapperConfig()
-        {
-            var config = new MapperConfiguration(cfg => { cfg.AddProfile(new MapperConfig()); });
-            return config.CreateMapper();
         }
     }
     public class JourneyResolver : IValueResolver<Container, ContainerResponse, string>

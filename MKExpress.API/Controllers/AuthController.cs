@@ -4,20 +4,16 @@ using MKExpress.API.DTO.Response;
 using MKExpress.API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MKExpress.API.DTO.Request.User;
 
 namespace MKExpress.API.Controllers
 {
     [Route(StaticValues.APIPrefix)]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AuthController(ILoginService loginService, IFileUploadService uploadService) : ControllerBase
     {
-        private readonly ILoginService _loginService;
-        private readonly IFileUploadService _uploadService;
-        public AuthController(ILoginService loginService, IFileUploadService uploadService)
-        {
-            _loginService = loginService;
-            _uploadService = uploadService;
-        }
+        private readonly ILoginService _loginService = loginService;
+        private readonly IFileUploadService _uploadService = uploadService;
 
         [AllowAnonymous]
         [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
@@ -98,9 +94,10 @@ namespace MKExpress.API.Controllers
         }
 
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [Consumes("multipart/form-data")]
         [HttpPost(StaticValues.UserUpdateProfileImagePath)]
-        public async Task<string> ResetEmailVerificationCode([FromForm] IFormFile file)
-        {
+        public async Task<string> UserUpdateProfileImage([FromForm] UserProfileImageUploadRequest file)
+        {   
             return await _uploadService.UploadUserProfileImage(file);
         }
 

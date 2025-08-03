@@ -4,389 +4,272 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using MKExpress.API.Services.IServices;
 using System.Data;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace MKExpress.API.Services
 {
     public class ExcelService : IExcelService
     {
-        private const string noRecordsToDisplay = "No records to display";
-        public DataTable ReadExcelAsDataTable(string fileName)
+        private static readonly List<char> Letters = new() { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' ' };
+        private char[] _removeCharFromColName;
+        public char[] RemoveCharFromColName { get => _removeCharFromColName; set => _removeCharFromColName = value; }
+        private SpreadsheetDocument _workBook;
+        private string _fileName;
+
+        public byte[] DownloadExcel(DataTable dataTable, string filePath, string fileName, string tabName)
         {
-            var table = new DataTable();
-            using (SpreadsheetDocument spreadSheetDocument = SpreadsheetDocument.Open(fileName, false))
+            if (string.IsNullOrEmpty(filePath))
+                throw new ArgumentException("filePath is empty.");
+
+            if (string.IsNullOrEmpty(fileName))
+                throw new ArgumentException("fileName is empty.");
+
+            if (string.IsNullOrEmpty(tabName))
+                throw new ArgumentException("tabName is empty.");
+
+            if (dataTable.Rows.Count == 0)
+                throw new ArgumentException("DataTable is empty.");
+
+            if (!Directory.Exists(filePath))
+                Directory.CreateDirectory(filePath);
+
+            _fileName = Path.Combine(filePath, fileName);
+            _workBook = SpreadsheetDocument.Create(_fileName, DocumentFormat.OpenXml.SpreadsheetDocumentType.Workbook);
+            using (_workBook)
             {
-                WorkbookPart workbookPart = spreadSheetDocument.WorkbookPart;
-                IEnumerable<Sheet> sheets = spreadSheetDocument.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>();
-                string relationshipId = sheets.First().Id.Value;
-                WorksheetPart worksheetPart = (WorksheetPart)spreadSheetDocument.WorkbookPart.GetPartById(relationshipId);
-                Worksheet workSheet = worksheetPart.Worksheet;
-                SheetData sheetData = workSheet.GetFirstChild<SheetData>();
-                IEnumerable<Row> rows = sheetData.Descendants<Row>();
-                foreach (Cell cell in rows.ElementAt(0))
+                var workbookPart = _workBook.AddWorkbookPart();
+
+                _workBook.WorkbookPart.Workbook = new DocumentFormat.OpenXml.Spreadsheet.Workbook
                 {
-                    table.Columns.Add(GetCellValue(spreadSheetDocument, cell));
+                    Sheets = new DocumentFormat.OpenXml.Spreadsheet.Sheets()
+                };
+
+                var sheetPart = _workBook.WorkbookPart.AddNewPart<WorksheetPart>();
+                var sheetData = new DocumentFormat.OpenXml.Spreadsheet.SheetData();
+                sheetPart.Worksheet = new DocumentFormat.OpenXml.Spreadsheet.Worksheet(sheetData);
+
+                DocumentFormat.OpenXml.Spreadsheet.Sheets sheets = _workBook.WorkbookPart.Workbook.GetFirstChild<DocumentFormat.OpenXml.Spreadsheet.Sheets>();
+                string relationshipId = _workBook.WorkbookPart.GetIdOfPart(sheetPart);
+
+                uint sheetId = 1;
+                if (sheets?.Elements<DocumentFormat.OpenXml.Spreadsheet.Sheet>().Count() > 0)
+                {
+                    sheetId = sheets.Elements<DocumentFormat.OpenXml.Spreadsheet.Sheet>().Select(s => s.SheetId?.Value ?? 0).Max() + 1;
                 }
-                //this will also include your header row...
-                foreach (Row row in rows)
+
+                DocumentFormat.OpenXml.Spreadsheet.Sheet sheet = new() { Id = relationshipId, SheetId = sheetId, Name = tabName };
+                sheets?.Append(sheet);
+
+                DocumentFormat.OpenXml.Spreadsheet.Row headerRow = new();
+
+                List<string> columns = new();
+                foreach (DataColumn column in dataTable.Columns)
                 {
-                    DataRow tempRow = table.NewRow();
-                    for (int i = 0; i < row.Descendants<Cell>().Count(); i++)
+                    columns.Add(column.ColumnName);
+
+                    DocumentFormat.OpenXml.Spreadsheet.Cell cell = new()
                     {
-                        tempRow[i] = GetCellValue(spreadSheetDocument, row.Descendants<Cell>().ElementAt(i));
+                        DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String,
+                        CellValue = new DocumentFormat.OpenXml.Spreadsheet.CellValue(column.ColumnName)
+                    };
+                    headerRow.AppendChild(cell);
+                }
+
+                sheetData.AppendChild(headerRow);
+
+                foreach (DataRow dr in dataTable.Rows)
+                {
+                    DocumentFormat.OpenXml.Spreadsheet.Row newRow = new();
+                    foreach (string col in columns)
+                    {
+                        DocumentFormat.OpenXml.Spreadsheet.Cell cell = new()
+                        {
+                            DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String,
+                            CellValue = new DocumentFormat.OpenXml.Spreadsheet.CellValue(dr[col].ToString()) //
+                        };
+                        newRow.AppendChild(cell);
                     }
-                    table.Rows.Add(tempRow);
+
+                    sheetData.AppendChild(newRow);
                 }
             }
-            table.Rows.RemoveAt(0);
-            return table;
+            return default;// _fileName;
         }
 
-        public byte[] DownloadExcel(DataSet dataSet)
+        public DataTable ReadExcelAsDataTable(string excelFilePath,string tabName)
         {
-            byte[] byteResult = null;
-            if (dataSet == null) 
-            { 
-                return byteResult; 
-            }
-
-            if (dataSet.Tables.Count > 0)
+            SpreadsheetDocument? _document = null;
+            try
             {
-                using (MemoryStream stream = new())
+                _document = SpreadsheetDocument.Open(excelFilePath, false);
+
+                if (string.IsNullOrEmpty(excelFilePath))
+                    throw new ArgumentNullException(nameof(excelFilePath));
+
+                if (string.IsNullOrEmpty(tabName))
+                    throw new ArgumentNullException(nameof(tabName));
+
+                DataTable dt = new();
+                _document = SpreadsheetDocument.Open(excelFilePath, false);
+
+
+                WorkbookPart? bkPart = _document.WorkbookPart;
+                Workbook? workbook = bkPart?.Workbook;
+                Sheet? sheet = workbook?.Descendants<Sheet>().FirstOrDefault(sht => sht?.Name?.Value?.ToLower() == tabName.ToLower()) ?? throw new Exception($"Excel file doesn't contain {tabName} tab.");
+                WorksheetPart? wsPart = (WorksheetPart)bkPart.GetPartById(sheet?.Id?.Value);
+                SheetData? sheetData = wsPart?.Worksheet?.Elements<SheetData>()?.FirstOrDefault();
+
+
+                SharedStringTablePart? sstp = _document?.WorkbookPart?.GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
+                SharedStringTable? sst = sstp?.SharedStringTable ?? new();
+
+                IEnumerable<Row>? rows = sheetData?.Elements<Row>();
+
+                int rowId = 0;
+
+                if (rows == null)
+                    return dt;
+
+                foreach (Row row in rows)
                 {
-                    using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Workbook))
-                    {
-                        // Add a WorkbookPart to the document.
-                        WorkbookPart workbookpart = AddWorkbookPart(spreadsheetDocument);
-                        AddSheet(spreadsheetDocument, out Sheets sheets, out uint currentSheetID);
-                        AddNewPartStyle(workbookpart);
+                    OpenXmlElementList cells = row.ChildElements;
+                   
+                    DataRow dr = dt.NewRow();
 
-                        int rowIndexCount = 1;
-
-                        foreach (DataTable dt in dataSet.Tables)
+                    int cellId = 0;
+                    foreach (Cell cell in cells.Cast<Cell>())
                         {
-                            // Add a WorksheetPart to the WorkbookPart.
-                            WorksheetPart worksheetPart = workbookpart.AddNewPart<WorksheetPart>();
-                            worksheetPart.Worksheet = new Worksheet();
-                            Columns columns = SetDefaultColumnWidth();
-                            worksheetPart.Worksheet.Append(columns);
+                            if (cell == null) continue;
 
-                            SheetData sheetData = new SheetData();
-                            worksheetPart.Worksheet.AppendChild(sheetData);
-
-                            // Append a new worksheet and associate it with the workbook.
-                            Sheet sheet = new()
+                            int cellColumnIndex = 0;
+                            if (cell?.CellReference != null)
                             {
-                                Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPart),
-                                SheetId = currentSheetID,
-                                Name = string.IsNullOrWhiteSpace(dt.TableName) ? "Sheet" + currentSheetID : dt.TableName
-                            };
+                                cellColumnIndex = (int)GetColumnIndexFromName(GetColumnName(cell?.CellReference?.Value ?? string.Empty));
+                            }
 
-                            if (dt.Rows.Count == 0)
+                            if (cellId < cellColumnIndex)
                             {
-                                //if table rows count is 0, create Excel Sheet with default message
-                                CreateDefaultWithMessage(rowIndexCount, sheetData);
+                                do
+                                {
+                                    dr[cellId] = string.Empty;
+                                    cellId++;
+                                }
+                                while (cellId < cellColumnIndex);
+                                var cellValue = GetValueAsString(cell, sst);
+                                if (cellValue.Trim() == "Total" || cellValue.Trim() == "Count") break;
+                                if (dt.Columns[cellId].DataType == typeof(DateTime))
+                                {
+                                    if (double.TryParse(cellValue, out double dateTimeInt))
+                                        dr[cellId] = DateTime.FromOADate(dateTimeInt);
+                                }
+                                else
+                                    dr[cellId] = cellValue;
                             }
                             else
                             {
-                                int numberOfColumns = dt.Columns.Count;
-                                string[] excelColumnNames = new string[numberOfColumns];
-
-                                //Create Header
-                                Row SheetrowHeader = CreateHeader(rowIndexCount, dt, numberOfColumns, excelColumnNames);
-                                sheetData.Append(SheetrowHeader);
-                                ++rowIndexCount;
-
-                                //Create Body
-                                rowIndexCount = CreateBody(rowIndexCount, dt, sheetData, excelColumnNames);
+                                var cellValue = GetValueAsString(cell, sst);
+                                if (cellValue.Trim() == "Total" || cellValue.Trim() == "Count") break;
+                                if (dt.Columns[cellId].DataType == typeof(DateTime))
+                                {
+                                    if (double.TryParse(cellValue, out double dateTimeInt))
+                                        dr[cellId] = DateTime.FromOADate(dateTimeInt);
+                                }
+                                else
+                                    dr[cellId] = cellValue;
                             }
 
-                            sheets.Append(sheet);
-
-                            ++currentSheetID;
-
-                            rowIndexCount = 1;
+                            cellId++;
                         }
+                    if (!dr.IsEmpty())
+                       dt.Rows.Add(dr);
 
-                        workbookpart.Workbook.Save();
+                    rowId++;
+                }
+                _document?.Dispose();
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                _document?.Dispose();
+                throw;
+            }
+        }
+        private static string GetValueAsString(Cell cell, SharedStringTable sst)
+        {
+            if (cell == null) return string.Empty;
 
-                        // Close the document.
-                        //spreadsheetDocument.Close();
+            if (cell.DataType != null && cell.DataType == CellValues.SharedString)
+            {
+                if (int.TryParse(cell?.CellValue?.Text, out int ind))
+                {
+                    return sst.ChildElements[ind].InnerText;
+                }
+                else
+                {
+                    return cell?.InnerText ?? string.Empty;
+                }
+            }
+            else
+            {
+                return cell?.CellValue?.Text ?? string.Empty;
+            }
+        }
 
+        private static string GetColumnName(string cellReference)
+        {
+            Regex regex = new("[A-Za-z]+");
+            Match match = regex.Match(cellReference);
+            return match.Value;
+        }
+
+        private static int? GetColumnIndexFromName(string columnName)
+        {
+            int? columnIndex = null;
+
+            string[] colLetters = Regex.Split(columnName, "([A-Z]+)");
+            colLetters = colLetters.Where(s => !string.IsNullOrEmpty(s)).ToArray();
+
+            if (colLetters.Length <= 2)
+            {
+                int index = 0;
+                foreach (string col in colLetters)
+                {
+                    List<char> col1 = colLetters.ElementAt(index).ToCharArray().ToList();
+                    int? indexValue = Letters.IndexOf(col1.ElementAt(index));
+
+                    if (indexValue != -1)
+                    {
+                        // The first letter of a two digit column needs some extra calculations
+                        if (index == 0 && colLetters.Length == 2)
+                        {
+                            columnIndex = columnIndex == null ? (indexValue + 1) * 26 : columnIndex + ((indexValue + 1) * 26);
+                        }
+                        else
+                        {
+                            columnIndex = columnIndex == null ? indexValue : columnIndex + indexValue;
+                        }
                     }
 
-                    stream.Flush();
-                    stream.Position = 0;
-
-                    byteResult = new byte[stream.Length];
-                    stream.Read(byteResult, 0, byteResult.Length);
+                    index++;
                 }
             }
-            return byteResult;
+
+            return columnIndex;
+        }
+        
+    }
+    public static class DataTableExtenstion
+    {
+        public static bool IsEmpty(this DataRow row)
+        {
+            return row == null || row.ItemArray.All(i => i.IsNullEquivalent());
         }
 
-        //Customize column width
-        private static Columns SetDefaultColumnWidth()
+        public static bool IsNullEquivalent(this object value)
         {
-            Columns columns = new();
-            //width of 1st Column
-            columns.Append(new Column() { Min = 1, Max = 1, Width = 25, CustomWidth = true });
-            //with of 2st Column
-            columns.Append(new Column() { Min = 2, Max = 2, Width = 50, CustomWidth = true });
-            //set column width from 3rd to 400 columns
-            columns.Append(new Column() { Min = 3, Max = 400, Width = 10, CustomWidth = true });
-            return columns;
-        }
-
-        private static void AddNewPartStyle(WorkbookPart workbookpart)
-        {
-            WorkbookStylesPart stylePart = workbookpart.AddNewPart<WorkbookStylesPart>();
-            stylePart.Stylesheet = GenerateStylesheet();
-            stylePart.Stylesheet.Save();
-        }
-
-        private static void AddSheet(SpreadsheetDocument spreadsheetDocument, out Sheets sheets, out uint currentSheetID)
-        {
-            sheets = spreadsheetDocument.WorkbookPart.Workbook.AppendChild(new Sheets());
-            currentSheetID = 1;
-        }
-
-        private static WorkbookPart AddWorkbookPart(SpreadsheetDocument spreadsheetDocument)
-        {
-            WorkbookPart workbookpart = spreadsheetDocument.AddWorkbookPart();
-            workbookpart.Workbook = new Workbook();
-            return workbookpart;
-        }
-
-        private static void CreateDefaultWithMessage(int rowIndexCount, SheetData sheetData)
-        {
-            Row Sheetrow = new() { RowIndex = Convert.ToUInt32(rowIndexCount) };
-            Cell cellHeader = new()
-            {
-                CellReference = "A1",
-                CellValue = new CellValue(noRecordsToDisplay),
-                DataType = CellValues.String,
-                StyleIndex = 1
-            };
-
-            Sheetrow.Append(cellHeader);
-            sheetData.Append(Sheetrow);
-        }
-
-        private static int CreateBody(int rowIndexCount, DataTable dt, SheetData sheetData, string[] excelColumnNames)
-        {
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                Row Sheetrow = new () { RowIndex = Convert.ToUInt32(rowIndexCount) };
-                for (int j = 0; j < dt.Columns.Count; j++)
-                {
-                    // insert value in cell with dataType (String, Int, decimal, datatime)
-                    Sheetrow.Append(GetCellWithDataType(excelColumnNames[j] + rowIndexCount, dt.Rows[i][j], dt.Columns[j].DataType));
-                }
-                sheetData.Append(Sheetrow);
-                ++rowIndexCount;
-            }
-
-            return rowIndexCount;
-        }
-
-        private static Row CreateHeader(int rowIndexCount, DataTable dt, int numberOfColumns, string[] excelColumnNames)
-        {
-            Row SheetrowHeader = new() { RowIndex = Convert.ToUInt32(rowIndexCount) };
-            for (int n = 0; n < numberOfColumns; n++)
-            {
-                excelColumnNames[n] = GetExcelColumnName(n);
-
-                Cell cellHeader = new()
-                {
-                    CellReference = excelColumnNames[n] + rowIndexCount,
-                    CellValue = new CellValue(dt.Columns[n].ColumnName),
-                    DataType = CellValues.String,
-                    StyleIndex = 2
-                };
-                SheetrowHeader.Append(cellHeader);
-            }
-
-            return SheetrowHeader;
-        }
-
-        private static string GetExcelColumnName(int columnIndex)
-        {
-            if (columnIndex < 26)
-            {
-                return ((char)('A' + columnIndex)).ToString();
-            }
-
-            char firstChar = (char)('A' + (columnIndex / 26) - 1);
-            char secondChar = (char)('A' + (columnIndex % 26));
-
-            return string.Format(CultureInfo.CurrentCulture, "{0}{1}", firstChar, secondChar);
-        }
-
-        private static Stylesheet GenerateStylesheet()
-        {
-            Fonts fonts = GenerateFonts();
-            Fills fills = GenerateFills();
-            Borders borders = GenerateBorders();
-            CellFormats cellFormats = GenerateCellFormats();
-            Column column = GenerateColumnProperty();
-            Stylesheet styleSheet = new(fonts, fills, borders, cellFormats, column);
-
-            return styleSheet;
-        }
-
-        private static Column GenerateColumnProperty()
-        {
-            return new Column
-            {
-                Width = 100,
-                CustomWidth = true
-            };
-        }
-
-        private static CellFormats GenerateCellFormats()
-        {
-            CellFormats cellFormats = new(
-                // default - Cell StyleIndex = 0 
-                new CellFormat(new Alignment() { WrapText = true, Vertical = VerticalAlignmentValues.Top }),
-
-                // default2 - Cell StyleIndex = 1
-                new CellFormat(new Alignment() { WrapText = true, Vertical = VerticalAlignmentValues.Top }) { FontId = 0, FillId = 0, BorderId = 1, ApplyBorder = true },
-
-                // header - Cell StyleIndex = 2
-                new CellFormat(new Alignment() { WrapText = true, Vertical = VerticalAlignmentValues.Top }) { FontId = 1, FillId = 0, BorderId = 1, ApplyFill = true },
-
-                // DateTime DataType - Cell StyleIndex = 3
-                new CellFormat(new Alignment() { Vertical = VerticalAlignmentValues.Top }) { FontId = 0, FillId = 0, BorderId = 1, ApplyBorder = true, NumberFormatId = 15, ApplyNumberFormat = true },
-
-                // int,long,short DataType - Cell StyleIndex = 4
-                new CellFormat(new Alignment() { WrapText = true, Vertical = VerticalAlignmentValues.Top }) { FontId = 0, FillId = 0, BorderId = 1, ApplyBorder = true, NumberFormatId = 1 },
-
-                // decimal DataType  - Cell StyleIndex = 5
-                new CellFormat(new Alignment() { WrapText = true, Vertical = VerticalAlignmentValues.Top }) { FontId = 0, FillId = 0, BorderId = 1, ApplyBorder = true, NumberFormatId = 2 }
-                );
-            return cellFormats;
-        }
-
-        private static Borders GenerateBorders()
-        {
-            Borders borders = new(
-                // index 0 default
-                new Border(),
-
-                // index 1 black border
-                new Border(
-                    new LeftBorder(new DocumentFormat.OpenXml.Office2010.Excel.Color() { Auto = true }) { Style = BorderStyleValues.Thin },
-                    new RightBorder(new DocumentFormat.OpenXml.Office2010.Excel.Color() { Auto = true }) { Style = BorderStyleValues.Thin },
-                    new TopBorder(new DocumentFormat.OpenXml.Office2010.Excel.Color() { Auto = true }) { Style = BorderStyleValues.Thin },
-                    new BottomBorder(new DocumentFormat.OpenXml.Office2010.Excel.Color() { Auto = true }) { Style = BorderStyleValues.Thin },
-                    new DiagonalBorder())
-                );
-            return borders;
-        }
-
-        private static Fills GenerateFills()
-        {
-            Fills fills = new(
-                // Index 0
-                new Fill(new PatternFill() { PatternType = PatternValues.None }),
-
-                // Index 1
-                new Fill(new PatternFill() { PatternType = PatternValues.Gray125 }),
-
-                // Index 2 - header
-                new Fill(new PatternFill(new ForegroundColor { Rgb = new HexBinaryValue() { Value = "66666666" } }) { PatternType = PatternValues.Solid })
-                );
-            return fills;
-        }
-
-        private static Fonts GenerateFonts()
-        {
-            Fonts fonts = new(
-                // Index 0 - default
-                new Font(
-                    new FontSize() { Val = 10 },
-                    new FontName() { Val = "Arial Unicode" }
-                ),
-
-                // Index 1 - header
-                new Font(
-                    new FontSize() { Val = 10 },
-                    new Bold()//,
-
-                //new Color() { Rgb = "FFFFFF" }
-
-                ));
-            return fonts;
-        }
-
-        private static Cell GetCellWithDataType(string cellRef, object value, Type type)
-        {
-            if (type == typeof(DateTime))
-            {
-                Cell cell = new()
-                {
-                    DataType = new EnumValue<CellValues>(CellValues.Number),
-                    StyleIndex = 3
-                };
-
-                if (value != DBNull.Value)
-                {
-                    System.Globalization.CultureInfo cultureinfo = new System.Globalization.CultureInfo("en-US");
-                    DateTime valueDate = (DateTime)value;
-                    string valueString = valueDate.ToOADate().ToString(cultureinfo);
-                    CellValue cellValue = new(valueString);
-                    cell.Append(cellValue);
-                }
-
-                return cell;
-            }
-            if (type == typeof(long) || type == typeof(int) || type == typeof(short))
-            {
-                Cell cell = new()
-                {
-                    CellReference = cellRef,
-                    CellValue = new(value.ToString()),
-                    DataType = CellValues.Number,
-                    StyleIndex = 4
-                };
-                return cell;
-            }
-            if (type == typeof(decimal))
-            {
-                Cell cell = new()
-                {
-                    CellReference = cellRef,
-                    CellValue = new(value.ToString()),
-                    DataType = CellValues.Number,
-                    StyleIndex = 5
-                };
-                return cell;
-            }
-            else
-            {
-                Cell cell = new()
-                {
-                    CellReference = cellRef,
-                    CellValue = new(value.ToString()),
-                    DataType = CellValues.String,
-                    StyleIndex = 1
-                };
-                return cell;
-            }
-        }
-
-        private static string GetCellValue(SpreadsheetDocument document, Cell cell)
-        {
-            SharedStringTablePart stringTablePart = document.WorkbookPart.SharedStringTablePart;
-            string value = cell.CellValue.InnerXml;
-            if (cell.DataType != null && cell.DataType.Value == CellValues.SharedString)
-            {
-                return stringTablePart.SharedStringTable.ChildElements[Int32.Parse(value)].InnerText;
-            }
-            else
-            {
-                return value;
-            }
+            return value == null
+                   || value is DBNull
+                   || string.IsNullOrWhiteSpace(value.ToString());
         }
     }
 }

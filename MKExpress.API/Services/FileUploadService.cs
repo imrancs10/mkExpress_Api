@@ -1,6 +1,7 @@
 using AutoMapper;
 using MKExpress.API.Contants;
 using MKExpress.API.DTO.Request;
+using MKExpress.API.DTO.Request.User;
 using MKExpress.API.DTO.Response;
 using MKExpress.API.Enums;
 using MKExpress.API.Exceptions;
@@ -11,20 +12,12 @@ using System.Drawing.Drawing2D;
 
 namespace MKExpress.API.Services
 {
-    public class FileUploadService : IFileUploadService
+    public class FileUploadService(IConfiguration configuration, IMapper mapper, IShipmentImageRepository shipmentImageRepository, IUserRepository userRepository) : IFileUploadService
     {
-        private readonly IConfiguration _configuration;
-        private readonly IMapper _mapper;
-        private readonly IShipmentImageRepository _shipmentImageRepository;
-        private readonly IUserRepository _userRepository;
-
-        public FileUploadService(IConfiguration configuration,IMapper mapper, IShipmentImageRepository shipmentImageRepository, IUserRepository userRepository)
-        {
-            _configuration = configuration;
-            _mapper = mapper;
-            _shipmentImageRepository = shipmentImageRepository;
-            _userRepository = userRepository;
-        }
+        private readonly IConfiguration _configuration = configuration;
+        private readonly IMapper _mapper = mapper;
+        private readonly IShipmentImageRepository _shipmentImageRepository = shipmentImageRepository;
+        private readonly IUserRepository _userRepository = userRepository;
 
         private static string GetFileName(IFormFile file)
         {
@@ -65,7 +58,7 @@ namespace MKExpress.API.Services
             //}
         }
 
-        private static System.Drawing.Image ResizeImage(System.Drawing.Image imgToResize, System.Drawing.Size size)
+        private static Bitmap ResizeImage(System.Drawing.Image imgToResize, System.Drawing.Size size)
         {
             //Get the image current width  
             int sourceWidth = imgToResize.Width;
@@ -86,13 +79,13 @@ namespace MKExpress.API.Services
             int destWidth = (int)(sourceWidth * nPercent);
             //New Height  
             int destHeight = (int)(sourceHeight * nPercent);
-            Bitmap b = new Bitmap(destWidth, destHeight);
-            Graphics g = Graphics.FromImage((System.Drawing.Image)b);
+            Bitmap b = new(destWidth, destHeight);
+            Graphics g = Graphics.FromImage((Image)b);
             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
             // Draw image with new width and height  
             g.DrawImage(imgToResize, 0, 0, destWidth, destHeight);
             g.Dispose();
-            return (System.Drawing.Image)b;
+            return b;
         }
 
         private static void CreateThumbnail(string basePath, string fileName)
@@ -185,20 +178,20 @@ namespace MKExpress.API.Services
 
         }
 
-        public async Task<string> UploadUserProfileImage(IFormFile file)
+        public async Task<string> UploadUserProfileImage(UserProfileImageUploadRequest request)
         {
-            if (file == null || file.Length == 0)
+            if (request==null || request.File == null || request.File.Length == 0)
                 throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidParameters, StaticValues.Error_InvalidImageUploaded);
 
-            var imageExt = Path.GetExtension(file.FileName);
+            var imageExt = Path.GetExtension(request.File.FileName);
             if (imageExt != ".png" && imageExt != ".jpg" && imageExt != "jpeg")
                 throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidImageExtension, StaticValues.Error_InvalidImageExtension);
 
-            if (file.Length/1000>200)
+            if (request.File.Length/1000>200)
                 throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidImageSize, StaticValues.Error_InvalidImageSize);
 
             string? ImagePath = _configuration.GetSection("UserProfileImagePath").Value;
-            string newFileName = GetFileName(file);
+            string newFileName = GetFileName(request.File);
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", ImagePath);
             if(!Directory.Exists(path))
             {
@@ -207,7 +200,7 @@ namespace MKExpress.API.Services
             var fullFileName=Path.Combine(path, newFileName);
             using (var stream = new FileStream(fullFileName, FileMode.Create))
             {
-                await file.CopyToAsync(stream);
+                await request.File.CopyToAsync(stream);
             }
 
             var relativePath = Path.Combine(ImagePath, newFileName);
