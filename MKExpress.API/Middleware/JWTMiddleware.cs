@@ -6,18 +6,18 @@ using System.Text;
 
 namespace MKExpress.API.Middleware
 {
-    public class JwtMiddleware
+    public class JwtMiddleware(RequestDelegate next)
     {
-        private readonly RequestDelegate _next;
+        private readonly RequestDelegate _next = next;
         private static Guid _userId;
         private static string _userRole;
         private static Guid? _memberId;
-
-        public JwtMiddleware(RequestDelegate next)
-        {
-            _next = next;
-        }
-
+        private static List<string> _skippedRoutes = [
+            "/",
+            "/shipment/tracking/live/negotiate",
+            "/shipment/tracking/live",
+            "/health"
+            ];
         public async Task Invoke(HttpContext context)
         {
             var endpoint = context.GetEndpoint();
@@ -28,9 +28,9 @@ namespace MKExpress.API.Middleware
                 await _next(context);
                 return;
             }
-            var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            var token = context.Request.Headers.Authorization.FirstOrDefault()?.Split(" ").Last();
             var path = context.Request.Path;
-            if ((token == null || !ValidateToken(token)) && path.Value != "/" && path.Value != "/shipment/tracking/live/negotiate" && path.Value!= "/shipment/tracking/live")
+            if ((token == null || !ValidateToken(token)) && !_skippedRoutes.Contains(path.Value))
             {
                 context.Response.StatusCode = 401;
                 await context.Response.WriteAsync("Token invalid");

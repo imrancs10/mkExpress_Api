@@ -1,37 +1,41 @@
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Logging;
 using MKExpress.API.Config;
+using MKExpress.API.Data;
 using MKExpress.API.Dto;
 using MKExpress.API.Middleware;
 using MKExpress.API.SignalR;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using System;
 
 var _policyName = "ImkExpressPolicy";
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.RegisterServices();
-builder.Services.RegisterDataServices();
+builder.Services.RegisterDataServices(builder.Configuration);
 builder.Services.RegisterValidators();
 builder.Services.AddControllers();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 //LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
+builder.Services.AddHealthChecks()
+    .AddCheck("api_alive", () => HealthCheckResult.Healthy("API is running"))
+    .AddDbContextCheck<MKExpressContext>("db_context_reachable")
+    .AddCheck<AllowedDomainHealthCheck>("allowed_domain")
+    .AddCheck<DbInfoHealthCheck>("db_info");
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerConfig();
 builder.Services.AddJWTConfig();
-
+builder.Services.AddHealthChecks();
+var allowedHost = builder.Configuration.GetSection("AllowedHosts").Get<string[]>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(_policyName,
         policy =>
         {
             policy
-            .WithOrigins("http://imkexpressksa.com", 
-                            "http://localhost:3000", 
-                            "http://localhost:3001", 
-                            "http://imkexpress.com", 
-                            "http://web.imkexpress.com"
-            )
+            .WithOrigins(allowedHost ?? ["*"])
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -61,6 +65,7 @@ app.UseRouting();
 app.UseMiddleware<ValidationMiddleware>();
 app.UseCors(_policyName);
 app.UseCustomExceptionHandler();
+app.AddHealthCheck();
 app.UseMiddleware<JwtMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();

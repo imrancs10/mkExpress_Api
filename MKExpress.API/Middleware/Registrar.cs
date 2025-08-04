@@ -64,11 +64,10 @@ namespace MKExpress.API.Middleware
             return services;
         }
 
-        public static IServiceCollection RegisterDataServices(this IServiceCollection services)
+        public static IServiceCollection RegisterDataServices(this IServiceCollection services,IConfiguration configuration)
         {
-            //var DefaultConnection = "workstation id=mssql-88450-0.cloudclusters.net,12597;TrustServerCertificate=true;user id=LaBeachUser;pwd=Gr8@54321;data source=mssql-88450-0.cloudclusters.net,12597;persist security info=False;initial catalog=KaashiYatri";
-            var DefaultConnection = "workstation id=mssql-88450-0.cloudclusters.net,12597;TrustServerCertificate=true;user id=mkExpress_User;pwd=Gr8@12345;data source=mssql-88450-0.cloudclusters.net,12597;persist security info=False;initial catalog=mkExpress_Db_test";
-            services.AddDbContext<MKExpressContext>(
+            var DefaultConnection=configuration.GetConnectionString("DefaultConnection");
+           services.AddDbContext<MKExpressContext>(
                 options => { options.UseSqlServer(DefaultConnection); }
             );
             var serviceProvider = services.BuildServiceProvider();
