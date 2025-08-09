@@ -66,7 +66,7 @@ app.UseMiddleware<ValidationMiddleware>();
 app.UseCors(_policyName);
 app.UseCustomExceptionHandler();
 app.AddHealthCheck();
-app.UseMiddleware<JwtMiddleware>();
+//app.UseMiddleware<JwtMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 
