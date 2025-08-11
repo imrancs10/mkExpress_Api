@@ -21,3 +21,5 @@ obj
 packages
 **/obj/*
 /MKExpress.API/googleOAuthCredential.json
+/MKExpress.API/Properties/PublishProfiles/FolderProfile.pubxml
+/MKExpress.API/logs/imkExpress
