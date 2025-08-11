@@ -1,11 +1,11 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System.Text;
+﻿using System.Text;
 using System.Text.RegularExpressions;
 
 namespace MKExpress.API.Extension
 {
     public static class StringExtensions
     {
+        private static readonly char[] separator = [','];
         public static string DecodeBase64(this String str)
         {
             byte[] data = Convert.FromBase64String(str);
@@ -43,7 +43,7 @@ namespace MKExpress.API.Extension
         public static bool IsBase64(this string base64String)
         {
             if (string.IsNullOrEmpty(base64String) || base64String.Length % 4 != 0
-               || base64String.Contains(" ") || base64String.Contains("\t") || base64String.Contains("\r") || base64String.Contains("\n"))
+               || base64String.Contains(' ') || base64String.Contains('\t') || base64String.Contains('\r') || base64String.Contains('\n'))
                 return false;
 
             try
@@ -51,11 +51,21 @@ namespace MKExpress.API.Extension
                 Convert.FromBase64String(base64String);
                 return true;
             }
-            catch (Exception exception)
+            catch (Exception)
             {
-                // Handle the exception
+                throw;
             }
-            return false;
+        }        
+
+        public static List<T> Get<T>(this string str)
+        {
+            if (string.IsNullOrWhiteSpace(str))
+                return [];
+
+            return str
+                .Split(separator, StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => (T)Convert.ChangeType(s, typeof(T)))
+                .ToList();
         }
     }
 }

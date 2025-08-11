@@ -1,3 +1,4 @@
+using AreanaSoft.Utility.DotNetCore.Logger;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Logging;
 using MKExpress.API.Config;
@@ -6,7 +7,6 @@ using MKExpress.API.Dto;
 using MKExpress.API.Middleware;
 using MKExpress.API.SignalR;
 using Swashbuckle.AspNetCore.SwaggerUI;
-using System;
 
 var _policyName = "ImkExpressPolicy";
 var builder = WebApplication.CreateBuilder(args);
@@ -17,7 +17,13 @@ builder.Services.RegisterDataServices(builder.Configuration);
 builder.Services.RegisterValidators();
 builder.Services.AddControllers();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
-//LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
+builder.Logging.ClearProviders();
+builder.Logging.AddAreanaLogger(new LoggerConfig
+{
+    LogFilePath = "logs/imkExpress/API.log",
+    LogToConsole = true,
+    MinimumLevel = AreanaSoft.Utility.DotNetCore.Logger.LogLevel.Debug
+});
 builder.Services.AddHealthChecks()
     .AddCheck("api_alive", () => HealthCheckResult.Healthy("API is running"))
     .AddDbContextCheck<MKExpressContext>("db_context_reachable")
@@ -62,7 +68,7 @@ app.UseSwaggerUI(options =>
 app.UseHttpsRedirection();
 app.UseRouting();
 
-app.UseMiddleware<ValidationMiddleware>();
+//app.UseMiddleware<ValidationMiddleware>();
 app.UseCors(_policyName);
 app.UseCustomExceptionHandler();
 app.AddHealthCheck();

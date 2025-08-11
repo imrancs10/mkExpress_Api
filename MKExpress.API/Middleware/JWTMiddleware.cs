@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using MKExpress.API.Config;
+using MKExpress.API.Extension;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
@@ -9,41 +10,50 @@ namespace MKExpress.API.Middleware
     public class JwtMiddleware(RequestDelegate next)
     {
         private readonly RequestDelegate _next = next;
+        private ILogger<JwtMiddleware> _logger;
         private static Guid _userId;
-        private static string _userRole;
+        private static string? _userRole;
         private static Guid? _memberId;
-        private static List<string> _skippedRoutes = [
-            "/",
-            "/shipment/tracking/live/negotiate",
-            "/shipment/tracking/live",
-            "/health"
-            ];
+        private static List<string> _skippedRoutes = [];
         public async Task Invoke(HttpContext context)
         {
-            var endpoint = context.GetEndpoint();
-
-            // Skip JWT validation if endpoint has [AllowAnonymous] attribute
-            if (endpoint?.Metadata?.GetMetadata<IAllowAnonymous>() != null)
+            try
             {
+                var endpoint = context.GetEndpoint();
+
+                _logger = context.RequestServices.GetRequiredService<ILogger<JwtMiddleware>>();
+                _skippedRoutes = ConfigManager.AppSetting["JWT:SkippedRoutes"].Get<string>();
+                // Skip JWT validation if endpoint has [AllowAnonymous] attribute
+                if (endpoint?.Metadata?.GetMetadata<IAllowAnonymous>() != null)
+                {
+                    await _next(context);
+                    return;
+                }
+                var token = context.Request.Headers.Authorization.FirstOrDefault()?.Split(" ").Last();
+                var path = context.Request.Path;
+                if ((token == null || !ValidateToken(token)) && !_skippedRoutes.Contains(path.Value ?? string.Empty))
+                {
+                    context.Response.StatusCode = 401;
+                    await context.Response.WriteAsync("Token invalid");
+                    _logger.LogWarning("JwtMiddleware:Invoke: Unauthorized access attempt to {Path} with token: {Token}", path, token);
+                    return;
+                }
+
                 await _next(context);
-                return;
             }
-            var token = context.Request.Headers.Authorization.FirstOrDefault()?.Split(" ").Last();
-            var path = context.Request.Path;
-            if ((token == null || !ValidateToken(token)) && !_skippedRoutes.Contains(path.Value))
+            catch (Exception ex)
             {
-                context.Response.StatusCode = 401;
-                await context.Response.WriteAsync("Token invalid");
-                return;
+                _logger.LogError("JwtMiddleware:Invoke: Error occurred while  validating token :=>{msg}", ex.Message);
+                throw;
             }
-
-            await _next(context);
         }
 
         private static bool ValidateToken(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(ConfigManager.AppSetting["JWT:Secret"]);
+            var jwtSecret = ConfigManager.AppSetting["JWT:SecretKey"]??string.Empty;
+
+            var key = Encoding.UTF8.GetBytes(jwtSecret);
             try
             {
                 tokenHandler.ValidateToken(token, new TokenValidationParameters
@@ -65,9 +75,9 @@ namespace MKExpress.API.Middleware
 
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return false;
+                throw;
             }
         }
 
@@ -80,7 +90,7 @@ namespace MKExpress.API.Middleware
             return _memberId;
         }
 
-        public static string GetUserRole()
+        public static string? GetUserRole()
         {
             return _userRole;
         }

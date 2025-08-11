@@ -2,26 +2,18 @@
 using Microsoft.EntityFrameworkCore;
 using MKExpress.API.DTO.Response;
 using MKExpress.API.Exceptions;
-using MKExpress.API.Logger;
 using System.Net;
 using System.Text.Json;
 
 namespace MKExpress.API.Middleware
 {
 
-    public class GlobalExceptionHandlerMiddleware
+    public class GlobalExceptionHandlerMiddleware(RequestDelegate next, ILogger<GlobalExceptionHandlerMiddleware> loggerManager,
+        Func<Exception, ExceptionResponse>? localExceptionHandlerFunc = null)
     {
-        private readonly Func<Exception, ExceptionResponse>? _localExceptionHandlerFunc;
-        private readonly RequestDelegate _next;
-        private readonly ILoggerManager _loggerManager;
-
-        public GlobalExceptionHandlerMiddleware(RequestDelegate next,ILoggerManager loggerManager,
-            Func<Exception, ExceptionResponse>? localExceptionHandlerFunc = null)
-        {
-            _next = next;
-            _localExceptionHandlerFunc = localExceptionHandlerFunc;
-            _loggerManager = loggerManager;
-        }
+        private readonly Func<Exception, ExceptionResponse>? _localExceptionHandlerFunc = localExceptionHandlerFunc;
+        private readonly RequestDelegate _next = next;
+        private readonly ILogger<GlobalExceptionHandlerMiddleware> _loggerManager = loggerManager;
 
         public async Task InvokeAsync(HttpContext context)
         {

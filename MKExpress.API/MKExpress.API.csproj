@@ -49,6 +49,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="AreanaSoft.Utility.DotNetCore.Logger">
+      <HintPath>..\External Library\AreanaSoft.Utility.DotNetCore.Logger.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Update="googleOAuthCredential.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

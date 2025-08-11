@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MkExpress.MessageBroker.Services;
 using MKExpress.API.Data;
-using MKExpress.API.Logger;
 using MKExpress.API.Repositories;
 using MKExpress.API.Repository;
 using MKExpress.API.Services;
@@ -59,7 +58,6 @@ namespace MKExpress.API.Middleware
                 .AddScoped<ISmsService, SmsService>()
                 .AddScoped<INotificationService, NotificationService>()
                 .AddScoped<IExcelReader, ExcelReader>()
-                .AddSingleton<ILoggerManager, LoggerManager>()
                 .AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             return services;
         }

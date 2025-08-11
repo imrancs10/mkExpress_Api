@@ -5,7 +5,12 @@ VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKExpress.API", "MKExpress.API\MKExpress.API.csproj", "{CE257F03-467D-4BE0-9423-D1E19C5C543F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MkExpressMessageBroker", "MkExpressMessageBroker\MkExpressMessageBroker.csproj", "{1C13518E-8422-415E-B3E8-ED0951E6DACF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MkExpressMessageBroker", "MkExpressMessageBroker\MkExpressMessageBroker.csproj", "{1C13518E-8422-415E-B3E8-ED0951E6DACF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External Library", "External Library", "{55A3DBE9-14BD-4004-B30B-C088DE3B7290}"
+	ProjectSection(SolutionItems) = preProject
+		External Library\AreanaSoft.Utility.DotNetCore.Logger.dll = External Library\AreanaSoft.Utility.DotNetCore.Logger.dll
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

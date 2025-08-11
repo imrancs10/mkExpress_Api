@@ -6,41 +6,35 @@ using MKExpress.API.DTO.Response;
 using MKExpress.API.Enums;
 using MKExpress.API.Exceptions;
 using MKExpress.API.Extension;
-using MKExpress.API.Logger;
 using MKExpress.API.Middleware;
 using MKExpress.API.Models;
 using MKExpress.API.Services;
 
 namespace MKExpress.API.Repository
 {
-    public class ContainerRepository : IContainerRepository
+    public class ContainerRepository(MKExpressContext context, ILogger<ContainerRepository> loggerManager, IMasterJourneyRepository masterJourneyRepository, IShipmentService shipmentService, IShipmentRepository shipmentRepository) : IContainerRepository
     {
-        private readonly MKExpressContext _context;
-        private readonly ILoggerManager _loggerManager;
-        private readonly IMasterJourneyRepository _masterJourneyRepository;
-        private readonly IShipmentService _shipmentService;
-        private readonly IShipmentRepository _shipmentRepository;
-        public ContainerRepository(MKExpressContext context, ILoggerManager loggerManager, IMasterJourneyRepository masterJourneyRepository, IShipmentService shipmentService, IShipmentRepository shipmentRepository)
-        {
-            _context = context;
-            _loggerManager = loggerManager;
-            _masterJourneyRepository = masterJourneyRepository;
-            _shipmentService = shipmentService;
-            _shipmentRepository = shipmentRepository;
-        }
+        private readonly MKExpressContext _context = context;
+        private readonly ILogger<ContainerRepository> _loggerManager = loggerManager;
+        private readonly IMasterJourneyRepository _masterJourneyRepository = masterJourneyRepository;
+        private readonly IShipmentService _shipmentService = shipmentService;
+        private readonly IShipmentRepository _shipmentRepository = shipmentRepository;
+
         public async Task<Container> AddContainer(Container container)
         {
             var journey = await _masterJourneyRepository.Get(container.JourneyId) ?? throw new BusinessRuleViolationException(StaticValues.DataNotFoundError, StaticValues.ContainerJourneyDetailsNotFound);
 
-            List<ContainerJourney> containerJourneys = new List<ContainerJourney>();
-            containerJourneys.Add(new ContainerJourney()
-            {
-                ContainerId = container.Id,
-                Id = Guid.NewGuid(),
-                StationId = journey.FromStationId,
-                IsSourceStation = true,
-                SequenceNo = 1,
-            });
+            List<ContainerJourney> containerJourneys =
+            [
+                new ContainerJourney()
+                {
+                    ContainerId = container.Id,
+                    Id = Guid.NewGuid(),
+                    StationId = journey.FromStationId,
+                    IsSourceStation = true,
+                    SequenceNo = 1,
+                },
+            ];
 
             journey.MasterJourneyDetails.ForEach(res =>
             {
@@ -72,7 +66,7 @@ namespace MKExpress.API.Repository
             {
                 return entity.Entity;
             }
-            return default(Container);
+            return default;
         }
 
         public async Task<bool> CheckInContainer(Guid containerId, Guid containerJourneyId)
@@ -420,14 +414,14 @@ namespace MKExpress.API.Repository
                 });
                 if (await _context.SaveChangesAsync() == 0)
                 {
-                    _loggerManager.LogWarn(StaticValues.Message_UnableToSaveData, "ContainerRepository", "ValidateAndAddShipmentInContainer");
+                    _loggerManager.LogWarning(StaticValues.Message_UnableToSaveData, "ValidateAndAddShipmentInContainer");
                     throw new BusinessRuleViolationException(StaticValues.Error_UnableToSaveData, StaticValues.Message_UnableToSaveData);
                 }
             }
             return validateShipmentResponse;
         }
 
-        private string GetTrackingCode(ContainerTrackingCodeEnum codeEnum)
+        private static string GetTrackingCode(ContainerTrackingCodeEnum codeEnum)
         {
             return codeEnum switch
             {

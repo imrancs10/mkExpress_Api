@@ -1,19 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MKExpress.API.Contants;
-using MKExpress.API.DTO.Request;
 using MKExpress.API.DTO.Response;
 using MKExpress.API.Services;
 
 namespace MKExpress.API.Controllers
 {
     [ApiController]
-    public class DashboardController : ControllerBase
+    public class DashboardController(IDashboardService dashboardService,ILogger<DashboardController> logger) : ControllerBase
     {
-        private readonly IDashboardService _dashboardService;
-        public DashboardController(IDashboardService dashboardService)
-        {
-            _dashboardService = dashboardService;
-        }
+        private readonly IDashboardService _dashboardService = dashboardService;
+        private readonly ILogger<DashboardController> _logger = logger;
 
         [ProducesResponseType(typeof(DashboardShipmentStatusResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status503ServiceUnavailable)]
@@ -22,7 +18,16 @@ namespace MKExpress.API.Controllers
         [HttpGet(StaticValues.DashboardShipmenyStatusCountPath)]
         public async Task<DashboardShipmentStatusResponse> GetDashboardShipmentStatusCount([FromQuery] int? year, [FromQuery] string? status)
         {
-            return await _dashboardService.GetDashboardShipmentStatusCount(status,year??DateTime.Now.Year);
+            try
+            {
+                throw new Exception("Status cannot be null or empty.");
+                return await _dashboardService.GetDashboardShipmentStatusCount(status, year ?? DateTime.Now.Year);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while fetching dashboard shipment status count.");
+                throw;
+            }
         }
 
         [ProducesResponseType(typeof(List<DashboardShipmentStatusWiseCountResponse>), StatusCodes.Status201Created)]
